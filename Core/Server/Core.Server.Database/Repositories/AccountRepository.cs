@@ -1,3 +1,4 @@
+using Core.Cryptography.Interface;
 using Core.Database.Interfaces;
 using Core.Database.Interfaces.Account;
 using Core.Database.Interfaces.Player;
@@ -6,7 +7,7 @@ using Core.Server.Database.Interface;
 
 namespace Core.Server.Database.Repositories;
 
-public class AccountRepository<T>(IRepository<T> context) : IAccountRepository<T>
+public class AccountRepository<T>(IRepository<T> context, ICrypto crypto ) : IAccountRepository<T>
 where T : class, IAccountModel
 {
     private IRepository<T> Context => context;
@@ -17,6 +18,8 @@ where T : class, IAccountModel
             return (new DatabaseException(true, "Account already exists"), null);
         if (await Context.ExistEntityAsync(p => p.Email == account.Email))
             return (new DatabaseException(true, "E-mail already exists"), null);
+        
+        account.Password = crypto.HashString(account.Password);
         
         var result = await Context.AddAsync(account);
         
@@ -30,13 +33,15 @@ where T : class, IAccountModel
     
     public async Task<(IDatabaseException, T?)> GetAccountAsync(string username, string password)
     {
-        
-        var accountResult = await Context.GetEntityAsync(a => a.Username == username && a.Password == password, model => model.Players );
+        var accountResult = await Context.GetEntityAsync(a => a.Username == username, model => model.Players );
         
         if (accountResult == null)
             return (new DatabaseException(true, "Account not found"), null);
-        else
-            return (new DatabaseException(false, "Account found"), accountResult);
+        
+        if (!crypto.CompareHash(password, accountResult.Password))
+            return (new DatabaseException(true, "Password incorrect"), null);
+        
+        return (new DatabaseException(false, "Account found"), accountResult);
     }
 
     public async Task<IDatabaseException> UpdateAccountAsync(T account)

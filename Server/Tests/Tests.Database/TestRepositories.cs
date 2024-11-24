@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Core.Cryptography;
+using Core.Cryptography.Interface;
 using Core.Database;
 using Core.Database.Interfaces;
 using Core.Database.Models.Account;
@@ -32,6 +35,9 @@ public class TestRepositories
         services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
         services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
         services.AddLogging();
+        
+        // crypto
+        services.AddScoped<ICrypto, Cryptography>();
 
         var serviceProvider = services.BuildServiceProvider();
 
@@ -57,6 +63,10 @@ public class TestRepositories
 
         // Act
         await accountRepository.AddAccountAsync(account);
+        
+        // mensagem pro debug de tests
+        Debug.Print(account.Password);
+        
         var retrievedAccount = await accountRepository.GetAccountAsync("testuser", "password");
 
         // Assert
