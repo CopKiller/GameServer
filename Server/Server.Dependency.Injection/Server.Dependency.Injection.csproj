@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        
+        <ProjectReference Include="..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj" />
+        
+        <ProjectReference Include="..\..\Core\Database\Core.Database\Core.Database.csproj" />
+        <ProjectReference Include="..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj" />
+        
+      <ProjectReference Include="..\..\Core\Logger\Core.Logger\Core.Logger.csproj" />
+      <ProjectReference Include="..\..\Core\Service\Core.Service\Core.Service.csproj" />
+    </ItemGroup>
+
+</Project>
