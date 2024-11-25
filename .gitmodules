@@ -1,0 +1,4 @@
+
+[submodule "External/LiteNetLib"]
+	path = External/LiteNetLib
+	url = https://github.com/CopKiller/LiteNetLib

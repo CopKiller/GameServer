@@ -104,5 +104,15 @@ public class TestRepositories
 
         // Assert
         accountRetrieve.Item2?.Players.Should().HaveCount(1, "Player count should be 1.");
+        
+        // Act
+        var playerRetrieve = await playerRepository.GetPlayersAsync(accountRetrieve.Item2.Id);
+        
+        // Assert
+        playerRetrieve.Item1.IsError.Should().BeFalse();
+        playerRetrieve.Item2.Should().HaveCount(1, "Player count should be 1.");
+        playerRetrieve.Item2.First().Position.Should().NotBeNull();
+        playerRetrieve.Item2.First().Vitals.Should().NotBeNull();
+        playerRetrieve.Item2.First().Stats.Should().NotBeNull();
     }
 }
