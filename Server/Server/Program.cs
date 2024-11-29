@@ -33,6 +33,10 @@ public static class Program
         
         logger?.LogInformation("Iniciando o network...");
         
+        var networkManager = _serviceProvider?.GetRequiredService<INetworkService>();
+        
+        networkManager?.Register();
+        
         var eventListener = _serviceProvider?.GetRequiredService<ICustomEventBasedNetListener>();
 
         eventListener.OnConnectionRequest += request =>
@@ -45,9 +49,6 @@ public static class Program
             logger?.LogInformation($"Peer conectado: {peer}");
         };
         
-        var networkManager = _serviceProvider?.GetRequiredService<INetworkService>();
-        
-        networkManager?.Register();
 
         networkManager?.StartServer(8224);
         
@@ -57,12 +58,12 @@ public static class Program
         
         logger?.LogInformation("Servidor iniciado. Pressione Ctrl+C para encerrar.");
         
-        while (true)
-        {
-            networkManager?.Update();
-            await Task.Delay(15);
-        }
+        //while (true)
+        //{
+          //  networkManager?.Update();
+         //   await Task.Delay(15);
+        //}
 
-        //await Task.Delay(-1);
+        await Task.Delay(-1);
     }
 }

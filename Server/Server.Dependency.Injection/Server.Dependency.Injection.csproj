@@ -9,8 +9,10 @@
 
     <ItemGroup>
         
-        <ProjectReference Include="..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj" />
-        
+        <ProjectReference Include="..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
         <ProjectReference Include="..\..\Core\Database\Core.Database\Core.Database.csproj" />
         
         <ProjectReference Include="..\..\Core\Network\Core.Network\Core.Network.csproj" />

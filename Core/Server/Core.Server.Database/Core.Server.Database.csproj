@@ -8,7 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj" />
+      <ProjectReference Include="..\..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj" >
+          <PrivateAssets>all</PrivateAssets>
+      </ProjectReference>
+        
       <ProjectReference Include="..\Core.Server.Database.Interface\Core.Server.Database.Interface.csproj" />
     </ItemGroup>
 
