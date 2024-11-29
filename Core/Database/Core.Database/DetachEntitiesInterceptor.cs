@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Database;
 
-public class DetachEntitiesInterceptor : SaveChangesInterceptor
+internal class DetachEntitiesInterceptor : SaveChangesInterceptor
 {
         public override async ValueTask<int> SavedChangesAsync(
             SaveChangesCompletedEventData eventData,

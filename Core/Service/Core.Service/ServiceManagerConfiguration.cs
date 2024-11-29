@@ -1,6 +1,6 @@
 using Core.Service.Interfaces;
 
-namespace Server.Dependency.Injection;
+namespace Core.Service;
 
 public class ServiceManagerConfiguration : IServiceConfiguration
 {

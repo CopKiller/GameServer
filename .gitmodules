@@ -2,3 +2,6 @@
 [submodule "External/LiteNetLib"]
 	path = External/LiteNetLib
 	url = https://github.com/CopKiller/LiteNetLib
+[submodule "External/DarkRiftNetworking"]
+	path = External/DarkRiftNetworking
+	url = https://github.com/DarkRiftNetworking/DarkRift

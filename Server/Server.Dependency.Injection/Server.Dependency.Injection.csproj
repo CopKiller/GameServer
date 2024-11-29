@@ -12,6 +12,8 @@
         <ProjectReference Include="..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj" />
         
         <ProjectReference Include="..\..\Core\Database\Core.Database\Core.Database.csproj" />
+        
+        <ProjectReference Include="..\..\Core\Network\Core.Network\Core.Network.csproj" />
         <ProjectReference Include="..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj" />
         
       <ProjectReference Include="..\..\Core\Logger\Core.Logger\Core.Logger.csproj" />

@@ -2,12 +2,11 @@
 using Core.Cryptography.Interface;
 using Core.Database;
 using Core.Database.Interfaces;
-using Core.Database.Interfaces.Account;
-using Core.Database.Interfaces.Player;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Database.Repositorys;
-using Core.Logger.Interface;
+using Core.Network;
+using Core.Network.Interface;
 using Infrastructure.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +25,7 @@ internal class ServerServices
         ConfigureCryptographyService(services);
         ConfigureLoggerService(services);
         ConfigureDatabaseService(services);
+        ConfigureNetworkService(services);
         
         return services;
     }
@@ -37,7 +37,7 @@ internal class ServerServices
 
     private void ConfigureLoggerService(IServiceCollection services)
     {
-        const LogLevel logLevel = LogLevel.Debug;
+        const LogLevel logLevel = LogLevel.Trace;
         
         services.AddLogging(loggingBuilder =>
         {
@@ -60,5 +60,15 @@ internal class ServerServices
         services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
         services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
         services.AddScoped<IDatabaseService, DatabaseService>();
+    }
+    
+    private void ConfigureNetworkService(IServiceCollection services)
+    {
+        // Project Core.Network Abstract LiteNetLib
+        services.AddScoped<ICustomNetPeer, CustomNetPeer>();
+        services.AddSingleton<ICustomPacketProcessor, CustomPacketProcessor>();
+        services.AddSingleton<INetworkManager, NetworkManager>();
+        services.AddSingleton<INetworkService, NetworkService>();
+        services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
     }
 }
