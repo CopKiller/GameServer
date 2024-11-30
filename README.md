@@ -29,7 +29,7 @@ Para iniciar o servidor, você pode usar o seguinte comando:
 dotnet run
 ```
 
-Contribuição
+## 🤝 Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
 Licença
