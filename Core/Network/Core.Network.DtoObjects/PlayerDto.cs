@@ -1,8 +1,8 @@
-using Core.Network.Models.Player;
+using Core.Network.DtoObjects.Player;
 
-namespace Core.Network.Models;
+namespace Core.Network.DtoObjects;
 
-public class PlayerDTO
+public class PlayerDto
 {
     public int Id { get; set; }
     public int SlotNumber { get; set; }
@@ -10,7 +10,7 @@ public class PlayerDTO
     public int Level { get; set; }
     public int Experience { get; set; }
     public int Gold { get; set; }
-    public VitalsDTO? Vitals { get; set; }
-    public StatsDTO? Stats { get; set; }
-    public PositionDTO? Position { get; set; }
+    public VitalsDto? Vitals { get; set; }
+    public StatsDto? Stats { get; set; }
+    public PositionDto? Position { get; set; }
 }

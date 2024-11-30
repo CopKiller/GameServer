@@ -1,9 +1,9 @@
-﻿namespace Core.Network.Models;
+﻿namespace Core.Network.DtoObjects;
 
-public class AccountDTO
+public class AccountDto
 {
     public int Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public List<PlayerDTO> Players { get; set; } = new();
+    public List<PlayerDto> Players { get; set; } = new();
 }

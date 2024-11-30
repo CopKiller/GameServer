@@ -21,6 +21,7 @@
       <ProjectReference Include="..\..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj" />
       <ProjectReference Include="..\..\..\Core\Database\Core.Database\Core.Database.csproj" />
       <ProjectReference Include="..\..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj" />
+      <ProjectReference Include="..\..\..\Core\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
     </ItemGroup>
 
 </Project>
