@@ -20,6 +20,7 @@
         
       <ProjectReference Include="..\..\Core\Logger\Core.Logger\Core.Logger.csproj" />
       <ProjectReference Include="..\..\Core\Service\Core.Service\Core.Service.csproj" />
+      <ProjectReference Include="..\..\Core\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
     </ItemGroup>
 
 </Project>

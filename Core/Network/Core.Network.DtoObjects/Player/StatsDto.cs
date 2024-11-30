@@ -1,6 +1,6 @@
-namespace Core.Network.Models.Player;
+namespace Core.Network.DtoObjects.Player;
 
-public class StatsDTO
+public class StatsDto
 {
     public int Strength { get; set; }
     public int Defense { get; set; }

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\External\AutoMapper\src\AutoMapper\AutoMapper.csproj" />
+      <ProjectReference Include="..\..\..\Database\Core.Database.Models\Core.Database.Models.csproj" />
+      <ProjectReference Include="..\..\..\Network\Core.Network.DtoObjects\Core.Network.DtoObjects.csproj" />
+      <ProjectReference Include="..\Core.Utils.AutoMapper.Interface\Core.Utils.AutoMapper.Interface.csproj" />
+    </ItemGroup>
+
+</Project>

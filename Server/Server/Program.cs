@@ -38,6 +38,12 @@ public static class Program
         networkManager?.Register();
         
         var eventListener = _serviceProvider?.GetRequiredService<ICustomEventBasedNetListener>();
+        
+        if (eventListener == null)
+        {
+            logger?.LogError("Falha ao obter o eventListener");
+            return;
+        }
 
         eventListener.OnConnectionRequest += request =>
         {

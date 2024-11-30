@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Core.Server.Database;
 using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
+using Core.Utils.AutoMapper;
+using Core.Utils.AutoMapper.Interface;
 
 namespace Server.Dependency.Injection;
 
@@ -26,6 +28,7 @@ internal class ServerServices
         ConfigureLoggerService(services);
         ConfigureDatabaseService(services);
         ConfigureNetworkService(services);
+        ConfigureMapperService(services);
         
         return services;
     }
@@ -70,5 +73,11 @@ internal class ServerServices
         services.AddSingleton<INetworkManager, NetworkManager>();
         services.AddSingleton<INetworkService, NetworkService>();
         services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
+    }
+    
+    private void ConfigureMapperService(IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(ServerServices)); // Scaneia os Profiles no assembly
+        services.AddScoped<IMapperService, MapperService>();
     }
 }

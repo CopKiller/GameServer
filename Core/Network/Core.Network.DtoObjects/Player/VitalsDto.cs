@@ -1,6 +1,6 @@
-namespace Core.Network.Models.Player;
+namespace Core.Network.DtoObjects.Player;
 
-public class VitalsDTO
+public class VitalsDto
 {
     public double Health { get; set; }
     public double MaxHealth { get; set; }
