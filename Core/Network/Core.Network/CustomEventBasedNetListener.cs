@@ -18,7 +18,7 @@ public sealed class CustomEventBasedNetListener : ICustomEventBasedNetListener
         _listener.PeerConnectedEvent += peer => OnPeerConnected?.Invoke(new CustomNetPeer(peer));
         _listener.PeerDisconnectedEvent += (peer, disconnectInfo) => OnPeerDisconnected?.Invoke(new CustomNetPeer(peer), new CustomDisconnectInfo(disconnectInfo));
         _listener.NetworkErrorEvent += (endPoint, socketError) => OnNetworkError?.Invoke(endPoint, socketError);
-        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) => OnNetworkReceive?.Invoke(new CustomNetPeer(peer), new CustomNetPacketReader(reader), reader.GetByte(), Extensions.ConvertToCustomDeliveryMethod(deliveryMethod));
+        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) => OnNetworkReceive?.Invoke(new CustomNetPeer(peer), new CustomNetPacketReader(reader), channel, Extensions.ConvertToCustomDeliveryMethod(deliveryMethod));
         _listener.NetworkReceiveUnconnectedEvent += (endPoint, reader, messageType) => OnNetworkReceiveUnconnected?.Invoke(endPoint, new CustomNetPacketReader(reader), Extensions.ConvertToCustomUnconnectedMessageType(messageType));
         _listener.NetworkLatencyUpdateEvent += (peer, latency) => OnNetworkLatencyUpdate?.Invoke(new CustomNetPeer(peer), latency);
         _listener.ConnectionRequestEvent += request => OnConnectionRequest?.Invoke(new CustomConnectionRequest(request));

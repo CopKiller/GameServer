@@ -2,7 +2,7 @@ using System.Diagnostics;
 using AutoMapper;
 using AutoMapper.Internal;
 using Core.Database.Models.Player;
-using Core.Network.DtoObjects;
+using Core.Network.SerializationObjects;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
 using Microsoft.Extensions.DependencyInjection;

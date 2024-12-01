@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Network\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj" />
+      <ProjectReference Include="..\..\Network\Core.Network.Packets\Core.Network.Packets.csproj" />
+      <ProjectReference Include="..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj" />
+    </ItemGroup>
+
+</Project>

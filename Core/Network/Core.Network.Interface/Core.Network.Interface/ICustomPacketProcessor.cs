@@ -8,4 +8,8 @@ public interface ICustomPacketProcessor
         where TPacket : class, new();
 
     void RegisterNestedType<T>() where T : ICustomSerializable;
+
+    void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new();
+    
+    void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer);
 }

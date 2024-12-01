@@ -1,6 +1,6 @@
 namespace Core.Network.Interface;
 
-public interface ICustomNetPacketReader
+public interface ICustomNetPacketReader : ICustomDataReader
 {
     void Recycle();
 }

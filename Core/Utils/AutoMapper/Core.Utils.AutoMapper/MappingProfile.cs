@@ -3,8 +3,8 @@ using Core.Database.Interfaces.Account;
 using Core.Database.Interfaces.Player;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
-using Core.Network.DtoObjects;
-using Core.Network.DtoObjects.Player;
+using Core.Network.SerializationObjects;
+using Core.Network.SerializationObjects.Player;
 
 namespace Core.Utils.AutoMapper;
 

@@ -1,12 +1,15 @@
+using Core.Network.Interface.Enum;
+
 namespace Core.Network.Interface;
 
 public interface INetworkService
 {
+    bool IsRunning { get; }
+    ICustomNetPeer? GetFirstPeer();
     void Register();
-    void StartServer(int port);
-    void StartClient();
-    void ConnectToServer(string address, int port);
+    bool Initialize(NetworkMode mode, int port = 0, string? address = null);
     void Update();
     void Stop();
     void Dispose();
+    void Send(byte[] data, CustomDeliveryMethod deliveryMethod);
 }

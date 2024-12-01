@@ -6,16 +6,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Service;
 
-public class ServiceManager(IServiceConfiguration configuration, IServiceCollection collection) : IServiceManager
+public class ServiceManager(IServiceCollection collection) : IServiceManager
 {
-    public IServiceConfiguration Configuration { get; } = configuration;
+    public IServiceConfiguration Configuration { get; } = new ServiceManagerConfiguration();
     public IServiceProvider? ServiceProvider { get; set; }
     private List<ISingleService> Services { get; set; } = [];
-    private TimerPool? TickCounter { get; set; }
+    private TimerPool? ServicesUpdate { get; set; }
     private CancellationTokenSource? _updateCancellationTokenSource;
     
     private ILogger<ServiceManager>? Log { get; set; }
-    private ILoggerFactory? LoggerFactory { get; set; }
 
     public void Register()
     {
@@ -29,10 +28,9 @@ public class ServiceManager(IServiceConfiguration configuration, IServiceCollect
         Services.Clear();
         
         // Obter serviço ILogger apartir do ServiceProvider.
-        LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
-        Log = LoggerFactory.CreateLogger<ServiceManager>();
+        Log = ServiceProvider.GetRequiredService<ILogger<ServiceManager>>();
         
-        TickCounter = new TimerPool(Configuration, LoggerFactory.CreateLogger<TimerPool>());
+        ServicesUpdate = new TimerPool(Configuration, ServiceProvider.GetRequiredService<ILogger<TimerPool>>());
         
         Log?.LogDebug("Getting singleton services (ISingleService)...");
         foreach (var serviceDescriptor in collection.Where(sd => 
@@ -45,7 +43,7 @@ public class ServiceManager(IServiceConfiguration configuration, IServiceCollect
             {
                 singletonService.Register();
                 Services.Add(singletonService);
-                TickCounter?.AddService(singletonService);
+                ServicesUpdate?.AddService(singletonService);
                 Log?.LogDebug($"Registered singleton service: {singletonService.GetType().Name}");
             }
         }
@@ -61,7 +59,7 @@ public class ServiceManager(IServiceConfiguration configuration, IServiceCollect
         });
         
         _updateCancellationTokenSource ??= new CancellationTokenSource();
-        TickCounter?.Start(_updateCancellationTokenSource.Token);
+        ServicesUpdate?.Start(_updateCancellationTokenSource.Token);
     }
     
     public void Stop()
@@ -81,7 +79,7 @@ public class ServiceManager(IServiceConfiguration configuration, IServiceCollect
     {
         Log?.LogDebug("Descartando serviços...");
         
-        TickCounter?.Dispose();
+        ServicesUpdate?.Dispose();
         
         // Dispose seguro para o ServiceProvider, caso seja IDisposable
         if (ServiceProvider is IDisposable disposableProvider)

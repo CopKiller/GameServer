@@ -19,6 +19,8 @@
         <ProjectReference Include="..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj" />
         
       <ProjectReference Include="..\..\Core\Logger\Core.Logger\Core.Logger.csproj" />
+        
+      <ProjectReference Include="..\..\Core\Server\Core.Server.Network\Core.Server.Network.csproj" />
       <ProjectReference Include="..\..\Core\Service\Core.Service\Core.Service.csproj" />
       <ProjectReference Include="..\..\Core\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
     </ItemGroup>

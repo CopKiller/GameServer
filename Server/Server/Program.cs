@@ -12,6 +12,8 @@ public static class Program
     public static async Task Main(string[] args)
     {
         var server = new ServerManager();
+        
+        server.Register();
 
         server.Start();
         
@@ -31,44 +33,7 @@ public static class Program
             Environment.Exit(0);
         };
         
-        logger?.LogInformation("Iniciando o network...");
-        
-        var networkManager = _serviceProvider?.GetRequiredService<INetworkService>();
-        
-        networkManager?.Register();
-        
-        var eventListener = _serviceProvider?.GetRequiredService<ICustomEventBasedNetListener>();
-        
-        if (eventListener == null)
-        {
-            logger?.LogError("Falha ao obter o eventListener");
-            return;
-        }
-
-        eventListener.OnConnectionRequest += request =>
-        {
-            request.AcceptIfKey("key");
-        };
-        
-        eventListener.OnPeerConnected += peer =>
-        {
-            logger?.LogInformation($"Peer conectado: {peer}");
-        };
-        
-
-        networkManager?.StartServer(8224);
-        
-        networkManager?.StartClient();
-        
-        networkManager?.ConnectToServer("localhost", 8224);
-        
         logger?.LogInformation("Servidor iniciado. Pressione Ctrl+C para encerrar.");
-        
-        //while (true)
-        //{
-          //  networkManager?.Update();
-         //   await Task.Delay(15);
-        //}
 
         await Task.Delay(-1);
     }

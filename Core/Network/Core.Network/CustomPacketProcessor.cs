@@ -1,5 +1,6 @@
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
+using Core.Network.Serialization;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -12,11 +13,35 @@ public sealed class CustomPacketProcessor : ICustomPacketProcessor
     // Max string length for packet data
     private const byte MaxStringLength = 255;
 
-    private readonly NetPacketProcessor _netPacketProcessor = new(MaxStringLength);
+    private readonly NetPacketProcessor _netPacketProcessor;
+    
+    private readonly SerializationService _serializationService;
+    
+    public CustomPacketProcessor()
+    {
+        _netPacketProcessor = new NetPacketProcessor(MaxStringLength);
+        _serializationService = new SerializationService(_netPacketProcessor);
+        
+        _serializationService.Initialize();
+        
+    }
     
     public void RegisterNestedType<T>() where T : ICustomSerializable
     {
-        _netPacketProcessor.RegisterNestedType(() => new LiteNetSerializableAdapter<T>());
+        _serializationService.RegisterNestedType<T>();
+    }
+    
+    public void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new()
+    {
+        _netPacketProcessor.SubscribeReusable(onReceive);
+    }
+    
+    public void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer)
+    {
+        if (customNetPacketReader is not CustomNetPacketReader netPacketReader)
+            throw new InvalidOperationException("Invalid customNetPacketReader type. Expected CustomNetPacketReader.");
+        
+        _netPacketProcessor.ReadAllPackets(netPacketReader.GetReader, customNetPeer);
     }
     
     public void SendPacket<TPacket>(ICustomNetPeer iCustomNetPeer, TPacket packet, CustomDeliveryMethod deliveryMethod) where TPacket : class, new()

@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Core.Server.Database;
 using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
+using Core.Server.Network;
+using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
 
@@ -68,16 +70,18 @@ internal class ServerServices
     private void ConfigureNetworkService(IServiceCollection services)
     {
         // Project Core.Network Abstract LiteNetLib
-        services.AddScoped<ICustomNetPeer, CustomNetPeer>();
+        //services.AddScoped<ICustomNetPeer, CustomNetPeer>();
         services.AddSingleton<ICustomPacketProcessor, CustomPacketProcessor>();
-        services.AddSingleton<INetworkManager, NetworkManager>();
         services.AddSingleton<INetworkService, NetworkService>();
         services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
+        
+        // ISingleService -> LoopService
+        services.AddSingleton<ISingleService, ServerNetworkService>();
     }
     
     private void ConfigureMapperService(IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(ServerServices)); // Scaneia os Profiles no assembly
+        services.AddAutoMapper(typeof(MapperService)); // Scaneia os Profiles no assembly
         services.AddScoped<IMapperService, MapperService>();
     }
 }

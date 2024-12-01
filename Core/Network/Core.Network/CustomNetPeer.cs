@@ -13,6 +13,8 @@ public sealed class CustomNetPeer : ICustomNetPeer
         Peer = peer;
     }
 
+    public int Id => Peer.Id;
+
     public void Send(byte[] data, CustomDeliveryMethod deliveryMethod)
     {
         // Traduzir o CustomDeliveryMethod para DeliveryMethod do LiteNetLib

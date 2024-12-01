@@ -12,14 +12,16 @@ public sealed class ServerManager
     {
         var serverServices = new ServerServices();
         
-        var serviceConfig = new ServiceManagerConfiguration() { Enabled = true, NeedUpdate = true, UpdateIntervalMs = 1 };
-        
-        Manager = new ServiceManager(serviceConfig, serverServices.GetServices());
+        Manager = new ServiceManager(serverServices.GetServices());
+    }
+    
+    public void Register()
+    {
+        Manager.Register();
     }
     
     public void Start()
     {
-        Manager.Register();
         Manager.Start();
     }
     
