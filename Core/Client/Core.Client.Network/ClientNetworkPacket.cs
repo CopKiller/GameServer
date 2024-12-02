@@ -1,17 +1,18 @@
 using Core.Network.Interface;
 using Core.Network.Packets.Client;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Client.Network;
 
-public class ClientNetworkPacket
+public class ClientNetworkPacket(ILogger<ClientNetworkProcessor> logger)
 {
     public void OnFirstPacket(CPacketFirst packet, ICustomNetPeer peer)
     {
-        
+        logger.LogInformation($"Client: Received packet: {packet.GetType().Name}");
     }
     
     public void OnSecondPacket(CPacketSecond packet, ICustomNetPeer peer)
     {
-        
+        logger.LogInformation($"Client: Received packet: {packet.GetType().Name}");
     }
 }

@@ -4,7 +4,5 @@ namespace Core.Client.Network.Interface;
 
 public interface IClientNetworkService
 {
-    bool IsConnected { get; }
     
-    ICustomNetPeer? GetServerPeer();
 }

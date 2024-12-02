@@ -1,3 +1,4 @@
+using Core.Network.Connection;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 using LiteNetLib;
@@ -7,34 +8,27 @@ namespace Core.Network;
 
 public class NetworkService : INetworkService
 {
-    private NetworkMode _mode;
-    private readonly NetManager _netManager;
+    public NetworkMode Mode { get; private set; }
     
-    public bool IsRunning => _netManager.IsRunning;
+    internal readonly NetManager _netManager;
     
-    public ICustomNetPeer? GetFirstPeer()
+    public NetworkService(ICustomEventBasedNetListener listener, ILogger<LiteNetLibLoggerAdapter> logger)
     {
-        return new CustomNetPeer(_netManager.FirstPeer);
-    }
-    
-    public NetworkService(ICustomEventBasedNetListener netListener, 
-        ILogger<LiteNetLibLoggerAdapter> logger)
-    {
-        if (netListener is not CustomEventBasedNetListener listener)
+        if (listener is not CustomEventBasedNetListener customEventBasedNetListener)
         {
-            throw new ArgumentException("netListener must be an instance of EventBasedNetListener");
+            throw new ArgumentException("Listener must implement IConnectionManager");
         }
         
-        _netManager = new NetManager(listener.GetListener());
-        
         var loggerAdapter = new LiteNetLibLoggerAdapter(logger);
-        
         NetDebug.Logger = loggerAdapter;
+        
+        _netManager = new NetManager(customEventBasedNetListener.GetListener());
     }
     
     public bool Initialize(NetworkMode mode, int port = 0, string? address = null)
     {
-        _mode = mode;
+        Mode = mode;
+        
         switch (mode)
         {
             case NetworkMode.Server:
@@ -70,6 +64,11 @@ public class NetworkService : INetworkService
         _netManager.AutoRecycle = true;
         _netManager.EnableStatistics = false;
         _netManager.UnconnectedMessagesEnabled = false;
+        
+        if (Mode == NetworkMode.Server)
+        {
+            _netManager.UseNativeSockets = true;
+        }
     }
 
     public void Stop()
@@ -85,13 +84,5 @@ public class NetworkService : INetworkService
     public void Dispose()
     {
         _netManager.Stop();
-    }
-    
-    public void Send(byte[] data, CustomDeliveryMethod deliveryMethod)
-    {
-        if (_mode == NetworkMode.Server)
-        {
-            _netManager.SendToAll(data, Extensions.ConvertToLiteDeliveryMethod(deliveryMethod));
-        }
     }
 }

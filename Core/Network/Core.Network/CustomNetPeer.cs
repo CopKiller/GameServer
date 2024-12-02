@@ -1,3 +1,4 @@
+using System.Net;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 using LiteNetLib;
@@ -14,6 +15,8 @@ public sealed class CustomNetPeer : ICustomNetPeer
     }
 
     public int Id => Peer.Id;
+    
+    public IPAddress EndPoint => Peer.Address;
 
     public void Send(byte[] data, CustomDeliveryMethod deliveryMethod)
     {
