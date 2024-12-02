@@ -124,7 +124,7 @@ public class NetworkIntegrationTests
         clientManager.Register();
         clientManager.Start();
         
-        await Task.Delay(4000); // Simula um pequeno delay para garantir inicialização
+        await Task.Delay(3000); // Simula um pequeno delay para garantir inicialização
         
         var serverConnectionManager = serverManager.ServiceProvider?.GetRequiredService<IServerConnectionManager>();
         serverConnectionManager.Should().NotBeNull();
