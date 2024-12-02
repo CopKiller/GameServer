@@ -1,9 +1,12 @@
+﻿using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 
-namespace Core.Network.Interface;
+namespace Core.Server.Network.Interface;
 
-public interface ICustomPacketProcessor
+public interface IServerNetworkProcessor
 {
+    public void Initialize();
+    
     public void SendPacket<TPacket>(ICustomNetPeer peer, TPacket packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
         where TPacket : class, new();
     
@@ -23,8 +26,4 @@ public interface ICustomPacketProcessor
     void RegisterNestedType<T>() where T : ICustomSerializable;
 
     void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new();
-
-    void UnregisterPackets();
-    
-    void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer);
 }

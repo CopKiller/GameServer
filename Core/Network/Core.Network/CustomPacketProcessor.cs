@@ -17,13 +17,16 @@ public sealed class CustomPacketProcessor : ICustomPacketProcessor
     
     private readonly SerializationService _serializationService;
     
-    public CustomPacketProcessor()
+    // Use IConnectionManager to get all peers and send packets to all peers
+    private readonly IConnectionManager _manager;
+    
+    public CustomPacketProcessor(IConnectionManager manager)
     {
         _netPacketProcessor = new NetPacketProcessor(MaxStringLength);
         _serializationService = new SerializationService(_netPacketProcessor);
+        _manager = manager;
         
         _serializationService.Initialize();
-        
     }
     
     public void RegisterNestedType<T>() where T : ICustomSerializable
@@ -36,6 +39,11 @@ public sealed class CustomPacketProcessor : ICustomPacketProcessor
         _netPacketProcessor.SubscribeReusable(onReceive);
     }
     
+    public void UnregisterPackets()
+    {
+        _netPacketProcessor.ClearSubscriptions();
+    }
+    
     public void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer)
     {
         if (customNetPacketReader is not CustomNetPacketReader netPacketReader)
@@ -44,12 +52,59 @@ public sealed class CustomPacketProcessor : ICustomPacketProcessor
         _netPacketProcessor.ReadAllPackets(netPacketReader.GetReader, customNetPeer);
     }
     
-    public void SendPacket<TPacket>(ICustomNetPeer iCustomNetPeer, TPacket packet, CustomDeliveryMethod deliveryMethod) where TPacket : class, new()
+    public void SendPacket<TPacket>(ICustomNetPeer peer, TPacket packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
     {
-        if (iCustomNetPeer is not CustomNetPeer liteNetPeer)
-            throw new InvalidOperationException("Invalid iCustomNetPeer type. Expected CustomNetPeer.");
+        if (peer is not CustomNetPeer liteNetPeer)
+            throw new InvalidOperationException("Invalid peer type. Expected CustomNetPeer.");
 
         _netPacketProcessor.Send(liteNetPeer.Peer, packet, ConvertToLiteDeliveryMethod(deliveryMethod));
+    }
+    
+    public void SendPacket<T>(ICustomNetPeer peer, ref T packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
+    {
+        if (peer is not CustomNetPeer liteNetPeer)
+            throw new InvalidOperationException("Invalid peer type. Expected CustomNetPeer.");
+
+        var adapter = new LiteNetSerializableAdapter<T>(packet);
+        _netPacketProcessor.SendNetSerializable(liteNetPeer.Peer, ref adapter, ConvertToLiteDeliveryMethod(deliveryMethod));
+    }
+    
+    public void SendPacket(ICustomNetPeer peer, byte[] data, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
+    {
+        peer.Send(data, deliveryMethod);
+    }
+    
+    public void SendPacketToAll<TPacket>(TPacket packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
+    {
+        var allPeers = _manager.CustomPeers.Values;
+        
+        foreach (var peer in allPeers)
+        {
+            SendPacket(peer, packet, deliveryMethod);
+        }
+    }
+    
+    public void SendPacketToAll<T>(ref T packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
+    {
+        
+        var allPeers = _manager.CustomPeers.Values;
+        
+        var adapter = new LiteNetSerializableAdapter<T>(packet);
+        
+        foreach (var peer in allPeers)
+        {
+            SendPacket(peer, adapter, deliveryMethod);
+        }
+    }
+    
+    public void SendPacketToAll(byte[] data, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
+    {
+        var allPeers = _manager.CustomPeers.Values;
+        
+        foreach (var peer in allPeers)
+        {
+            peer.Send(data, deliveryMethod);
+        }
     }
 
     private DeliveryMethod ConvertToLiteDeliveryMethod(CustomDeliveryMethod deliveryMethod)

@@ -9,37 +9,51 @@ namespace Core.Server.Network;
 public class ServerNetworkProcessor(
     ICustomPacketProcessor packetProcessor, 
     ICustomEventBasedNetListener netListener,
-    IConnectionManager connectionManager,
-    ILogger<ServerNetworkProcessor> logger)
+    ILogger<ServerNetworkProcessor> logger) : IServerNetworkProcessor
 {
-    private readonly ServerNetworkPacket _serverNetworkPacket = new();
+    private readonly ServerNetworkPacket _serverNetworkPacket = new(packetProcessor,logger);
     
     public void Initialize()
     {
-        packetProcessor.RegisterPacket<SPacketFirst>(_serverNetworkPacket.OnFirstPacket);
-        packetProcessor.RegisterPacket<SPacketSecond>(_serverNetworkPacket.OnSecondPacket);
+        RegisterPacket<SPacketFirst>(_serverNetworkPacket.OnFirstPacket);
+        RegisterPacket<SPacketSecond>(_serverNetworkPacket.OnSecondPacket);
         
         netListener.OnNetworkReceive += ProcessPacket;
-        netListener.OnConnectionRequest += OnConnectionRequest;
-        
-        if (connectionManager is not ConnectionManager manager)
-        {
-            throw new ArgumentException("connectionManager must be an instance of ConnectionManager");
-        }
-        // connection Manager
-        netListener.OnPeerConnected += manager.AddPeer;
-        netListener.OnPeerDisconnected += manager.RemovePeer;
     }
+
+    public void SendPacket<TPacket>(ICustomNetPeer peer, TPacket packet,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
+    => packetProcessor.SendPacket(peer, packet, deliveryMethod);
+
+    public void SendPacket<T>(ICustomNetPeer peer, ref T packet,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
+    => packetProcessor.SendPacket(peer, ref packet, deliveryMethod);
+
+    public void SendPacket(ICustomNetPeer peer, byte[] data,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
+    => packetProcessor.SendPacket(peer, data, deliveryMethod);
+
+    public void SendPacketToAll<TPacket>(TPacket packet,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
+    => packetProcessor.SendPacketToAll(packet, deliveryMethod);
     
+    public void SendPacketToAll<T>(ref T packet,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
+    => packetProcessor.SendPacketToAll(ref packet, deliveryMethod);
+    
+    public void SendPacketToAll(byte[] data,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
+    => packetProcessor.SendPacketToAll(data, deliveryMethod);
+
+    public void RegisterNestedType<T>() where T : ICustomSerializable
+    => packetProcessor.RegisterNestedType<T>();
+
+    public void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new()
+    => packetProcessor.RegisterPacket(onReceive);
+
+    private void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer)
+    => packetProcessor.ReadAllPackets(customNetPacketReader, customNetPeer);
+
     private void ProcessPacket(ICustomNetPeer peer, ICustomNetPacketReader reader, byte channel, CustomDeliveryMethod deliveryMethod)
-    {
-        packetProcessor.ReadAllPackets(reader, peer);
-    }
-    
-    private void OnConnectionRequest(ICustomConnectionRequest request)
-    {
-        logger.LogInformation($"Connection request from {request.RemoteEndPoint}");
-        
-        request.AcceptIfKey("key");
-    }
+    => ReadAllPackets(reader, peer);
 }
