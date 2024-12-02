@@ -1,4 +1,5 @@
 ﻿using Core.Network.Interface;
+using Core.Server.Network.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Dependency.Injection;
