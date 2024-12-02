@@ -17,6 +17,7 @@ Siga os passos abaixo para clonar e configurar o projeto:
 
 ```bash
 git clone https://github.com/CopKiller/GameServer.git
+git submodule update --init --recursive
 cd GameServer
 ```
 
