@@ -6,6 +6,7 @@ using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Database.Repositorys;
 using Core.Network;
+using Core.Network.Connection;
 using Core.Network.Interface;
 using Infrastructure.Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ using Core.Server.Database;
 using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
 using Core.Server.Network;
+using Core.Server.Network.Interface;
 using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
@@ -42,7 +44,7 @@ internal class ServerServices
 
     private void ConfigureLoggerService(IServiceCollection services)
     {
-        const LogLevel logLevel = LogLevel.Trace;
+        const LogLevel logLevel = LogLevel.Debug;
         
         services.AddLogging(loggingBuilder =>
         {
@@ -70,13 +72,16 @@ internal class ServerServices
     private void ConfigureNetworkService(IServiceCollection services)
     {
         // Project Core.Network Abstract LiteNetLib
-        //services.AddScoped<ICustomNetPeer, CustomNetPeer>();
+        services.AddScoped<ICustomDataWriter, CustomDataWriter>();
         services.AddSingleton<ICustomPacketProcessor, CustomPacketProcessor>();
         services.AddSingleton<INetworkService, NetworkService>();
+        services.AddSingleton<IConnectionManager, ConnectionManager>();
         services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
         
-        // ISingleService -> LoopService
+        // Project Core.Server.Network
         services.AddSingleton<ISingleService, ServerNetworkService>();
+        services.AddSingleton<IServerNetworkProcessor, ServerNetworkProcessor>();
+        services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
     }
     
     private void ConfigureMapperService(IServiceCollection services)

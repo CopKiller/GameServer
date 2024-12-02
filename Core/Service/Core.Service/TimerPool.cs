@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using Core.Service.Interfaces;
 using Core.Service.Interfaces.Types;
@@ -15,13 +16,13 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
     public void Start(CancellationToken cancellationToken)
     {
         MainTimer.Start();
-        
+
         UpdateTask = Task.Run(async () =>
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 var startTick = MainTimer.ElapsedMilliseconds;
-                
+
                 foreach (var service in ServiceLastTick.Keys)
                 {
                     Update(service);
@@ -33,47 +34,50 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
                     await Task.Delay((int)(configuration.UpdateIntervalMs - elapsed), cancellationToken);
                 }
             }
-            
+
             Stop();
         }, cancellationToken);
     }
-    private void Update(ISingleService service)
+
+    internal void Update(ISingleService service, bool force = false)
     {
         if (!service.Configuration.NeedUpdate) return;
-        
+
         var tick = MainTimer.ElapsedMilliseconds;
-        
+
         var tickCounter = tick - ServiceLastTick[service];
-        if (tickCounter < service.Configuration.UpdateIntervalMs) return;
+        if (tickCounter < service.Configuration.UpdateIntervalMs && !force) return;
 
         service.Update(tick);
         ServiceLastTick[service] = tick;
     }
+
     public void Stop()
     {
-        foreach (var service in ServiceLastTick.Keys)
+        foreach (var service in ServiceLastTick.Keys.Where(s => s.Configuration.Enabled).ToImmutableList())
         {
             service.Stop();
-            logger?.LogDebug($"{nameof(Service)} stopped.");
+            logger?.LogDebug($"{nameof(service.Configuration.ServiceType)} stopped.");
         }
-        
+
         MainTimer.Stop();
     }
+
     public void AddService<T>(T service) where T : ISingleService
     {
         ServiceLastTick.TryAdd(service, 0);
     }
+
     public void Dispose()
     {
-        
         foreach (var service in ServiceLastTick.Keys)
         {
             service.Dispose();
             logger?.LogDebug($"{nameof(Service)} disposed.");
         }
-        
+
         ServiceLastTick.Clear();
-        
+
         MainTimer.Stop();
     }
 }

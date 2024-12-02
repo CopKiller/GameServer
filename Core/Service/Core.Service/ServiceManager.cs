@@ -1,4 +1,5 @@
 
+using System.Collections.Immutable;
 using Core.Service.Interfaces;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
         Log?.LogDebug("Getting singleton services (ISingleService)...");
         foreach (var serviceDescriptor in collection.Where(sd => 
                      sd.Lifetime == ServiceLifetime.Singleton && 
-                     typeof(ISingleService).IsAssignableFrom(sd.ServiceType)))
+                     sd.ServiceType.IsAssignableFrom(typeof(ISingleService))))
         {
             var singletonService = ServiceProvider.GetRequiredService(serviceDescriptor.ServiceType) as ISingleService;
 
@@ -52,14 +53,26 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
     public void Start()
     {
         Log?.LogDebug("Starting services...");
-        Services.ForEach(service =>
+        foreach (var singleService in Services.
+                     Where(a => !a.Configuration.Enabled)
+                     .ToImmutableList())
         {
-            service.Start();
-            Log?.LogDebug($"Service {service.GetType().Name} started.");
-        });
+            singleService.Start();
+            Log?.LogDebug($"Started service: {singleService.Configuration.ServiceType.Name}");
+        }
         
         _updateCancellationTokenSource ??= new CancellationTokenSource();
         ServicesUpdate?.Start(_updateCancellationTokenSource.Token);
+    }
+    
+    public void ForceUpdate()
+    {
+        Log?.LogDebug("Forçando atualização de serviços...");
+        
+        foreach (var service in Services.OfType<ISingleService>())
+        {
+            ServicesUpdate?.Update(service, true);
+        }
     }
     
     public void Stop()

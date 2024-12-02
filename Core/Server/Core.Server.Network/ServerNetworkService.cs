@@ -7,19 +7,33 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Server.Network;
 
-public class ServerNetworkService(INetworkService networkService, 
-    ICustomPacketProcessor packetProcessor, ICustomEventBasedNetListener netListener,
-    IConnectionManager connectionManager,
-    ILogger<ServerNetworkProcessor> logger) : ISingleService, IServerNetworkService
+public class ServerNetworkService : ISingleService
 {
-    private readonly ServerNetworkProcessor _processor = new(packetProcessor, netListener, connectionManager, logger);
+    private readonly INetworkService networkService;
+    private readonly IServerConnectionManager connectionManager;
+    private readonly IServerNetworkProcessor networkProcessor;
+    private readonly ILogger<ServerNetworkProcessor> logger;
+    public ServerNetworkService(
+        INetworkService networkService,
+        IServerConnectionManager connectionManager,
+        IServerNetworkProcessor networkProcessor,
+        ILogger<ServerNetworkProcessor> logger)
+    {
+        this.networkService = networkService;
+        this.connectionManager = connectionManager;
+        this.networkProcessor = networkProcessor;
+        this.logger = logger;
+    }
+    
+    public readonly NetworkMode NetworkMode = NetworkMode.Server;
+    public readonly int Port = 9050;
     
     public IServiceConfiguration Configuration { get; } = new ServerNetworkConfiguration();
 
     public void Start()
     {
-        _processor.Initialize();
-        networkService.Initialize(NetworkMode.Server, port: 9050);
+        networkProcessor.Initialize();
+        Configuration.Enabled = networkService.Initialize(NetworkMode, port: Port);
     }
 
     public void Stop()
@@ -46,17 +60,5 @@ public class ServerNetworkService(INetworkService networkService,
     public void Dispose()
     {
         Stop();
-    }
-
-
-    public int GetConnectedPlayersCount()
-    {
-        return connectionManager.GetAllPeers().Count();
-    }
-
-    public void SendPacketToAllPlayers<T>(T packet) where T : ICustomSerializable
-    {
-        // TODO: Implement
-        //throw new NotImplementedException();
     }
 }

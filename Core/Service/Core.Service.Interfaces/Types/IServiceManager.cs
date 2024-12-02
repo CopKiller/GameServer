@@ -6,4 +6,5 @@ public interface IServiceManager : IService
     public IServiceProvider? ServiceProvider { get; set; }
     public void Register();
     public void Restart();
+    public void ForceUpdate();
 }
