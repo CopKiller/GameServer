@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Dependency.Injection", "Server\Server.Dependency.Injection\Server.Dependency.Injection.csproj", "{A4AB6062-A5B8-4ED8-9CA9-9DEB3A9D529B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Services", "Server\Server.Services\Server.Services.csproj", "{A4AB6062-A5B8-4ED8-9CA9-9DEB3A9D529B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{483B9A74-4FED-479D-824B-AE0ADC67B1BA}"
 EndProject

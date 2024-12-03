@@ -20,7 +20,7 @@ using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
 
-namespace Server.Dependency.Injection;
+namespace Server.Services;
 
 internal class ServerServices
 {

@@ -2,7 +2,7 @@
 using Core.Server.Network.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Server.Dependency.Injection;
+using Server.Services;
 
 namespace Server;
 

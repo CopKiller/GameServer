@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Server.Dependency.Injection\Server.Dependency.Injection.csproj" />
+      <ProjectReference Include="..\Server.Services\Server.Services.csproj" />
     </ItemGroup>
 
 </Project>

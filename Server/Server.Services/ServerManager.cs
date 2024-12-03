@@ -2,7 +2,7 @@
 using Core.Service.Interfaces.Types;
 using Core.Service;
 
-namespace Server.Dependency.Injection;
+namespace Server.Services;
 
 public sealed class ServerManager
 {
