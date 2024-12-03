@@ -87,7 +87,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
         Stop();
         Start();
     }
-    
+
     public void Dispose()
     {
         Log?.LogDebug("Descartando serviços...");
