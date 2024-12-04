@@ -1,4 +1,5 @@
 using Core.Cryptography.Interface;
+using Core.Database.Consistency;
 using Core.Database.Interfaces;
 using Core.Database.Interfaces.Account;
 using Core.Database.Interfaces.Player;
@@ -18,6 +19,14 @@ where T : class, IAccountModel
             return (new DatabaseException(true, "Account already exists"), null);
         if (await Context.ExistEntityAsync(p => p.Email == account.Email))
             return (new DatabaseException(true, "E-mail already exists"), null);
+        if (!account.Username.IsValidName())    
+            return (new DatabaseException(true, "Username is invalid"), null);
+        if (!account.Password.IsValidPassword())
+            return (new DatabaseException(true, "Password is invalid"), null);
+        if (!account.Email.IsValidEmail())
+            return (new DatabaseException(true, "E-mail is invalid"), null);
+        if (!account.BirthDate.IsValidBirthDate())
+            return (new DatabaseException(true, "Birth date is invalid"), null);
         
         account.Password = crypto.HashString(account.Password);
         
@@ -49,7 +58,7 @@ where T : class, IAccountModel
         Context.Update(account);
         
         var result = await Context.SaveChangesAsync() > 0;
-        
+            
         if (result)
             return new DatabaseException(false, "Account updated");
         else
