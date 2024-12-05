@@ -15,23 +15,31 @@ using Infrastructure.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Core.Extensions;
+
 namespace Client;
 
 public static class Program
 {
+    public static IServiceManager? ServiceManager { get; private set; } 
     public static async Task Main(string[] args)
     {
-        var service = new ServiceCollection();
+        var services = new ServiceCollection();
+        ServiceManager = new ServiceManager(services);
         
-        ConfigureLoggerService(service);
-        ConfigureNetworkService(service);
-
-        var servicesManager = new ServiceManager(service);
+        services.AddCryptography();
+        services.AddLogger(LogLevel.Trace);
+        services.AddDatabase();
+        services.AddNetwork();
+        services.AddNetworkClient();
+        services.AddMapper();
         
-        servicesManager.Register();
-        servicesManager.Start();
+        ServiceManager.Register();
+        ServiceManager.Start();
         
-        var clientPacketProcessor = servicesManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
+        var logger = ServiceManager.ServiceProvider?.GetRequiredService<ILogger<ServiceManager>>();
+        
+        var clientPacketProcessor = ServiceManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
         
         await Task.Delay(2000);
         
@@ -40,35 +48,20 @@ public static class Program
         
         var packet2 = new SPacketSecond();
         clientPacketProcessor?.SendPacket(packet2);
-        
-        await Task.Delay(-1);
-    }
-    
-    private static void ConfigureLoggerService(IServiceCollection services)
-    {
-        const LogLevel logLevel = LogLevel.Trace;
-        
-        services.AddLogging(loggingBuilder =>
+
+        Console.CancelKeyPress += (sender, eventArgs) =>
         {
-            loggingBuilder.SetMinimumLevel(logLevel);
+            eventArgs.Cancel = true; // Cancela a finalização automática
             
-            loggingBuilder.AddProvider(new CustomLoggerProvider(logLevel));
-        });
-    }
-    
-    private static void ConfigureNetworkService(IServiceCollection services)
-    {
-        // Project Core.Network Abstract LiteNetLib
-        services.AddScoped<ICustomDataWriter, CustomDataWriter>();
-        services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
-        services.AddSingleton<INetworkConfiguration, NetworkConfiguration>();
-        services.AddSingleton<IPacketProcessor, PacketProcessor>();
-        services.AddSingleton<IConnectionManager, ConnectionManager>();
-        services.AddSingleton<INetworkManager, NetworkManager>();
+            logger?.LogInformation("Finalizando Servidor...");
+ 
+            ServiceManager?.Dispose();
+            
+            Environment.Exit(0);
+        };
         
-        // ISingleService -> LoopService
-        services.AddSingleton<ISingleService, ClientNetworkService>();
-        services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
-        services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
+        logger?.LogInformation("Client iniciado. Pressione Ctrl+C para encerrar.");
+
+        await Task.Delay(-1);
     }
 }

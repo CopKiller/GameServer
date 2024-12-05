@@ -7,18 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        
-      <ProjectReference Include="..\..\..\External\LiteNetLib\LiteNetLib\LiteNetLib.csproj" >
-        <PrivateAssets>All</PrivateAssets>
-      </ProjectReference>
-        
-      <ProjectReference Include="..\..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj" >
-          <PrivateAssets>All</PrivateAssets>
-      </ProjectReference>
-        
-      <ProjectReference Include="..\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj" />
-        
-      <ProjectReference Include="..\Core.Network.SerializationObjects\Core.Network.SerializationObjects.csproj" />
+
+        <ProjectReference Include="..\..\..\External\LiteNetLib\LiteNetLib\LiteNetLib.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj"/>
+
+        <ProjectReference Include="..\Core.Network.SerializationObjects\Core.Network.SerializationObjects.csproj"/>
     </ItemGroup>
 
 </Project>

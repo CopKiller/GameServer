@@ -1,35 +1,41 @@
-﻿using Core.Network.Interface;
-using Core.Server.Network.Interface;
+﻿
+using Core.Extensions;
+using Core.Service;
+using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Server.Services;
 
 namespace Server;
 
 public static class Program
 {
-    private static IServiceProvider? _serviceProvider;
+    private static IServiceManager? _serviceManager;
     
     public static async Task Main(string[] args)
     {
-        var server = new ServerManager();
+        var services = new ServiceCollection();
+        _serviceManager = new ServiceManager(services);
+        var serviceProvider = _serviceManager.ServiceProvider;
         
-        server.Register();
-
-        server.Start();
+        services.AddCryptography();
+        services.AddLogger(LogLevel.Trace);
+        services.AddDatabase();
+        services.AddNetwork();
+        services.AddNetworkServer();
+        services.AddMapper();
         
-        _serviceProvider = server.Manager.ServiceProvider;
-   
-        var logger = _serviceProvider?.GetRequiredService<ILogger<ServerManager>>();
+        _serviceManager.Register();
+        _serviceManager.Start();
+        
+        var logger = serviceProvider?.GetRequiredService<ILogger<ServiceManager>>();
 
         Console.CancelKeyPress += (sender, eventArgs) =>
         {
-            logger?.LogInformation("Finalizando Servidor...");
-            server?.Stop();
-
-            server?.Dispose();
-            
             eventArgs.Cancel = true; // Cancela a finalização automática
+            
+            logger?.LogInformation("Finalizando Servidor...");
+ 
+            _serviceManager?.Dispose();
             
             Environment.Exit(0);
         };

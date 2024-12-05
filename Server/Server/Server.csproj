@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Server.Services\Server.Services.csproj" />
+      <ProjectReference Include="..\..\Core\Core.Extensions\Core.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Network\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj" />
-      <ProjectReference Include="..\..\Network\Core.Network.Packets\Core.Network.Packets.csproj" />
-      <ProjectReference Include="..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj" />
+        <ProjectReference Include="..\..\Network\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj"/>
+        <ProjectReference Include="..\..\Network\Core.Network.Packets\Core.Network.Packets.csproj"/>
+        <ProjectReference Include="..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj"/>
     </ItemGroup>
 
 </Project>

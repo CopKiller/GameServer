@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\External\AutoMapper\src\AutoMapper\AutoMapper.csproj" />
-      <ProjectReference Include="..\..\..\Database\Core.Database.Models\Core.Database.Models.csproj" />
-      <ProjectReference Include="..\..\..\Network\Core.Network.SerializationObjects\Core.Network.SerializationObjects.csproj" />
-      <ProjectReference Include="..\Core.Utils.AutoMapper.Interface\Core.Utils.AutoMapper.Interface.csproj" />
+        <ProjectReference Include="..\..\..\..\External\AutoMapper\src\AutoMapper\AutoMapper.csproj"/>
+        <ProjectReference Include="..\..\..\Database\Core.Database.Models\Core.Database.Models.csproj"/>
+        <ProjectReference Include="..\..\..\Network\Core.Network.SerializationObjects\Core.Network.SerializationObjects.csproj"/>
+        <ProjectReference Include="..\Core.Utils.AutoMapper.Interface\Core.Utils.AutoMapper.Interface.csproj"/>
     </ItemGroup>
 
 </Project>
