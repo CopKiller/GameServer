@@ -1,22 +1,17 @@
 using System.Net;
 using System.Net.Sockets;
-using Core.Network;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 using LiteNetLib;
 
-namespace Core.Network;
+namespace Core.Network.Event;
 
-public sealed class CustomEventBasedNetListener : ICustomEventBasedNetListener
+public sealed class NetworkEventsListener : INetworkEventsListener
 {
-    private readonly EventBasedNetListener _listener;
+    internal EventBasedNetListener GetListener() => _listener;
+    
+    private readonly EventBasedNetListener _listener = new();
 
-    public CustomEventBasedNetListener()
-    {
-        _listener = new EventBasedNetListener();
-    }
-
-    // Eventos customizados expostos pela interface
     public event Action<ICustomNetPeer>? OnPeerConnected
     {
         add => _listener.PeerConnectedEvent += peer => value?.Invoke(new CustomNetPeer(peer));
@@ -73,6 +68,14 @@ public sealed class CustomEventBasedNetListener : ICustomEventBasedNetListener
         remove => _listener.ConnectionRequestEvent -= request => value?.Invoke(new CustomConnectionRequest(request));
     }
 
+    public void ClearPeerConnectedEvent() => _listener.ClearPeerConnectedEvent();
+    public void ClearPeerDisconnectedEvent() => _listener.ClearPeerDisconnectedEvent();
+    public void ClearNetworkErrorEvent() => _listener.ClearNetworkErrorEvent();
+    public void ClearNetworkReceiveEvent() => _listener.ClearNetworkReceiveEvent();
+    public void ClearNetworkReceiveUnconnectedEvent() => _listener.ClearNetworkReceiveUnconnectedEvent();
+    public void ClearNetworkLatencyUpdateEvent() => _listener.ClearNetworkLatencyUpdateEvent();
+    public void ClearConnectionRequestEvent() => _listener.ClearConnectionRequestEvent();
+    
     public void ClearEvents()
     {
         ClearPeerConnectedEvent();
@@ -83,15 +86,4 @@ public sealed class CustomEventBasedNetListener : ICustomEventBasedNetListener
         ClearNetworkLatencyUpdateEvent();
         ClearConnectionRequestEvent();
     }
-
-    // Métodos Clear mantêm a mesma funcionalidade
-    public void ClearPeerConnectedEvent() => _listener.ClearPeerConnectedEvent();
-    public void ClearPeerDisconnectedEvent() => _listener.ClearPeerDisconnectedEvent();
-    public void ClearNetworkErrorEvent() => _listener.ClearNetworkErrorEvent();
-    public void ClearNetworkReceiveEvent() => _listener.ClearNetworkReceiveEvent();
-    public void ClearNetworkReceiveUnconnectedEvent() => _listener.ClearNetworkReceiveUnconnectedEvent();
-    public void ClearNetworkLatencyUpdateEvent() => _listener.ClearNetworkLatencyUpdateEvent();
-    public void ClearConnectionRequestEvent() => _listener.ClearConnectionRequestEvent();
-
-    internal EventBasedNetListener GetListener() => _listener;
 }
