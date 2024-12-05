@@ -11,7 +11,7 @@ public sealed class LiteNetSerializableAdapter<T> : INetSerializable where T : I
     {
         _instance = instance;
     }
-    
+
     public LiteNetSerializableAdapter()
     {
         _instance = Activator.CreateInstance<T>();

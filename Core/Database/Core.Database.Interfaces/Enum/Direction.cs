@@ -10,5 +10,5 @@ public enum Direction : byte
     UpLeft,
     UpRight,
     DownLeft,
-    DownRight,
+    DownRight
 }

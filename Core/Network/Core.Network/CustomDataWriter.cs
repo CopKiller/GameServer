@@ -15,18 +15,18 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
     {
         return writer;
     }
-    
+
     private void SerializeUsingAdapter<T>(T obj) where T : ICustomSerializable
     {
         var adapter = new LiteNetSerializableAdapter<T>(obj);
         adapter.Serialize(writer);
     }
-    
+
     private LiteNetSerializableAdapter<T>[] AdaptArray<T>(T[] value) where T : ICustomSerializable, new()
     {
         return Array.ConvertAll(value, item => new LiteNetSerializableAdapter<T>(item));
     }
-    
+
     public byte[] CopyData()
     {
         return writer.CopyData();

@@ -28,45 +28,90 @@ public class CustomDataReader : ICustomDataReader
         return obj;
     }
 
-    public IPEndPoint GetIpEndPoint() => _reader.GetNetEndPoint();
+    public IPEndPoint GetIpEndPoint()
+    {
+        return _reader.GetNetEndPoint();
+    }
 
-    public byte GetByte() => _reader.GetByte();
+    public byte GetByte()
+    {
+        return _reader.GetByte();
+    }
 
-    public sbyte GetSByte() => _reader.GetSByte();
+    public sbyte GetSByte()
+    {
+        return _reader.GetSByte();
+    }
 
-    public bool GetBool() => _reader.GetBool();
+    public bool GetBool()
+    {
+        return _reader.GetBool();
+    }
 
-    public char GetChar() => (char)_reader.GetUShort();
+    public char GetChar()
+    {
+        return (char)_reader.GetUShort();
+    }
 
-    public ushort GetUShort() => _reader.GetUShort();
+    public ushort GetUShort()
+    {
+        return _reader.GetUShort();
+    }
 
-    public short GetShort() => _reader.GetShort();
+    public short GetShort()
+    {
+        return _reader.GetShort();
+    }
 
-    public ulong GetULong() => _reader.GetULong();
+    public ulong GetULong()
+    {
+        return _reader.GetULong();
+    }
 
-    public long GetLong() => _reader.GetLong();
+    public long GetLong()
+    {
+        return _reader.GetLong();
+    }
 
-    public uint GetUInt() => _reader.GetUInt();
+    public uint GetUInt()
+    {
+        return _reader.GetUInt();
+    }
 
-    public int GetInt() => _reader.GetInt();
+    public int GetInt()
+    {
+        return _reader.GetInt();
+    }
 
-    public double GetDouble() => _reader.GetDouble();
+    public double GetDouble()
+    {
+        return _reader.GetDouble();
+    }
 
-    public float GetFloat() => _reader.GetFloat();
+    public float GetFloat()
+    {
+        return _reader.GetFloat();
+    }
 
-    public string GetString() => _reader.GetString();
+    public string GetString()
+    {
+        return _reader.GetString();
+    }
 
-    public string GetString(int maxLength) => _reader.GetString(maxLength);
+    public string GetString(int maxLength)
+    {
+        return _reader.GetString(maxLength);
+    }
 
-    public Guid GetGuid() => _reader.GetGuid();
+    public Guid GetGuid()
+    {
+        return _reader.GetGuid();
+    }
 
     public T[] GetArray<T>(ushort size) where T : struct, ICustomSerializable
     {
         var array = new T[size];
-        for (ushort i = 0; i < size; i++)
-        {
-            array[i] = Get<T>();
-        }
+        for (ushort i = 0; i < size; i++) array[i] = Get<T>();
         return array;
     }
 
@@ -80,6 +125,7 @@ public class CustomDataReader : ICustomDataReader
             obj.Deserialize(this);
             array[i] = obj;
         }
+
         return array;
     }
 
@@ -93,36 +139,79 @@ public class CustomDataReader : ICustomDataReader
             obj.Deserialize(this);
             array[i] = obj;
         }
+
         return array;
     }
 
-    public bool[] GetBoolArray() => _reader.GetBoolArray();
+    public bool[] GetBoolArray()
+    {
+        return _reader.GetBoolArray();
+    }
 
-    public ushort[] GetUShortArray() => _reader.GetUShortArray();
+    public ushort[] GetUShortArray()
+    {
+        return _reader.GetUShortArray();
+    }
 
-    public short[] GetShortArray() => _reader.GetShortArray();
+    public short[] GetShortArray()
+    {
+        return _reader.GetShortArray();
+    }
 
-    public int[] GetIntArray() => _reader.GetIntArray();
+    public int[] GetIntArray()
+    {
+        return _reader.GetIntArray();
+    }
 
-    public uint[] GetUIntArray() => _reader.GetUIntArray();
+    public uint[] GetUIntArray()
+    {
+        return _reader.GetUIntArray();
+    }
 
-    public float[] GetFloatArray() => _reader.GetFloatArray();
+    public float[] GetFloatArray()
+    {
+        return _reader.GetFloatArray();
+    }
 
-    public double[] GetDoubleArray() => _reader.GetDoubleArray();
+    public double[] GetDoubleArray()
+    {
+        return _reader.GetDoubleArray();
+    }
 
-    public long[] GetLongArray() => _reader.GetLongArray();
+    public long[] GetLongArray()
+    {
+        return _reader.GetLongArray();
+    }
 
-    public ulong[] GetULongArray() => _reader.GetULongArray();
+    public ulong[] GetULongArray()
+    {
+        return _reader.GetULongArray();
+    }
 
-    public string[] GetStringArray() => _reader.GetStringArray();
+    public string[] GetStringArray()
+    {
+        return _reader.GetStringArray();
+    }
 
-    public string[] GetStringArray(int maxStringLength) => _reader.GetStringArray(maxStringLength);
+    public string[] GetStringArray(int maxStringLength)
+    {
+        return _reader.GetStringArray(maxStringLength);
+    }
 
-    public ArraySegment<byte> GetBytesSegment(int count) => _reader.GetBytesSegment(count);
+    public ArraySegment<byte> GetBytesSegment(int count)
+    {
+        return _reader.GetBytesSegment(count);
+    }
 
-    public ArraySegment<byte> GetRemainingBytesSegment() => _reader.GetRemainingBytesSegment();
+    public ArraySegment<byte> GetRemainingBytesSegment()
+    {
+        return _reader.GetRemainingBytesSegment();
+    }
 
-    public byte[] GetRemainingBytes() => _reader.GetRemainingBytes();
+    public byte[] GetRemainingBytes()
+    {
+        return _reader.GetRemainingBytes();
+    }
 
     public byte[] GetBytes(int start, int count)
     {

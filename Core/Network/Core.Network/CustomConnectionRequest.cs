@@ -8,7 +8,7 @@ namespace Core.Network;
 public sealed class CustomConnectionRequest(ConnectionRequest connectionRequest) : ICustomConnectionRequest
 {
     public IPEndPoint RemoteEndPoint => connectionRequest.RemoteEndPoint;
-    
+
     public ICustomNetPeer AcceptIfKey(string key)
     {
         return new CustomNetPeer(connectionRequest.AcceptIfKey(key));
@@ -63,12 +63,12 @@ public sealed class CustomConnectionRequest(ConnectionRequest connectionRequest)
     {
         connectionRequest.Reject(ValidateAndExtract(rejectData));
     }
-    
+
     private static NetDataWriter ValidateAndExtract(ICustomDataWriter rejectData)
     {
         if (rejectData is not CustomDataWriter customDataWriter)
             throw new InvalidOperationException("Invalid ICustomDataWriter type. Expected CustomDataWriter.");
-    
+
         return customDataWriter.GetNetDataWriter();
     }
 }

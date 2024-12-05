@@ -11,9 +11,13 @@ public class DatabaseContext : DbContext, IDbContext
     public DbSet<AccountModel> Accounts { get; set; }
     public DbSet<PlayerModel> Players { get; set; }
 
-    public DatabaseContext() { }
+    public DatabaseContext()
+    {
+    }
 
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,7 +40,8 @@ public class DatabaseContext : DbContext, IDbContext
     {
         if (optionsBuilder.IsConfigured) return;
 
-        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DatabaseSide2D.db");
+        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "DatabaseSide2D.db");
         optionsBuilder.UseSqlite($"Filename={databasePath}");
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         optionsBuilder.AddInterceptors(new DetachEntitiesInterceptor());

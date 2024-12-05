@@ -12,11 +12,9 @@ public static class DatabaseValidations
     public static bool IsValidName(this string name)
     {
         if (IsNullOrEmpty(name) ||
-            (name.Length > MaxNameCharacters) ||
-            (name.Length < MinNameCharacters))
-        {
+            name.Length > MaxNameCharacters ||
+            name.Length < MinNameCharacters)
             return false;
-        }
 
         return MyRegex.IsMatch(name);
     }
@@ -36,11 +34,9 @@ public static class DatabaseValidations
     public static bool IsValidEmail(this string email)
     {
         if (IsNullOrEmpty(email) ||
-            (email.Length > MaxEmailCharacters) ||
-            (email.Length < MinEmailCharacters))
-        {
+            email.Length > MaxEmailCharacters ||
+            email.Length < MinEmailCharacters)
             return false;
-        }
 
         try
         {
@@ -66,10 +62,7 @@ public static class DatabaseValidations
 
     public static bool IsValidBirthDate(this string date)
     {
-        if (IsNullOrEmpty(date) || date.Length != BirthDateCharacters)
-        {
-            return false;
-        }
+        if (IsNullOrEmpty(date) || date.Length != BirthDateCharacters) return false;
 
         return Regex.IsMatch(date, @"^(\d{2})\/(\d{2})\/(\d{4})$") && DateTime.TryParse(date, out _);
     }

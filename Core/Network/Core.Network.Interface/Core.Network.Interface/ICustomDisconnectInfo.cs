@@ -6,6 +6,6 @@ namespace Core.Network.Interface;
 public interface ICustomDisconnectInfo
 {
     CustomDisconnectReason Reason { get; }
-    
+
     SocketError SocketErrorCode { get; }
 }

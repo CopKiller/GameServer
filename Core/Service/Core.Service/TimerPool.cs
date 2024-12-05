@@ -33,19 +33,16 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
                     }
                     catch (Exception e)
                     {
-                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.", service.ServiceConfiguration.ServiceType);
+                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.",
+                            service.ServiceConfiguration.ServiceType);
                     }
                 });
 
                 var elapsed = MainTimer.ElapsedMilliseconds - startTick;
                 if (elapsed > configuration.UpdateIntervalMs)
-                {
                     logger?.LogWarning("Loop de atualização atrasado em {Elapsed}ms.", elapsed);
-                }
                 else
-                {
                     await Task.Delay((int)(configuration.UpdateIntervalMs - elapsed), cancellationToken);
-                }
             }
         }, cancellationToken);
     }
@@ -55,11 +52,11 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
     {
         if (!service.ServiceConfiguration.Enabled) return;
         if (!service.ServiceConfiguration.NeedUpdate) return;
-        
+
         ServiceLastTick.TryAdd(service, 0); // Tentativa de adicionar o serviço caso não exista
 
         var tick = MainTimer.ElapsedMilliseconds;
-        
+
         var lastTick = ServiceLastTick.GetValueOrDefault(service, 0);
 
         // Valor inicial
@@ -69,11 +66,10 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
         service.Update(tick);
         ServiceLastTick[service] = tick;
     }
-    
+
     public async Task StopAsync()
     {
         if (UpdateLoopTask != null)
-        {
             try
             {
                 await UpdateLoopTask;
@@ -91,7 +87,6 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
                 UpdateLoopTask.Dispose();
                 UpdateLoopTask = null;
             }
-        }
     }
 
 

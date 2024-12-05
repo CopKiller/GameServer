@@ -7,9 +7,10 @@ public interface IStats : IEntity
     int Agility { get; set; }
     int Intelligence { get; set; }
     int Willpower { get; set; }
-    
+
     public string ToString()
     {
-        return $"Strength: {Strength}, Defense: {Defense}, Agility: {Agility}, Intelligence: {Intelligence}, Willpower: {Willpower}";
+        return
+            $"Strength: {Strength}, Defense: {Defense}, Agility: {Agility}, Intelligence: {Intelligence}, Willpower: {Willpower}";
     }
 }

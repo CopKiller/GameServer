@@ -103,15 +103,10 @@ public class TestAutoMapper
         // Act: Listar todos os mapeamentos
         var typeMaps = mapper.ConfigurationProvider.Internal().GetAllTypeMaps();
         foreach (var typeMap in typeMaps)
-        {
             Debug.WriteLine($"{typeMap.SourceType.Name} -> {typeMap.DestinationType.Name}");
-        }
 
         // Act: Listar todos os serviços registrados
-        foreach (var service in serviceProvider.GetServices<IMapper>())
-        {
-            Debug.WriteLine(service.GetType().Name);
-        }
+        foreach (var service in serviceProvider.GetServices<IMapper>()) Debug.WriteLine(service.GetType().Name);
 
         // Assert
         Assert.NotEmpty(typeMaps);
@@ -165,21 +160,24 @@ public class FooService : ISomeService
         _value = value;
     }
 
-    public int Modify(int value) => value + _value;
+    public int Modify(int value)
+    {
+        return value + _value;
+    }
 }
 
 public class Source
 {
 }
-    
+
 public class Dest
 {
 }
-    
+
 public class Source2
 {
 }
-    
+
 public class Dest2
 {
     public int ResolvedValue { get; set; }

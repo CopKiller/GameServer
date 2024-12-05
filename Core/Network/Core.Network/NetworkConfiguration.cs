@@ -7,17 +7,15 @@ namespace Core.Network;
 public class NetworkConfiguration : INetworkConfiguration
 {
     private readonly NetManager _netManager;
-    
+
     public NetworkConfiguration(INetworkManager networkManager)
     {
         if (networkManager is not NetworkManager netManager)
-        {
             throw new ArgumentException("NetworkManager is not NetworkManager");
-        }
-        
+
         _netManager = netManager.GetManager();
     }
-    
+
     public string Address { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 9050;
 
@@ -108,6 +106,7 @@ public class NetworkConfiguration : INetworkConfiguration
         get => _netManager.SimulationMinLatency;
         set => _netManager.SimulationMinLatency = value;
     }
+
     /// <summary>
     /// Maximum simulated latency (in milliseconds)
     /// </summary>
@@ -190,7 +189,7 @@ public class NetworkConfiguration : INetworkConfiguration
         get => _netManager.DontRoute;
         set => _netManager.DontRoute = value;
     }
-    
+
     // TODO: Implement NetStatistics
     //public readonly NetStatistics Statistics = new NetStatistics();
 
@@ -202,7 +201,7 @@ public class NetworkConfiguration : INetworkConfiguration
         get => _netManager.EnableStatistics;
         set => _netManager.EnableStatistics = value;
     }
-    
+
     // TODO: Implement NatPunchModule
     //public readonly NatPunchModule NatPunchModule;
 
@@ -210,6 +209,7 @@ public class NetworkConfiguration : INetworkConfiguration
     /// Returns true if socket listening and update thread is running
     /// </summary>
     public bool IsRunning => _netManager.IsRunning;
+
     /// <summary>
     /// Local EndPoint (host and port)
     /// </summary>

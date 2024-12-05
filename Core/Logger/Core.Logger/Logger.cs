@@ -5,11 +5,18 @@ namespace Infrastructure.Logger;
 
 public class Logger(string categoryName, LogLevel minLogLevel) : ILog
 {
-    public IDisposable? BeginScope<TState>(TState state) => null;
+    public IDisposable? BeginScope<TState>(TState state)
+    {
+        return null;
+    }
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel >= minLogLevel;
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return logLevel >= minLogLevel;
+    }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
         if (!IsEnabled(logLevel))
             return;

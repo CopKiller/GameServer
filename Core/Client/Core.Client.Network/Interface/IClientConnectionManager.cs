@@ -8,7 +8,7 @@ public interface IClientConnectionManager
     /// Desconecta o jogador local.
     /// </summary>
     void Disconnect();
-    
+
 
     /// <summary>
     /// Obter o peer do servidor.

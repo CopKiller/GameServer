@@ -10,7 +10,7 @@ public class PacketRegister(NetPacketProcessor packetProcessor) : IPacketRegiste
     {
         packetProcessor.SubscribeReusable(onReceive);
     }
-    
+
     public void UnregisterPackets()
     {
         packetProcessor.ClearSubscriptions();

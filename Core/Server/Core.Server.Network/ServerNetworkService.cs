@@ -17,8 +17,8 @@ public class ServerNetworkService(
     public void Start()
     {
         packetProcessor.Initialize();
-        
-        ServiceConfiguration.Enabled = networkManager.StartListener(port: networkConfiguration.Port);
+
+        ServiceConfiguration.Enabled = networkManager.StartListener(networkConfiguration.Port);
     }
 
     public void Stop()
@@ -30,7 +30,7 @@ public class ServerNetworkService(
     {
         networkManager.PollEvents();
     }
-    
+
     public void Register()
     {
         networkConfiguration.AutoRecycle = true;
@@ -44,7 +44,7 @@ public class ServerNetworkService(
         Stop();
         Start();
     }
-    
+
     public void Dispose()
     {
         Stop();

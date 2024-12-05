@@ -10,7 +10,7 @@ public class ClientNetworkPacket(ILogger<ClientPacketProcessor> logger)
     {
         logger.LogInformation($"Client: Received packet: {packet.GetType().Name}");
     }
-    
+
     public void OnSecondPacket(CPacketSecond packet, ICustomNetPeer peer)
     {
         logger.LogInformation($"Client: Received packet: {packet.GetType().Name}");

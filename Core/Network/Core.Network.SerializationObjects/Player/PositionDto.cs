@@ -8,7 +8,7 @@ public class PositionDto : ICustomSerializable
     public float Y { get; set; }
     public int Z { get; set; }
     public double Rotation { get; set; }
-    
+
     public void Deserialize(ICustomDataReader reader)
     {
         X = reader.GetFloat();
@@ -16,7 +16,7 @@ public class PositionDto : ICustomSerializable
         Z = reader.GetInt();
         Rotation = reader.GetDouble();
     }
-    
+
     public void Serialize(ICustomDataWriter writer)
     {
         writer.Put(X);

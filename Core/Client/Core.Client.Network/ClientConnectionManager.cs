@@ -7,7 +7,13 @@ namespace Core.Client.Network;
 public class ClientConnectionManager(
     IConnectionManager connectionManager) : IClientConnectionManager
 {
-    public void Disconnect() => connectionManager.DisconnectAll();
+    public void Disconnect()
+    {
+        connectionManager.DisconnectAll();
+    }
 
-    public ICustomNetPeer GetServerPeer() => connectionManager.GetFirstPeer();
+    public ICustomNetPeer GetServerPeer()
+    {
+        return connectionManager.GetFirstPeer();
+    }
 }

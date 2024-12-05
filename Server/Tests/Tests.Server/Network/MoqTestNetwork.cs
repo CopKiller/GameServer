@@ -46,14 +46,14 @@ public class NetworkTests
         // Arrange
         var mockProcessor = new Mock<IClientPacketProcessor>();
         var mockPeer = new Mock<ICustomNetPeer>();
-        bool callbackInvoked = false;
+        var callbackInvoked = false;
 
         mockProcessor.Setup(p => p.RegisterPacket<SPacketFirst>(It.IsAny<Action<SPacketFirst, ICustomNetPeer>>()))
-                     .Callback((Action<SPacketFirst, ICustomNetPeer> action) =>
-                     {
-                         callbackInvoked = true;
-                         action(new SPacketFirst(), mockPeer.Object);
-                     });
+            .Callback((Action<SPacketFirst, ICustomNetPeer> action) =>
+            {
+                callbackInvoked = true;
+                action(new SPacketFirst(), mockPeer.Object);
+            });
 
         // Act
         mockProcessor.Object.RegisterPacket<SPacketFirst>((packet, peer) => { });
@@ -79,7 +79,8 @@ public class NetworkTests
         mockProcessor.Object.SendPacket(mockPeer.Object, packet);
 
         // Assert
-        mockProcessor.Verify(p => p.SendPacket(mockPeer.Object, packet, CustomDeliveryMethod.ReliableOrdered), Times.Once);
+        mockProcessor.Verify(p => p.SendPacket(mockPeer.Object, packet, CustomDeliveryMethod.ReliableOrdered),
+            Times.Once);
     }
 
     [Fact]

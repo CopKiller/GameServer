@@ -8,7 +8,7 @@ namespace Core.Network;
 public readonly struct CustomDisconnectInfo(DisconnectInfo disconnectInfo) : ICustomDisconnectInfo
 {
     public CustomDisconnectReason Reason => (CustomDisconnectReason)disconnectInfo.Reason;
-    
+
     public SocketError SocketErrorCode => disconnectInfo.SocketErrorCode;
 
     // TODO: Implement this property if needed...

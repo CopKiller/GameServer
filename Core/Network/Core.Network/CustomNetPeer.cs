@@ -15,15 +15,15 @@ public sealed class CustomNetPeer : ICustomNetPeer
     }
 
     public int Id => Peer.Id;
-    
+
     public bool IsConnected => Peer.ConnectionState == ConnectionState.Connected;
-    
+
     public IPAddress EndPoint => Peer.Address;
 
     public void Send(byte[] data, CustomDeliveryMethod deliveryMethod)
     {
         // Traduzir o CustomDeliveryMethod para DeliveryMethod do LiteNetLib
-        DeliveryMethod liteDeliveryMethod = deliveryMethod switch
+        var liteDeliveryMethod = deliveryMethod switch
         {
             CustomDeliveryMethod.ReliableOrdered => DeliveryMethod.ReliableOrdered,
             CustomDeliveryMethod.ReliableUnordered => DeliveryMethod.ReliableUnordered,

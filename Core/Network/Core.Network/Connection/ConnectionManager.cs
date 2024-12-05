@@ -87,10 +87,7 @@ public class ConnectionManager : IConnectionManager
     /// </summary>
     public void DisconnectPeer(ICustomNetPeer peer, string reason = "Disconnected")
     {
-        if (peer is not CustomNetPeer customNetPeer)
-        {
-            throw new ArgumentException("Peer must implement CustomNetPeer");
-        }
+        if (peer is not CustomNetPeer customNetPeer) throw new ArgumentException("Peer must implement CustomNetPeer");
 
         _networkManager.DisconnectPeer(peer);
 
@@ -129,5 +126,8 @@ public class ConnectionManager : IConnectionManager
     /// Obter o primeiro peer conectado. (é o do servidor)
     /// </summary>
     /// <returns></returns>
-    public ICustomNetPeer GetFirstPeer() => _networkManager.GetFirstPeer();
+    public ICustomNetPeer GetFirstPeer()
+    {
+        return _networkManager.GetFirstPeer();
+    }
 }

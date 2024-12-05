@@ -17,7 +17,7 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod, null)
         };
     }
-    
+
     internal static DeliveryMethod ConvertToLiteDeliveryMethod(CustomDeliveryMethod deliveryMethod)
     {
         return deliveryMethod switch
@@ -29,8 +29,9 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod, null)
         };
     }
-    
-    internal static CustomUnconnectedMessageType ConvertToCustomUnconnectedMessageType(UnconnectedMessageType messageType)
+
+    internal static CustomUnconnectedMessageType ConvertToCustomUnconnectedMessageType(
+        UnconnectedMessageType messageType)
     {
         return messageType switch
         {
@@ -39,12 +40,11 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null)
         };
     }
-    
+
     internal static NetLogLevel ConvertToLiteNetLogLevel(CustomNetLogLevel logLevel)
     {
         return logLevel switch
         {
-            
             CustomNetLogLevel.Trace => NetLogLevel.Trace,
             CustomNetLogLevel.Info => NetLogLevel.Info,
             CustomNetLogLevel.Warning => NetLogLevel.Warning,
@@ -52,7 +52,7 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
         };
     }
-    
+
     internal static LogLevel ConvertToLogLevel(CustomNetLogLevel logLevel)
     {
         return logLevel switch
@@ -64,7 +64,7 @@ internal static class Extensions
             _ => LogLevel.Information
         };
     }
-    
+
     internal static CustomNetLogLevel ConvertToCustomNetLogLevel(NetLogLevel logLevel)
     {
         return logLevel switch
@@ -76,7 +76,7 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
         };
     }
-    
+
     internal static ConnectionState ConvertToConnectionState(CustomConnectionState peerState)
     {
         return peerState switch

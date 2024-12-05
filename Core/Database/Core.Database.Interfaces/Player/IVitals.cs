@@ -6,7 +6,7 @@ public interface IVitals : IEntity
     double MaxHealth { get; set; }
     double Mana { get; set; }
     double MaxMana { get; set; }
-    
+
     public string ToString()
     {
         return $"Health: {Health}, MaxHealth: {MaxHealth}, Mana: {Mana}, MaxMana: {MaxMana}";

@@ -132,7 +132,7 @@ public class TestRepositories
 
         // Assert
         updatedAccount.Item2?.Players.Should().HaveCount(1, "Player count should be 1.");
-        
+
         updatedAccount.Item2.Should().NotBeNull("Account should not be null.");
 
         // Act: Recupera os jogadores associados à conta

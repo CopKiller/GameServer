@@ -10,11 +10,12 @@ public interface IPlayerModel : IEntity
     public IVitals Vitals { get; set; }
     public IStats Stats { get; set; }
     public IPosition Position { get; set; }
-    
+
     int AccountModelId { get; set; }
-    
+
     public string ToString()
     {
-        return $"SlotNumber: {SlotNumber}, Name: {Name}, Level: {Level}, Experience: {Experience}, Gold: {Gold}, Vitals: {Vitals.ToString()}, Stats: {Stats.ToString()}, Position: {Position.ToString()}";
+        return
+            $"SlotNumber: {SlotNumber}, Name: {Name}, Level: {Level}, Experience: {Experience}, Gold: {Gold}, Vitals: {Vitals.ToString()}, Stats: {Stats.ToString()}, Position: {Position.ToString()}";
     }
 }

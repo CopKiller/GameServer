@@ -8,8 +8,11 @@ namespace Core.Network.Event;
 
 public sealed class NetworkEventsListener : INetworkEventsListener
 {
-    internal EventBasedNetListener GetListener() => _listener;
-    
+    internal EventBasedNetListener GetListener()
+    {
+        return _listener;
+    }
+
     private readonly EventBasedNetListener _listener = new();
 
     public event Action<ICustomNetPeer>? OnPeerConnected
@@ -68,14 +71,41 @@ public sealed class NetworkEventsListener : INetworkEventsListener
         remove => _listener.ConnectionRequestEvent -= request => value?.Invoke(new CustomConnectionRequest(request));
     }
 
-    public void ClearPeerConnectedEvent() => _listener.ClearPeerConnectedEvent();
-    public void ClearPeerDisconnectedEvent() => _listener.ClearPeerDisconnectedEvent();
-    public void ClearNetworkErrorEvent() => _listener.ClearNetworkErrorEvent();
-    public void ClearNetworkReceiveEvent() => _listener.ClearNetworkReceiveEvent();
-    public void ClearNetworkReceiveUnconnectedEvent() => _listener.ClearNetworkReceiveUnconnectedEvent();
-    public void ClearNetworkLatencyUpdateEvent() => _listener.ClearNetworkLatencyUpdateEvent();
-    public void ClearConnectionRequestEvent() => _listener.ClearConnectionRequestEvent();
-    
+    public void ClearPeerConnectedEvent()
+    {
+        _listener.ClearPeerConnectedEvent();
+    }
+
+    public void ClearPeerDisconnectedEvent()
+    {
+        _listener.ClearPeerDisconnectedEvent();
+    }
+
+    public void ClearNetworkErrorEvent()
+    {
+        _listener.ClearNetworkErrorEvent();
+    }
+
+    public void ClearNetworkReceiveEvent()
+    {
+        _listener.ClearNetworkReceiveEvent();
+    }
+
+    public void ClearNetworkReceiveUnconnectedEvent()
+    {
+        _listener.ClearNetworkReceiveUnconnectedEvent();
+    }
+
+    public void ClearNetworkLatencyUpdateEvent()
+    {
+        _listener.ClearNetworkLatencyUpdateEvent();
+    }
+
+    public void ClearConnectionRequestEvent()
+    {
+        _listener.ClearConnectionRequestEvent();
+    }
+
     public void ClearEvents()
     {
         ClearPeerConnectedEvent();

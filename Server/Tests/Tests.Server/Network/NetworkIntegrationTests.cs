@@ -22,7 +22,7 @@ namespace Tests.Server.Network;
 
 public class NetworkIntegrationTests
 {
-    private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
     [Fact]
     public async Task Server_ShouldInitializeAndAcceptConnections()
@@ -36,25 +36,27 @@ public class NetworkIntegrationTests
 
             await WaitForConditionAsync(
                 () => serverConnectionManager.HasConnectedPeers,
-                timeout: TimeSpan.FromSeconds(10),
-                pollingInterval: TimeSpan.FromMilliseconds(100)
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromMilliseconds(100)
             );
 
-            serverConnectionManager.HasConnectedPeers.Should().BeTrue("Peers should be connected after initialization.");
+            serverConnectionManager.HasConnectedPeers.Should()
+                .BeTrue("Peers should be connected after initialization.");
 
             serverConnectionManager.DisconnectAll();
 
             await WaitForConditionAsync(
                 () => !serverConnectionManager.HasConnectedPeers,
-                timeout: TimeSpan.FromSeconds(5),
-                pollingInterval: TimeSpan.FromMilliseconds(100)
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromMilliseconds(100)
             );
 
-            serverConnectionManager.HasConnectedPeers.Should().BeFalse("Peers should be disconnected after calling DisconnectAll.");
-            
+            serverConnectionManager.HasConnectedPeers.Should()
+                .BeFalse("Peers should be disconnected after calling DisconnectAll.");
+
             serverManager.Stop();
             clientManager.Stop();
-            
+
             serverManager.Dispose();
             clientManager.Dispose();
         });
@@ -82,7 +84,7 @@ public class NetworkIntegrationTests
             var serverPacket1 = new CPacketFirst();
             var serverPacket2 = new CPacketSecond();
 
-            Func<Task> serverSendPackets = async () =>
+            var serverSendPackets = async () =>
             {
                 serverPacketProcessor.SendPacketToAll(serverPacket1);
                 serverPacketProcessor.SendPacketToAll(serverPacket2);
@@ -90,10 +92,10 @@ public class NetworkIntegrationTests
             };
 
             await serverSendPackets.Should().NotThrowAsync();
-            
+
             serverManager.Stop();
             clientManager.Stop();
-            
+
             serverManager.Dispose();
             clientManager.Dispose();
         });
@@ -168,9 +170,7 @@ public class NetworkIntegrationTests
         while (!condition())
         {
             if (DateTime.UtcNow - startTime > timeout)
-            {
                 throw new TimeoutException("A condição não foi atendida dentro do tempo limite.");
-            }
 
             await Task.Delay(pollingInterval);
         }

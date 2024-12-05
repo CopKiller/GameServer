@@ -8,5 +8,8 @@ public class DatabaseException(bool isError, string message) : IDatabaseExceptio
     public bool IsError => isError;
     public string Message => message;
 
-    public override string ToString() => message;
+    public override string ToString()
+    {
+        return message;
+    }
 }

@@ -8,7 +8,7 @@ public class VitalsDto : ICustomSerializable
     public double MaxHealth { get; set; }
     public double Mana { get; set; }
     public double MaxMana { get; set; }
-    
+
     public void Deserialize(ICustomDataReader reader)
     {
         Health = reader.GetDouble();
@@ -16,7 +16,7 @@ public class VitalsDto : ICustomSerializable
         Mana = reader.GetDouble();
         MaxMana = reader.GetDouble();
     }
-    
+
     public void Serialize(ICustomDataWriter writer)
     {
         writer.Put(Health);

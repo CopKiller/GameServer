@@ -35,7 +35,7 @@ public interface IConnectionManager
     /// Obter todos os peers conectados.
     /// </summary>
     IEnumerable<ICustomNetPeer> GetPeers();
-    
+
     /// <summary>
     /// Obter o peer do servidor.
     /// </summary>

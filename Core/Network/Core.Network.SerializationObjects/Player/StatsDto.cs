@@ -9,7 +9,7 @@ public class StatsDto : ICustomSerializable
     public int Agility { get; set; }
     public int Intelligence { get; set; }
     public int Willpower { get; set; }
-    
+
     public void Deserialize(ICustomDataReader reader)
     {
         Strength = reader.GetInt();
@@ -18,7 +18,7 @@ public class StatsDto : ICustomSerializable
         Intelligence = reader.GetInt();
         Willpower = reader.GetInt();
     }
-    
+
     public void Serialize(ICustomDataWriter writer)
     {
         writer.Put(Strength);

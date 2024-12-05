@@ -16,14 +16,11 @@ public class Repository<T>(IDbContext context) : IRepository<T>
         IQueryable<T> query = context.Query<T>();
 
         // Aplica os includes, se houver
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
+        foreach (var include in includes) query = query.Include(include);
 
         return await query.FirstOrDefaultAsync(predicate);
     }
-    
+
     public async Task<IEnumerable<T>> GetEntitiesAsync(
         Expression<Func<T, bool>> predicate,
         params Expression<Func<T, object>>[] includes)
@@ -31,10 +28,7 @@ public class Repository<T>(IDbContext context) : IRepository<T>
         IQueryable<T> query = context.Query<T>();
 
         // Aplica os includes, se houver
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
+        foreach (var include in includes) query = query.Include(include);
 
         return await query.Where(predicate).ToListAsync();
     }

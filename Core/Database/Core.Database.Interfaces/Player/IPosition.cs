@@ -6,7 +6,7 @@ public interface IPosition
     float Y { get; set; }
     int Z { get; set; }
     double Rotation { get; set; }
-    
+
     public string ToString()
     {
         return $"X: {X}, Y: {Y}, Z: {Z}, Rotation: {Rotation}";

@@ -14,7 +14,7 @@ public class PlayerDto : ICustomSerializable
     public VitalsDto? Vitals { get; set; }
     public StatsDto? Stats { get; set; }
     public PositionDto? Position { get; set; }
-    
+
     public void Deserialize(ICustomDataReader reader)
     {
         Id = reader.GetInt();
@@ -27,7 +27,7 @@ public class PlayerDto : ICustomSerializable
         Stats = reader.Get(() => new StatsDto());
         Position = reader.Get(() => new PositionDto());
     }
-    
+
     public void Serialize(ICustomDataWriter writer)
     {
         writer.Put(Id);

@@ -1,6 +1,7 @@
 # GameServer
 
-**Game Server** configurado para ser escalável, seguindo fortemente os princípios **SOLID**. Este servidor foi projetado para jogos multiplayer e inclui os seguintes contextos básicos:
+**Game Server** configurado para ser escalável, seguindo fortemente os princípios **SOLID**. Este servidor foi projetado
+para jogos multiplayer e inclui os seguintes contextos básicos:
 
 ## ⚙️ Funcionalidades
 
@@ -26,6 +27,7 @@ Certifique-se de ter o .NET SDK instalado em sua máquina.
 ## ▶️ Uso
 
 Para iniciar o servidor, você pode usar o seguinte comando:
+
 ```bash
 dotnet run
 ```
@@ -38,7 +40,8 @@ Licença
 Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
 Para mais informações, entre em contato:
+
 ## 📬 Contato
 
-- **Nome:** CopKiller  
+- **Nome:** CopKiller
 - **GitHub:** [CopKiller](https://github.com/CopKiller)

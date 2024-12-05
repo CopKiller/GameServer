@@ -10,7 +10,7 @@ public class PacketReceiver(NetPacketProcessor packetProcessor) : IPacketReceive
     {
         if (customNetPacketReader is not CustomNetPacketReader netPacketReader)
             throw new InvalidOperationException("Invalid customNetPacketReader type. Expected CustomNetPacketReader.");
-        
+
         packetProcessor.ReadAllPackets(netPacketReader.GetReader, customNetPeer);
     }
 }

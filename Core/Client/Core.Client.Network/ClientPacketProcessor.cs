@@ -14,47 +14,62 @@ public class ClientPacketProcessor(
 {
     private readonly ClientNetworkPacket _clientNetworkPacket = new(logger);
     private ICustomNetPeer? ServerPeer { get; set; }
-    
+
     public void Initialize(ICustomNetPeer peer)
     {
         ServerPeer = peer;
-        
+
         packetProcessor.RegisterPacket<CPacketFirst>(_clientNetworkPacket.OnFirstPacket);
         packetProcessor.RegisterPacket<CPacketSecond>(_clientNetworkPacket.OnSecondPacket);
-        
+
         netListener.OnNetworkReceive += ProcessPacket;
     }
-    
+
     public void Stop()
     {
         packetProcessor.UnregisterPackets();
-        
+
         netListener.OnNetworkReceive -= ProcessPacket;
-        
+
         ServerPeer = null;
     }
-    
-    private void ProcessPacket(ICustomNetPeer peer, ICustomNetPacketReader reader, byte channel, CustomDeliveryMethod deliveryMethod)
-    => ReadAllPackets(reader, peer);
+
+    private void ProcessPacket(ICustomNetPeer peer, ICustomNetPacketReader reader, byte channel,
+        CustomDeliveryMethod deliveryMethod)
+    {
+        ReadAllPackets(reader, peer);
+    }
 
     public void SendPacket<TPacket>(TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
-    => packetProcessor.SendPacket(ServerPeer, packet, deliveryMethod);
+    {
+        packetProcessor.SendPacket(ServerPeer, packet, deliveryMethod);
+    }
 
     public void SendPacket<T>(ref T packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
-    => packetProcessor.SendPacket(ServerPeer, ref packet, deliveryMethod);
+    {
+        packetProcessor.SendPacket(ServerPeer, ref packet, deliveryMethod);
+    }
 
     public void SendPacket(byte[] data,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
-    => packetProcessor.SendPacket(ServerPeer, data, deliveryMethod);
+    {
+        packetProcessor.SendPacket(ServerPeer, data, deliveryMethod);
+    }
 
     public void RegisterNestedType<T>() where T : ICustomSerializable
-    => packetProcessor.RegisterNestedType<T>();
+    {
+        packetProcessor.RegisterNestedType<T>();
+    }
 
     public void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new()
-    => packetProcessor.RegisterPacket(onReceive);
+    {
+        packetProcessor.RegisterPacket(onReceive);
+    }
 
     public void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer)
-    => packetProcessor.ReadAllPackets(customNetPacketReader, customNetPeer);
+    {
+        packetProcessor.ReadAllPackets(customNetPacketReader, customNetPeer);
+    }
 }

@@ -2,6 +2,7 @@ using System.Net;
 using Core.Network.Interface;
 
 namespace Core.Network.Interface;
+
 public interface ICustomDataReader
 {
     // Métodos genéricos para desserialização de tipos

@@ -7,6 +7,6 @@ namespace Core.Server.Database.Interface;
 public interface IDatabaseService
 {
     IAccountRepository<AccountModel> GetAccountRepository();
-    
+
     IPlayerRepository<PlayerModel> GetPlayerRepository();
 }

@@ -10,6 +10,6 @@ public static class CharactersLimitations
 
     public const int MaxEmailCharacters = 50;
     public const int MinEmailCharacters = 6;
-    
+
     public const int BirthDateCharacters = 10;
 }

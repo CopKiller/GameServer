@@ -9,7 +9,7 @@ namespace Core.Client.Network;
 
 public class ClientNetworkService(
     INetworkConfiguration networkConfiguration,
-    INetworkManager networkManager, 
+    INetworkManager networkManager,
     IClientPacketProcessor packetProcessor,
     ILogger<ClientNetworkService> logger) : ISingleService
 {
@@ -23,18 +23,19 @@ public class ClientNetworkService(
             logger.LogError("Server peer is already connected.");
             return;
         }
-        
+
         networkManager.StartClient();
-        ServerPeer = networkManager.ConnectToServer(networkConfiguration.Address, networkConfiguration.Port, networkConfiguration.Key);
-        
+        ServerPeer = networkManager.ConnectToServer(networkConfiguration.Address, networkConfiguration.Port,
+            networkConfiguration.Key);
+
         if (ServerPeer is null)
         {
             logger.LogError("Failed to connect to the server : ServerPeer is null.");
             return;
         }
-        
+
         packetProcessor.Initialize(ServerPeer);
-        
+
         ServiceConfiguration.Enabled = true;
     }
 
@@ -53,7 +54,7 @@ public class ClientNetworkService(
             Stop();
             return;
         }
-        
+
         networkManager.PollEvents();
     }
 
@@ -70,15 +71,13 @@ public class ClientNetworkService(
         Stop();
         Start();
     }
-    
+
     public void Dispose()
     {
         Stop();
     }
-    
+
     // IClientNetworkService
 
     public ICustomNetPeer? ServerPeer { get; private set; }
-    
-    
 }

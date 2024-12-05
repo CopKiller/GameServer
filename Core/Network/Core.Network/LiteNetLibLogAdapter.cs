@@ -7,10 +7,13 @@ namespace Core.Network;
 
 public class LiteNetLibLoggerAdapter<T>(ILogger<T> logger) : INetLogger
 {
-    public void WriteNet(CustomNetLogLevel level, string str, params object[] args) 
-        => logger.Log(Extensions.ConvertToLogLevel(level), str, args);
-    
-    public void WriteNet(NetLogLevel level, string str, params object[] args) =>
+    public void WriteNet(CustomNetLogLevel level, string str, params object[] args)
+    {
+        logger.Log(Extensions.ConvertToLogLevel(level), str, args);
+    }
+
+    public void WriteNet(NetLogLevel level, string str, params object[] args)
+    {
         WriteNet(Extensions.ConvertToCustomNetLogLevel(level), str, args);
-    
+    }
 }
