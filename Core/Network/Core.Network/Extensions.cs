@@ -1,5 +1,6 @@
 using Core.Network.Interface.Enum;
 using LiteNetLib;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Network;
 
@@ -52,6 +53,18 @@ internal static class Extensions
         };
     }
     
+    internal static LogLevel ConvertToLogLevel(CustomNetLogLevel logLevel)
+    {
+        return logLevel switch
+        {
+            CustomNetLogLevel.Trace => LogLevel.Trace,
+            CustomNetLogLevel.Info => LogLevel.Information,
+            CustomNetLogLevel.Warning => LogLevel.Warning,
+            CustomNetLogLevel.Error => LogLevel.Error,
+            _ => LogLevel.Information
+        };
+    }
+    
     internal static CustomNetLogLevel ConvertToCustomNetLogLevel(NetLogLevel logLevel)
     {
         return logLevel switch
@@ -61,6 +74,20 @@ internal static class Extensions
             NetLogLevel.Warning => CustomNetLogLevel.Warning,
             NetLogLevel.Error => CustomNetLogLevel.Error,
             _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
+        };
+    }
+    
+    internal static ConnectionState ConvertToConnectionState(CustomConnectionState peerState)
+    {
+        return peerState switch
+        {
+            CustomConnectionState.Outgoing => ConnectionState.Outgoing,
+            CustomConnectionState.Connected => ConnectionState.Connected,
+            CustomConnectionState.ShutdownRequested => ConnectionState.ShutdownRequested,
+            CustomConnectionState.Disconnected => ConnectionState.Disconnected,
+            CustomConnectionState.EndPointChange => ConnectionState.EndPointChange,
+            CustomConnectionState.Any => ConnectionState.Any,
+            _ => throw new ArgumentOutOfRangeException(nameof(peerState), peerState, null)
         };
     }
 }
