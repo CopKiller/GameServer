@@ -7,6 +7,8 @@ public interface ICustomNetPeer
 {
     int Id { get; }
     
+    bool IsConnected { get; }
+    
     IPAddress EndPoint { get; }
     
     // TODO: Deixar os métodos de envio gerenciados a partir do ConnectionManager ou algo do tipo...
