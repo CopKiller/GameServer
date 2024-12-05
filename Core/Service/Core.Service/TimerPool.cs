@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using Core.Service.Interfaces;
@@ -9,59 +10,90 @@ namespace Core.Service;
 internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>? logger) : IDisposable
 {
     private Stopwatch MainTimer { get; } = new();
-    private Dictionary<ISingleService, long> ServiceLastTick { get; } = new();
-    private Task? UpdateTask { get; set; }
-    private CancellationTokenSource? UpdateCancellationTokenSource { get; set; }
+    private ConcurrentDictionary<ISingleService, long> ServiceLastTick { get; } = new();
+    private Task? UpdateLoopTask { get; set; }
 
     public void Start(CancellationToken cancellationToken)
     {
+        if (UpdateLoopTask != null) return;
+
         MainTimer.Start();
 
-        UpdateTask = Task.Run(async () =>
+        UpdateLoopTask = Task.Run(async () =>
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 var startTick = MainTimer.ElapsedMilliseconds;
 
-                foreach (var service in ServiceLastTick.Keys)
+                Parallel.ForEach(ServiceLastTick.Keys, service =>
                 {
-                    Update(service);
-                }
+                    try
+                    {
+                        Update(service);
+                    }
+                    catch (Exception e)
+                    {
+                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.", service.ServiceConfiguration.ServiceType);
+                    }
+                });
 
                 var elapsed = MainTimer.ElapsedMilliseconds - startTick;
-                if (elapsed < configuration.UpdateIntervalMs)
+                if (elapsed > configuration.UpdateIntervalMs)
+                {
+                    logger?.LogWarning("Loop de atualização atrasado em {Elapsed}ms.", elapsed);
+                }
+                else
                 {
                     await Task.Delay((int)(configuration.UpdateIntervalMs - elapsed), cancellationToken);
                 }
             }
-
-            Stop();
         }, cancellationToken);
     }
 
+
     internal void Update(ISingleService service, bool force = false)
     {
-        if (!service.Configuration.NeedUpdate) return;
+        if (!service.ServiceConfiguration.Enabled) return;
+        if (!service.ServiceConfiguration.NeedUpdate) return;
+        
+        ServiceLastTick.TryAdd(service, 0); // Tentativa de adicionar o serviço caso não exista
 
         var tick = MainTimer.ElapsedMilliseconds;
+        
+        var lastTick = ServiceLastTick.GetValueOrDefault(service, 0);
 
-        var tickCounter = tick - ServiceLastTick[service];
-        if (tickCounter < service.Configuration.UpdateIntervalMs && !force) return;
+        // Valor inicial
+        var tickCounter = tick - lastTick;
+        if (tickCounter < service.ServiceConfiguration.UpdateIntervalMs && !force) return;
 
         service.Update(tick);
         ServiceLastTick[service] = tick;
     }
-
-    public void Stop()
+    
+    public async Task StopAsync()
     {
-        foreach (var service in ServiceLastTick.Keys.Where(s => s.Configuration.Enabled).ToImmutableList())
+        if (UpdateLoopTask != null)
         {
-            service.Stop();
-            logger?.LogDebug($"{nameof(service.Configuration.ServiceType)} stopped.");
+            try
+            {
+                await UpdateLoopTask;
+            }
+            catch (TaskCanceledException)
+            {
+                // Ignorar cancelamento
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, "Erro ao aguardar o término da tarefa de atualização.");
+            }
+            finally
+            {
+                UpdateLoopTask.Dispose();
+                UpdateLoopTask = null;
+            }
         }
-
-        MainTimer.Stop();
     }
+
 
     public void AddService<T>(T service) where T : ISingleService
     {
@@ -70,14 +102,15 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
 
     public void Dispose()
     {
+        StopAsync().GetAwaiter().GetResult();
+
         foreach (var service in ServiceLastTick.Keys)
         {
             service.Dispose();
-            logger?.LogDebug($"{nameof(Service)} disposed.");
+            logger?.LogDebug("Serviço {ServiceType} liberado.", service.ServiceConfiguration.ServiceType);
         }
 
         ServiceLastTick.Clear();
-
         MainTimer.Stop();
     }
 }
