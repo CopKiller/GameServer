@@ -69,7 +69,7 @@ public class NetworkIntegrationTests
 
             var clientPacketProcessor = clientManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
             var clientConnectionManager = clientManager.ServiceProvider?.GetRequiredService<IClientConnectionManager>();
-            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<ServerPacketProcessor>();
+            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<IServerPacketProcessor>();
             var serverConnectionManager = serverManager.ServiceProvider?.GetRequiredService<IServerConnectionManager>();
 
             clientPacketProcessor.Should().NotBeNull();
@@ -134,7 +134,7 @@ public class NetworkIntegrationTests
         return manager;
     }
 
-    private void RegisterPacketHandlers(IClientPacketProcessor iClientProcessor, ServerPacketProcessor serverProcessor)
+    private void RegisterPacketHandlers(IClientPacketProcessor iClientProcessor, IServerPacketProcessor serverProcessor)
     {
         iClientProcessor.RegisterPacket<CPacketFirst>((packet, peer) =>
         {
@@ -188,6 +188,7 @@ public class NetworkIntegrationTests
         services.AddSingleton<INetworkManager, NetworkManager>();
         services.AddSingleton<IPacketProcessor, PacketProcessor>();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
+        services.AddSingleton<INetworkConfiguration, NetworkConfiguration>();
         services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
     }
 
@@ -195,7 +196,7 @@ public class NetworkIntegrationTests
     {
         // Project Core.Server.Network
         services.AddSingleton<ISingleService, ServerNetworkService>();
-        services.AddSingleton<ServerPacketProcessor, ServerPacketProcessor>();
+        services.AddSingleton<IServerPacketProcessor, ServerPacketProcessor>();
         services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
     }
 
