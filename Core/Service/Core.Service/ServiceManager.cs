@@ -15,11 +15,14 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
     private TimerPool? ServicesUpdate { get; set; }
     private CancellationTokenSource? _updateCancellationTokenSource;
     
+    private bool _disposed = false;
+    
     private ILogger<ServiceManager>? Log { get; set; }
 
     public void Register()
     {
-        
+        ArgumentNullException.ThrowIfNull(collection);
+
         ServiceProvider = collection.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = false,
@@ -38,14 +41,20 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
                      sd.Lifetime == ServiceLifetime.Singleton && 
                      sd.ServiceType.IsAssignableFrom(typeof(ISingleService))))
         {
-            var singletonService = ServiceProvider.GetRequiredService(serviceDescriptor.ServiceType) as ISingleService;
-
-            if (singletonService != null)
+            try
             {
-                singletonService.Register();
-                Services.Add(singletonService);
-                ServicesUpdate?.AddService(singletonService);
-                Log?.LogDebug($"Registered singleton service: {singletonService.GetType().Name}");
+                var singletonService = ServiceProvider.GetRequiredService(serviceDescriptor.ServiceType) as ISingleService;
+                if (singletonService != null)
+                {
+                    singletonService.Register();
+                    Services.Add(singletonService);
+                    ServicesUpdate?.AddService(singletonService);
+                    Log?.LogDebug($"Registered singleton service: {singletonService.GetType().Name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, $"Erro ao registrar serviço: {serviceDescriptor.ServiceType.Name}");
             }
         }
     }
@@ -53,16 +62,21 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
     public void Start()
     {
         Log?.LogDebug("Starting services...");
-        foreach (var singleService in Services.
-                     Where(a => !a.Configuration.Enabled)
-                     .ToImmutableList())
+        var servicesToStart = Services
+            .Where(a => !a.ServiceConfiguration.Enabled)
+            .ToList();
+
+        foreach (var singleService in servicesToStart)
         {
             singleService.Start();
-            Log?.LogDebug($"Started service: {singleService.Configuration.ServiceType.Name}");
+            Log?.LogDebug($"Started service: {singleService.ServiceConfiguration.ServiceType.Name}");
         }
         
-        _updateCancellationTokenSource ??= new CancellationTokenSource();
-        ServicesUpdate?.Start(_updateCancellationTokenSource.Token);
+        if (_updateCancellationTokenSource == null)
+        {
+            _updateCancellationTokenSource = new CancellationTokenSource();
+            ServicesUpdate?.Start(_updateCancellationTokenSource.Token);
+        }
     }
     
     public void ForceUpdate()
@@ -71,7 +85,15 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
         
         foreach (var service in Services.OfType<ISingleService>())
         {
-            ServicesUpdate?.Update(service, true);
+            try
+            {
+                ServicesUpdate?.Update(service, true);
+                Log?.LogDebug($"Force updated service: {service.GetType().Name}");
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, $"Erro ao forçar atualização do serviço: {service.GetType().Name}");
+            }
         }
     }
     
@@ -79,6 +101,8 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
     {
         Log?.LogDebug("Parando serviços...");
         _updateCancellationTokenSource?.Cancel();
+        _updateCancellationTokenSource?.Dispose();
+        _updateCancellationTokenSource = null;
     }
     
     public void Restart()
@@ -90,18 +114,27 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
 
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         Log?.LogDebug("Descartando serviços...");
-        
+
         ServicesUpdate?.Dispose();
-        
-        // Dispose seguro para o ServiceProvider, caso seja IDisposable
+
         if (ServiceProvider is IDisposable disposableProvider)
         {
-            disposableProvider.Dispose();
+            try
+            {
+                disposableProvider.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, "Erro ao descartar o ServiceProvider.");
+            }
         }
-    
+
         _updateCancellationTokenSource?.Dispose();
-    
+
         foreach (var service in Services.OfType<IDisposable>())
         {
             try
@@ -111,10 +144,11 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, $"Error while disposing service: {service.GetType().Name}");
+                Log?.LogError(ex, $"Erro ao descartar serviço: {service.GetType().Name}");
             }
         }
 
+        Services.Clear();
     }
 
 }
