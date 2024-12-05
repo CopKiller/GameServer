@@ -1,6 +1,4 @@
-using Core.Network.Interface.Enum;
-
-namespace Core.Network.Interface;
+namespace Core.Network.Interface.Connection;
 
 public interface IConnectionManager
 {

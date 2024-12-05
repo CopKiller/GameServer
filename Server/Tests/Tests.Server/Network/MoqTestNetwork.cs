@@ -28,7 +28,7 @@ public class NetworkTests
     public void Client_SendPacket_ShouldCallSendPacketMethod()
     {
         // Arrange
-        var mockProcessor = new Mock<IClientNetworkProcessor>();
+        var mockProcessor = new Mock<IClientPacketProcessor>();
         var mockPeer = new Mock<ICustomNetPeer>();
 
         var packet = new SPacketFirst();
@@ -44,7 +44,7 @@ public class NetworkTests
     public void Client_RegisterPacket_ShouldInvokeCallbackOnReceive()
     {
         // Arrange
-        var mockProcessor = new Mock<IClientNetworkProcessor>();
+        var mockProcessor = new Mock<IClientPacketProcessor>();
         var mockPeer = new Mock<ICustomNetPeer>();
         bool callbackInvoked = false;
 
@@ -70,7 +70,7 @@ public class NetworkTests
     public void Server_SendPacket_ShouldCallSendPacketMethod()
     {
         // Arrange
-        var mockProcessor = new Mock<IServerNetworkProcessor>();
+        var mockProcessor = new Mock<IServerPacketProcessor>();
         var mockPeer = new Mock<ICustomNetPeer>();
 
         var packet = new SPacketFirst();

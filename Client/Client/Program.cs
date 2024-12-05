@@ -3,7 +3,11 @@ using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Network;
 using Core.Network.Connection;
+using Core.Network.Event;
 using Core.Network.Interface;
+using Core.Network.Interface.Connection;
+using Core.Network.Interface.Packet;
+using Core.Network.Packet;
 using Core.Network.Packets.Server;
 using Core.Service;
 using Core.Service.Interfaces.Types;
@@ -17,7 +21,6 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
-        
         var service = new ServiceCollection();
         
         ConfigureLoggerService(service);
@@ -28,7 +31,7 @@ public static class Program
         servicesManager.Register();
         servicesManager.Start();
         
-        var clientPacketProcessor = servicesManager.ServiceProvider?.GetRequiredService<IClientNetworkProcessor>();
+        var clientPacketProcessor = servicesManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
         
         await Task.Delay(2000);
         
@@ -43,7 +46,7 @@ public static class Program
     
     private static void ConfigureLoggerService(IServiceCollection services)
     {
-        const LogLevel logLevel = LogLevel.Debug;
+        const LogLevel logLevel = LogLevel.Trace;
         
         services.AddLogging(loggingBuilder =>
         {
@@ -57,14 +60,15 @@ public static class Program
     {
         // Project Core.Network Abstract LiteNetLib
         services.AddScoped<ICustomDataWriter, CustomDataWriter>();
-        services.AddSingleton<ICustomPacketProcessor, CustomPacketProcessor>();
-        services.AddSingleton<INetworkService, NetworkService>();
+        services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
+        services.AddSingleton<INetworkConfiguration, NetworkConfiguration>();
+        services.AddSingleton<IPacketProcessor, PacketProcessor>();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
-        services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
+        services.AddSingleton<INetworkManager, NetworkManager>();
         
         // ISingleService -> LoopService
         services.AddSingleton<ISingleService, ClientNetworkService>();
-        services.AddSingleton<IClientNetworkProcessor, ClientNetworkProcessor>();
+        services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
         services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 }

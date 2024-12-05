@@ -3,7 +3,7 @@ using Core.Network.Interface.Enum;
 
 namespace Core.Client.Network.Interface;
 
-public interface IClientNetworkProcessor
+public interface IClientPacketProcessor
 {
     public void Initialize(ICustomNetPeer peer);
     public void Stop();

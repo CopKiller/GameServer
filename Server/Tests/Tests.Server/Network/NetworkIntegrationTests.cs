@@ -2,8 +2,12 @@ using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Network;
 using Core.Network.Connection;
+using Core.Network.Event;
 using Core.Network.Interface;
+using Core.Network.Interface.Connection;
 using Core.Network.Interface.Enum;
+using Core.Network.Interface.Packet;
+using Core.Network.Packet;
 using Core.Network.Packets.Client;
 using Core.Network.Packets.Server;
 using Core.Server.Network;
@@ -63,9 +67,9 @@ public class NetworkIntegrationTests
         {
             var (serverManager, clientManager) = SetupServerAndClient();
 
-            var clientPacketProcessor = clientManager.ServiceProvider?.GetRequiredService<IClientNetworkProcessor>();
+            var clientPacketProcessor = clientManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
             var clientConnectionManager = clientManager.ServiceProvider?.GetRequiredService<IClientConnectionManager>();
-            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<IServerNetworkProcessor>();
+            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<ServerPacketProcessor>();
             var serverConnectionManager = serverManager.ServiceProvider?.GetRequiredService<IServerConnectionManager>();
 
             clientPacketProcessor.Should().NotBeNull();
@@ -130,15 +134,15 @@ public class NetworkIntegrationTests
         return manager;
     }
 
-    private void RegisterPacketHandlers(IClientNetworkProcessor clientProcessor, IServerNetworkProcessor serverProcessor)
+    private void RegisterPacketHandlers(IClientPacketProcessor iClientProcessor, ServerPacketProcessor serverProcessor)
     {
-        clientProcessor.RegisterPacket<CPacketFirst>((packet, peer) =>
+        iClientProcessor.RegisterPacket<CPacketFirst>((packet, peer) =>
         {
             packet.Should().NotBeNull();
             peer.Should().NotBeNull();
         });
 
-        clientProcessor.RegisterPacket<CPacketSecond>((packet, peer) =>
+        iClientProcessor.RegisterPacket<CPacketSecond>((packet, peer) =>
         {
             packet.Should().NotBeNull();
             peer.Should().NotBeNull();
@@ -179,24 +183,26 @@ public class NetworkIntegrationTests
 
     private static void ConfigureNetworkService(IServiceCollection services)
     {
+        // Project Core.Network Abstract LiteNetLib
         services.AddScoped<ICustomDataWriter, CustomDataWriter>();
-        services.AddSingleton<ICustomPacketProcessor, CustomPacketProcessor>();
-        services.AddSingleton<INetworkService, NetworkService>();
+        services.AddSingleton<INetworkManager, NetworkManager>();
+        services.AddSingleton<IPacketProcessor, PacketProcessor>();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
-        services.AddSingleton<ICustomEventBasedNetListener, CustomEventBasedNetListener>();
+        services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
     }
 
     private static void ConfigureServerNetworkService(IServiceCollection services)
     {
-        services.AddSingleton<IServerNetworkProcessor, ServerNetworkProcessor>();
-        services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
+        // Project Core.Server.Network
         services.AddSingleton<ISingleService, ServerNetworkService>();
+        services.AddSingleton<ServerPacketProcessor, ServerPacketProcessor>();
+        services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
     }
 
     private static void ConfigureClientNetworkService(IServiceCollection services)
     {
-        services.AddSingleton<IClientNetworkProcessor, ClientNetworkProcessor>();
-        services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
         services.AddSingleton<ISingleService, ClientNetworkService>();
+        services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
+        services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 }

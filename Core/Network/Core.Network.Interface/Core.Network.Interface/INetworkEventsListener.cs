@@ -4,7 +4,7 @@ using Core.Network.Interface.Enum;
 
 namespace Core.Network.Interface;
 
-public interface ICustomEventBasedNetListener
+public interface INetworkEventsListener
 {
     event Action<ICustomNetPeer> OnPeerConnected;
     event Action<ICustomNetPeer, ICustomDisconnectInfo> OnPeerDisconnected;

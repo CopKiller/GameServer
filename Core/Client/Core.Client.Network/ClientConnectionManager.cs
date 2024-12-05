@@ -1,5 +1,6 @@
 using Core.Client.Network.Interface;
 using Core.Network.Interface;
+using Core.Network.Interface.Connection;
 
 namespace Core.Client.Network;
 

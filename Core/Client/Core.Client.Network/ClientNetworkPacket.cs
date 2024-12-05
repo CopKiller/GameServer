@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Client.Network;
 
-public class ClientNetworkPacket(ILogger<ClientNetworkProcessor> logger)
+public class ClientNetworkPacket(ILogger<ClientPacketProcessor> logger)
 {
     public void OnFirstPacket(CPacketFirst packet, ICustomNetPeer peer)
     {

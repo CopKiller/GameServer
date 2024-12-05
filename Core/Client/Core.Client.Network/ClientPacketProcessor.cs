@@ -1,15 +1,16 @@
 ﻿using Core.Client.Network.Interface;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
+using Core.Network.Interface.Packet;
 using Core.Network.Packets.Client;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Client.Network;
 
-public class ClientNetworkProcessor(
-    ICustomPacketProcessor packetProcessor,
-    ICustomEventBasedNetListener netListener,
-    ILogger<ClientNetworkProcessor> logger) : IClientNetworkProcessor
+public class ClientPacketProcessor(
+    IPacketProcessor packetProcessor,
+    INetworkEventsListener netListener,
+    ILogger<ClientPacketProcessor> logger) : IClientPacketProcessor
 {
     private readonly ClientNetworkPacket _clientNetworkPacket = new(logger);
     private ICustomNetPeer? ServerPeer { get; set; }

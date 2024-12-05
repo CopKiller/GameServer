@@ -1,15 +1,16 @@
 ﻿using Core.Network.Interface;
 using Core.Network.Interface.Enum;
+using Core.Network.Interface.Packet;
 using Core.Network.Packets.Server;
 using Core.Server.Network.Interface;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Server.Network;
 
-public class ServerNetworkProcessor(
-    ICustomPacketProcessor packetProcessor, 
-    ICustomEventBasedNetListener netListener,
-    ILogger<ServerNetworkProcessor> logger) : IServerNetworkProcessor
+public class ServerPacketProcessor(
+    IPacketProcessor packetProcessor, 
+    INetworkEventsListener netListener,
+    ILogger<ServerPacketProcessor> logger) : IServerPacketProcessor
 {
     private readonly ServerNetworkPacket _serverNetworkPacket = new(packetProcessor,logger);
     
