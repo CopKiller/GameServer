@@ -7,48 +7,36 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Server.Network;
 
-public class ServerNetworkService : ISingleService
+public class ServerNetworkService(
+    INetworkConfiguration networkConfiguration,
+    INetworkManager networkManager,
+    IServerPacketProcessor packetProcessor) : ISingleService
 {
-    private readonly INetworkService networkService;
-    private readonly IServerConnectionManager connectionManager;
-    private readonly IServerNetworkProcessor networkProcessor;
-    private readonly ILogger<ServerNetworkProcessor> logger;
-    public ServerNetworkService(
-        INetworkService networkService,
-        IServerConnectionManager connectionManager,
-        IServerNetworkProcessor networkProcessor,
-        ILogger<ServerNetworkProcessor> logger)
-    {
-        this.networkService = networkService;
-        this.connectionManager = connectionManager;
-        this.networkProcessor = networkProcessor;
-        this.logger = logger;
-    }
-    
-    public readonly NetworkMode NetworkMode = NetworkMode.Server;
-    public readonly int Port = 9050;
-    
-    public IServiceConfiguration Configuration { get; } = new ServerNetworkConfiguration();
+    public IServiceConfiguration ServiceConfiguration { get; } = new ServiceConfiguration();
 
     public void Start()
     {
-        networkProcessor.Initialize();
-        Configuration.Enabled = networkService.Initialize(NetworkMode, port: Port);
+        packetProcessor.Initialize();
+        
+        ServiceConfiguration.Enabled = networkManager.StartListener(port: networkConfiguration.Port);
     }
 
     public void Stop()
     {
-        networkService.Stop();
+        networkManager.Stop();
     }
 
     public void Update(long currentTick)
     {
-        networkService.Update();
+        networkManager.PollEvents();
     }
-
+    
     public void Register()
     {
-        networkService.Register();
+        networkConfiguration.AutoRecycle = true;
+        networkConfiguration.EnableStatistics = false;
+        networkConfiguration.UnconnectedMessagesEnabled = false;
+        networkConfiguration.UseNativeSockets = true;
     }
 
     public void Restart()
