@@ -32,14 +32,14 @@ public static class Program
         {
             eventArgs.Cancel = true; // Cancela a finalização automática
 
-            logger?.LogInformation("Finalizando Servidor...");
+            logger?.LogInformation("Finalizing Server...");
 
             _serviceManager?.Dispose();
 
             Environment.Exit(0);
         };
 
-        logger?.LogInformation("Servidor iniciado. Pressione Ctrl+C para encerrar.");
+        logger?.LogInformation("Server started. Press Ctrl+C to quit.");
 
         await Task.Delay(-1);
     }
