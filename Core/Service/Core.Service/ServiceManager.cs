@@ -53,7 +53,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, $"Erro ao registrar serviço: {serviceDescriptor.ServiceType.Name}");
+                Log?.LogError(ex, $"Error registering service: {serviceDescriptor.ServiceType.Name}");
             }
     }
 
@@ -79,7 +79,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
 
     public void ForceUpdate()
     {
-        Log?.LogDebug("Forçando atualização de serviços...");
+        Log?.LogDebug("Forcing service updates...");
 
         foreach (var service in Services.OfType<ISingleService>())
             try
@@ -89,13 +89,13 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, $"Erro ao forçar atualização do serviço: {service.GetType().Name}");
+                Log?.LogError(ex, $"Error forcing service update: {service.GetType().Name}");
             }
     }
 
     public void Stop()
     {
-        Log?.LogDebug("Parando serviços...");
+        Log?.LogDebug("Stopping services...");
         _updateCancellationTokenSource?.Cancel();
         _updateCancellationTokenSource?.Dispose();
         _updateCancellationTokenSource = null;
@@ -103,7 +103,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
 
     public void Restart()
     {
-        Log?.LogDebug("Reiniciando serviços...");
+        Log?.LogDebug("Restarting services...");
         Stop();
         Start();
     }
@@ -115,7 +115,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
         
         Stop();
 
-        Log?.LogDebug("Descartando serviços...");
+        Log?.LogDebug("Discarding services...");
 
         ServicesUpdate?.Dispose();
 
@@ -126,7 +126,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, "Erro ao descartar o ServiceProvider.");
+                Log?.LogError(ex, "Error disposing ServiceProvider");
             }
 
         foreach (var service in Services.OfType<IDisposable>())
@@ -137,7 +137,7 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, $"Erro ao descartar serviço: {service.GetType().Name}");
+                Log?.LogError(ex, $"Error when dismissing the service: {service.GetType().Name}");
             }
 
         Services.Clear();
