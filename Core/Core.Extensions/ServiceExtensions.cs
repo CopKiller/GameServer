@@ -82,10 +82,9 @@ public static class ServiceExtensions
         services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 
-    public static IServiceCollection AddMapper(this IServiceCollection services)
+    public static void AddMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(MapperService)); // Automatically scans profiles in the assembly
         services.AddScoped<IMapperService, MapperService>();
-        return services;
     }
 }

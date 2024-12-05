@@ -1,6 +1,5 @@
 using Core.Client.Network.Interface;
 using Core.Network.Interface;
-using Core.Network.Interface.Enum;
 using Core.Service.Interfaces;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.Logging;
@@ -11,6 +10,7 @@ public class ClientNetworkService(
     INetworkConfiguration networkConfiguration,
     INetworkManager networkManager,
     IClientPacketProcessor packetProcessor,
+    IClientConnectionManager connectionManager,
     ILogger<ClientNetworkService> logger) : ISingleService
 {
     public IServiceConfiguration ServiceConfiguration { get; } = new ServiceConfiguration();
@@ -18,23 +18,22 @@ public class ClientNetworkService(
     // ISingleService
     public void Start()
     {
-        if (ServerPeer is { IsConnected: true })
+        var serverPeer = connectionManager.GetServerPeer();
+
+        if (serverPeer is not null)
         {
             logger.LogError("Server peer is already connected.");
             return;
         }
 
         networkManager.StartClient();
-        ServerPeer = networkManager.ConnectToServer(networkConfiguration.Address, networkConfiguration.Port,
+        
+        var peer = networkManager.ConnectToServer(networkConfiguration.Address, networkConfiguration.Port,
             networkConfiguration.Key);
+        
+        connectionManager.SetServerPeer(peer);
 
-        if (ServerPeer is null)
-        {
-            logger.LogError("Failed to connect to the server : ServerPeer is null.");
-            return;
-        }
-
-        packetProcessor.Initialize(ServerPeer);
+        packetProcessor.Initialize(peer);
 
         ServiceConfiguration.Enabled = true;
     }
@@ -43,12 +42,13 @@ public class ClientNetworkService(
     {
         networkManager.Stop();
         packetProcessor.Stop();
+        connectionManager.Disconnect();
         ServiceConfiguration.Enabled = false;
     }
 
     public void Update(long currentTick)
     {
-        if (ServerPeer is null)
+        if (connectionManager.GetServerPeer() is null)
         {
             logger.LogError("Update service failed: Server peer is null.");
             Stop();
@@ -76,8 +76,4 @@ public class ClientNetworkService(
     {
         Stop();
     }
-
-    // IClientNetworkService
-
-    public ICustomNetPeer? ServerPeer { get; private set; }
 }

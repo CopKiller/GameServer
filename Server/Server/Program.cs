@@ -17,7 +17,7 @@ public static class Program
         var serviceProvider = _serviceManager.ServiceProvider;
 
         services.AddCryptography();
-        services.AddLogger(LogLevel.Trace);
+        services.AddLogger(LogLevel.Debug);
         services.AddDatabase();
         services.AddNetwork();
         services.AddNetworkServer();

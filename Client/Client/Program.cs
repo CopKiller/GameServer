@@ -27,7 +27,7 @@ public static class Program
         ServiceManager = new ServiceManager(services);
 
         services.AddCryptography();
-        services.AddLogger(LogLevel.Trace);
+        services.AddLogger(LogLevel.Debug);
         services.AddDatabase();
         services.AddNetwork();
         services.AddNetworkClient();
@@ -40,7 +40,7 @@ public static class Program
 
         var clientPacketProcessor = ServiceManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
 
-        await Task.Delay(2000);
+        await Task.Delay(1000);
 
         var packet = new SPacketFirst();
         clientPacketProcessor?.SendPacket(packet);
@@ -52,7 +52,7 @@ public static class Program
         {
             eventArgs.Cancel = true; // Cancela a finalização automática
 
-            logger?.LogInformation("Finalizando Servidor...");
+            logger?.LogInformation("Finalizando Client...");
 
             ServiceManager?.Dispose();
 
