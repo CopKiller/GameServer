@@ -1,5 +1,6 @@
 ﻿using Core.Client.Network;
 using Core.Client.Network.Interface;
+using Core.Service;
 
 namespace Core.Extensions;
 
@@ -44,6 +45,11 @@ public static class ServiceExtensions
             loggingBuilder.AddProvider(new CustomLoggerProvider(logLevel));
         });
     }
+    
+    public static void AddServiceManager(this IServiceCollection services)
+    {
+        services.AddSingleton<IServiceManager, ServiceManager>();
+    }
 
     public static void AddDatabase(this IServiceCollection services)
     {
@@ -86,5 +92,11 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(typeof(MapperService)); // Automatically scans profiles in the assembly
         services.AddScoped<IMapperService, MapperService>();
+    }
+    
+    public static void AddMapper(this IServiceCollection services, params Type[] profiles)
+    {
+        AddMapper(services);
+        services.AddAutoMapper(profiles);
     }
 }

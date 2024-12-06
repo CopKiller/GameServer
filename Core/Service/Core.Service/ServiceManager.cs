@@ -6,10 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Service;
 
-public class ServiceManager(IServiceCollection collection) : IServiceManager
+public class ServiceManager(IServiceProvider serviceProvider) : IServiceManager
 {
-    public IServiceConfiguration Configuration { get; } = new ServiceManagerConfiguration();
-    public IServiceProvider? ServiceProvider { get; set; }
+    public IServiceConfiguration ServiceConfiguration { get; } = new ServiceManagerConfiguration();
+    public IServiceProvider ServiceProvider => serviceProvider;
     private List<ISingleService> Services { get; set; } = [];
     private TimerPool? ServicesUpdate { get; set; }
     private CancellationTokenSource? _updateCancellationTokenSource;
@@ -20,40 +20,43 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
 
     public void Register()
     {
-        ArgumentNullException.ThrowIfNull(collection);
-
-        ServiceProvider = collection.BuildServiceProvider(new ServiceProviderOptions
-        {
-            ValidateOnBuild = false,
-            ValidateScopes = false
-        });
+        ArgumentNullException.ThrowIfNull(ServiceProvider);
 
         Services.Clear();
 
         // Obter serviço ILogger apartir do ServiceProvider.
         Log = ServiceProvider.GetRequiredService<ILogger<ServiceManager>>();
 
-        ServicesUpdate = new TimerPool(Configuration, ServiceProvider.GetRequiredService<ILogger<TimerPool>>());
+        ServicesUpdate = new TimerPool(ServiceConfiguration, ServiceProvider.GetRequiredService<ILogger<TimerPool>>());
 
         Log?.LogDebug("Getting singleton services (ISingleService)...");
-        foreach (var serviceDescriptor in collection.Where(sd =>
-                     sd.Lifetime == ServiceLifetime.Singleton &&
-                     sd.ServiceType.IsAssignableFrom(typeof(ISingleService))))
+        foreach (var singleService in ServiceProvider.GetServices<ISingleService>())
             try
             {
-                var singletonService =
-                    ServiceProvider.GetRequiredService(serviceDescriptor.ServiceType) as ISingleService;
-                if (singletonService != null)
-                {
-                    singletonService.Register();
-                    Services.Add(singletonService);
-                    ServicesUpdate?.AddService(singletonService);
-                    Log?.LogDebug($"Registered singleton service: {singletonService.GetType().Name}");
-                }
+                singleService.Register();
+                Services.Add(singleService);
+                ServicesUpdate?.AddService(singleService);
+                Log?.LogDebug($"Registered singleton service: {singleService.ServiceConfiguration.ServiceType.Name}");
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, $"Error registering service: {serviceDescriptor.ServiceType.Name}");
+                Log?.LogError(ex, $"Error registering service: {singleService.ServiceConfiguration.ServiceType.Name}");
+            }
+    }
+
+    public void Update(long currentTick)
+    {
+        Log?.LogDebug("Forcing service updates...");
+
+        foreach (var service in Services.OfType<ISingleService>())
+            try
+            {
+                ServicesUpdate?.Update(service, true);
+                Log?.LogDebug($"Force updated service: {service.GetType().Name}");
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, $"Error forcing service update: {service.GetType().Name}");
             }
     }
 
@@ -75,22 +78,6 @@ public class ServiceManager(IServiceCollection collection) : IServiceManager
             _updateCancellationTokenSource = new CancellationTokenSource();
             ServicesUpdate?.Start(_updateCancellationTokenSource.Token);
         }
-    }
-
-    public void ForceUpdate()
-    {
-        Log?.LogDebug("Forcing service updates...");
-
-        foreach (var service in Services.OfType<ISingleService>())
-            try
-            {
-                ServicesUpdate?.Update(service, true);
-                Log?.LogDebug($"Force updated service: {service.GetType().Name}");
-            }
-            catch (Exception ex)
-            {
-                Log?.LogError(ex, $"Error forcing service update: {service.GetType().Name}");
-            }
     }
 
     public void Stop()

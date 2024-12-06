@@ -13,8 +13,6 @@ public static class Program
     public static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
-        _serviceManager = new ServiceManager(services);
-        var serviceProvider = _serviceManager.ServiceProvider;
 
         services.AddCryptography();
         services.AddLogger(LogLevel.Debug);
@@ -22,11 +20,20 @@ public static class Program
         services.AddNetwork();
         services.AddNetworkServer();
         services.AddMapper();
+        services.AddServiceManager();
+        
+        var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = false,
+            ValidateScopes = false
+        });
+        
+        _serviceManager = serviceProvider.GetRequiredService<IServiceManager>();
 
         _serviceManager.Register();
         _serviceManager.Start();
 
-        var logger = serviceProvider?.GetRequiredService<ILogger<ServiceManager>>();
+        var logger = serviceProvider?.GetRequiredService<ILogger<IServiceManager>>();
 
         Console.CancelKeyPress += (sender, eventArgs) =>
         {

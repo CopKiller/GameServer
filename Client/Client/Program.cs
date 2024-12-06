@@ -1,16 +1,7 @@
-﻿using Core.Client.Network;
+﻿
 using Core.Client.Network.Interface;
-using Core.Network;
-using Core.Network.Connection;
-using Core.Network.Event;
-using Core.Network.Interface;
-using Core.Network.Interface.Connection;
-using Core.Network.Interface.Packet;
-using Core.Network.Packet;
 using Core.Network.Packets.Server;
-using Core.Service;
 using Core.Service.Interfaces.Types;
-using Infrastructure.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Core.Extensions;
@@ -24,7 +15,6 @@ public static class Program
     public static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
-        ServiceManager = new ServiceManager(services);
 
         services.AddCryptography();
         services.AddLogger(LogLevel.Debug);
@@ -32,11 +22,19 @@ public static class Program
         services.AddNetwork();
         services.AddNetworkClient();
         services.AddMapper();
+        services.AddServiceManager();
+        
+        ServiceManager = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = false,
+            ValidateScopes = false
+        })
+            .GetRequiredService<IServiceManager>();
 
         ServiceManager.Register();
         ServiceManager.Start();
 
-        var logger = ServiceManager.ServiceProvider?.GetRequiredService<ILogger<ServiceManager>>();
+        var logger = ServiceManager.ServiceProvider?.GetRequiredService<ILogger<IServiceManager>>();
 
         var clientPacketProcessor = ServiceManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
 

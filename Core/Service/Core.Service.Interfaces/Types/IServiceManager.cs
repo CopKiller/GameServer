@@ -1,10 +1,6 @@
 namespace Core.Service.Interfaces.Types;
 
-public interface IServiceManager : IService
+public interface IServiceManager : ISingleService
 {
-    public IServiceConfiguration Configuration { get; }
-    public IServiceProvider? ServiceProvider { get; set; }
-    public void Register();
-    public void Restart();
-    public void ForceUpdate();
+    IServiceProvider ServiceProvider { get; }
 }
