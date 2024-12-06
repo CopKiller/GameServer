@@ -5,3 +5,6 @@
 [submodule "External/AutoMapper"]
 	path = External/AutoMapper
 	url = https://github.com/CopKiller/AutoMapper
+[submodule "External/BCrypt"]
+	path = External/BCrypt
+	url = https://github.com/CopKiller/bcrypt.net

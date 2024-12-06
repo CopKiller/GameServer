@@ -8,10 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
-    </ItemGroup>
-
-    <ItemGroup>
+        <ProjectReference Include="..\..\..\External\BCrypt\src\BCrypt.Net\BCrypt.Net.csproj" />
         <ProjectReference Include="..\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj"/>
     </ItemGroup>
 
