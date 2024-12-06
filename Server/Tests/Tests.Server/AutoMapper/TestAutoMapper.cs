@@ -2,6 +2,7 @@ using System.Diagnostics;
 using AutoMapper;
 using AutoMapper.Internal;
 using Core.Database.Models.Player;
+using Core.Extensions;
 using Core.Network.SerializationObjects;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
@@ -17,8 +18,7 @@ public class TestAutoMapper
         var services = new ServiceCollection();
 
         // Registro de AutoMapper e serviços relacionados
-        services.AddAutoMapper(typeof(MappingProfile), typeof(Profile1), typeof(Profile2));
-        services.AddScoped<IMapperService, MapperService>();
+        services.AddMapper(typeof(Profile1), typeof(Profile2));
 
         // Registro de serviços auxiliares
         services.AddTransient<ISomeService>(sp => new FooService(5));

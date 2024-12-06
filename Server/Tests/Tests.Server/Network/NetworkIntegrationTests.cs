@@ -1,13 +1,6 @@
-using Core.Client.Network;
+
 using Core.Client.Network.Interface;
-using Core.Network;
-using Core.Network.Connection;
-using Core.Network.Event;
-using Core.Network.Interface;
-using Core.Network.Interface.Connection;
-using Core.Network.Interface.Enum;
-using Core.Network.Interface.Packet;
-using Core.Network.Packet;
+using Core.Extensions;
 using Core.Network.Packets.Client;
 using Core.Network.Packets.Server;
 using Core.Server.Network;
@@ -16,6 +9,7 @@ using Core.Service;
 using Core.Service.Interfaces.Types;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Tests.Server.Network;
@@ -116,21 +110,33 @@ public class NetworkIntegrationTests
         }
     }
 
-    private (ServiceManager serverManager, ServiceManager clientManager) SetupServerAndClient()
+    private (IServiceManager serverManager, IServiceManager clientManager) SetupServerAndClient()
     {
-        var serverManager = CreateAndStartManager(ConfigureServerNetworkService);
-        var clientManager = CreateAndStartManager(ConfigureClientNetworkService);
+        var serverCollection = new ServiceCollection();
+        serverCollection.AddNetworkServer();
+        var serverManager = CreateAndStartManager(serverCollection);
+        
+        var clientCollection = new ServiceCollection();
+        clientCollection.AddNetworkClient();
+        var clientManager = CreateAndStartManager(clientCollection);
+        
         return (serverManager, clientManager);
     }
 
-    private ServiceManager CreateAndStartManager(Action<IServiceCollection> configureServices)
+    private IServiceManager CreateAndStartManager(IServiceCollection services)
     {
-        var services = new ServiceCollection();
-        ConfigureLoggerService(services);
-        ConfigureNetworkService(services);
-        configureServices(services);
+        services.AddCryptography();
+        services.AddLogger(LogLevel.Debug);
+        services.AddNetwork();
+        services.AddMapper();
+        services.AddServiceManager();
 
-        var manager = new ServiceManager(services);
+        var manager = services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = false,
+                ValidateScopes = false
+            })
+            .GetRequiredService<IServiceManager>();
         manager.Register();
         manager.Start();
         return manager;
@@ -174,36 +180,5 @@ public class NetworkIntegrationTests
 
             await Task.Delay(pollingInterval);
         }
-    }
-
-    private static void ConfigureLoggerService(IServiceCollection services)
-    {
-        services.AddLogging(); // Simplificado para testes
-    }
-
-    private static void ConfigureNetworkService(IServiceCollection services)
-    {
-        // Project Core.Network Abstract LiteNetLib
-        services.AddScoped<ICustomDataWriter, CustomDataWriter>();
-        services.AddSingleton<INetworkManager, NetworkManager>();
-        services.AddSingleton<IPacketProcessor, PacketProcessor>();
-        services.AddSingleton<IConnectionManager, ConnectionManager>();
-        services.AddSingleton<INetworkConfiguration, NetworkConfiguration>();
-        services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
-    }
-
-    private static void ConfigureServerNetworkService(IServiceCollection services)
-    {
-        // Project Core.Server.Network
-        services.AddSingleton<ISingleService, ServerNetworkService>();
-        services.AddSingleton<IServerPacketProcessor, ServerPacketProcessor>();
-        services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
-    }
-
-    private static void ConfigureClientNetworkService(IServiceCollection services)
-    {
-        services.AddSingleton<ISingleService, ClientNetworkService>();
-        services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
-        services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 }

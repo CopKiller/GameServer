@@ -19,15 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Core\Client\Core.Client.Network\Core.Client.Network.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Database\Core.Database\Core.Database.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Logger\Core.Logger\Core.Logger.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Network\Core.Network\Core.Network.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Server\Core.Server.Network\Core.Server.Network.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Service\Core.Service\Core.Service.csproj"/>
-        <ProjectReference Include="..\..\..\Core\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj"/>
+      <ProjectReference Include="..\..\..\Core\Core.Extensions\Core.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

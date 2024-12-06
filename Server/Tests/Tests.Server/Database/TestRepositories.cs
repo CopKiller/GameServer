@@ -1,17 +1,14 @@
 using System.Diagnostics;
-using Core.Cryptography;
-using Core.Cryptography.Interface;
 using Core.Database;
 using Core.Database.Interfaces;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
-using Core.Database.Repositorys;
-using Core.Server.Database;
+using Core.Extensions;
 using Core.Server.Database.Interface;
-using Core.Server.Database.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Tests.Server.Database;
@@ -27,13 +24,10 @@ public class TestRepositories
             options.UseInMemoryDatabase("TestDatabase"));
 
         // Registro de repositórios, serviços e dependências
-        services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
-        services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
-        services.AddScoped<IDatabaseService, DatabaseService>();
-        services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
-        services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
-        services.AddScoped<ICrypto, Cryptography>();
-        services.AddLogging();
+        
+        services.AddDatabase();
+        services.AddCryptography();
+        services.AddLogger(LogLevel.Debug);
 
         return services.BuildServiceProvider();
     }
