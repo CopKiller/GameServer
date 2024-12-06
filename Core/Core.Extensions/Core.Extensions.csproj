@@ -7,22 +7,35 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Core\Cryptography\Core.Cryptography\Core.Cryptography.csproj">
+        <ProjectReference Include="..\Client\Core.Client.Network\Core.Client.Network.csproj"/>
+
+        <ProjectReference Include="..\Server\Core.Server.Network\Core.Server.Network.csproj"/>
+
+        <ProjectReference Include="..\Cryptography\Core.Cryptography\Core.Cryptography.csproj"/>
+
+        <ProjectReference Include="..\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj"/>
+
+        <ProjectReference Include="..\Database\Core.Database\Core.Database.csproj"/>
+
+        
+        <ProjectReference Include="..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj"/>
+        <ProjectReference Include="..\Logger\Core.Logger\Core.Logger.csproj">
             <PrivateAssets>All</PrivateAssets>
         </ProjectReference>
 
-        <ProjectReference Include="..\..\Core\Network\Core.Network\Core.Network.csproj"/>
-        <ProjectReference Include="..\..\Core\Server\Core.Server.Network\Core.Server.Network.csproj"/>
+        <ProjectReference Include="..\Network\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj"/>
+        <ProjectReference Include="..\Network\Core.Network\Core.Network.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+        <ProjectReference Include="..\Server\Core.Server.Database.Interface\Core.Server.Database.Interface.csproj"/>
+        <ProjectReference Include="..\Server\Core.Server.Database\Core.Server.Database.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
 
-        <ProjectReference Include="..\..\Core\Database\Core.Database\Core.Database.csproj"/>
-        <ProjectReference Include="..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj"/>
-
-        <ProjectReference Include="..\..\Core\Service\Core.Service\Core.Service.csproj"/>
-        <ProjectReference Include="..\..\Core\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj"/>
-
-        <ProjectReference Include="..\..\Core\Logger\Core.Logger\Core.Logger.csproj"/>
-
-        <ProjectReference Include="..\Client\Core.Client.Network\Core.Client.Network.csproj"/>
+        <ProjectReference Include="..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj"/>
+        <ProjectReference Include="..\Service\Core.Service\Core.Service.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>
