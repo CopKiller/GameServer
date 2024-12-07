@@ -41,6 +41,12 @@ public sealed class PacketProcessor : IPacketProcessor
         _packetSender = new PacketSender(_netPacketProcessor, connectionManager);
         _packetReceiver = new PacketReceiver(_netPacketProcessor);
         _networkSerializer = new NetworkSerializer(_netPacketProcessor);
+
+        RegisterNestedType<AccountDto>();
+        RegisterNestedType<PlayerDto>();
+        RegisterNestedType<PositionDto>();
+        RegisterNestedType<VitalsDto>();
+        RegisterNestedType<StatsDto>();
     }
 
     public void SendPacket<TPacket>(ICustomNetPeer peer, TPacket packet,
@@ -78,7 +84,7 @@ public sealed class PacketProcessor : IPacketProcessor
         _packetSender.SendPacketToAll(data, deliveryMethod);
     }
 
-    public void RegisterNestedType<T>() where T : ICustomSerializable
+    public void RegisterNestedType<T>() where T : ICustomSerializable, new()
     {
         _networkSerializer.RegisterNestedType<T>();
     }

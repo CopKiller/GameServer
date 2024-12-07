@@ -7,13 +7,13 @@ public class PlayerDto : ICustomSerializable
 {
     public int Id { get; set; }
     public int SlotNumber { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int Level { get; set; }
     public int Experience { get; set; }
     public int Gold { get; set; }
-    public VitalsDto? Vitals { get; set; }
-    public StatsDto? Stats { get; set; }
-    public PositionDto? Position { get; set; }
+    public VitalsDto Vitals { get; set; } = new();
+    public StatsDto Stats { get; set; } = new();
+    public PositionDto Position { get; set; } = new();
 
     public void Deserialize(ICustomDataReader reader)
     {
@@ -23,9 +23,9 @@ public class PlayerDto : ICustomSerializable
         Level = reader.GetInt();
         Experience = reader.GetInt();
         Gold = reader.GetInt();
-        Vitals = reader.Get(() => new VitalsDto());
-        Stats = reader.Get(() => new StatsDto());
-        Position = reader.Get(() => new PositionDto());
+        Vitals = reader.Get<VitalsDto>(() => new VitalsDto());
+        Stats = reader.Get<StatsDto>(() => new StatsDto());
+        Position = reader.Get<PositionDto>(() => new PositionDto());
     }
 
     public void Serialize(ICustomDataWriter writer)
