@@ -1,8 +1,11 @@
 
 using Core.Client.Network.Interface;
 using Core.Extensions;
+using Core.Network;
 using Core.Network.Packets.Client;
 using Core.Network.Packets.Server;
+using Core.Network.SerializationObjects;
+using Core.Network.SerializationObjects.Player;
 using Core.Server.Network;
 using Core.Server.Network.Interface;
 using Core.Service;
@@ -76,7 +79,18 @@ public class NetworkIntegrationTests
             RegisterPacketHandlers(clientPacketProcessor, serverPacketProcessor);
 
             var serverPacket1 = new CPacketFirst();
+            serverPacket1.Name = "Test";
+            serverPacket1.Age = 20;
+            
             var serverPacket2 = new CPacketSecond();
+            serverPacket2.Player = new PlayerDto
+            {
+                Name = "Test",
+                Level = 20,
+                Position = new PositionDto(),
+                Vitals = new VitalsDto(),
+                Stats = new StatsDto()
+            };
 
             var serverSendPackets = async () =>
             {
@@ -154,6 +168,10 @@ public class NetworkIntegrationTests
         {
             packet.Should().NotBeNull();
             peer.Should().NotBeNull();
+            
+            packet.Player.Should().NotBeNull();
+            packet.Player.Name.Should().NotBeNullOrEmpty();
+            packet.Player.Level.Should().BeGreaterThan(0);
         });
 
         serverProcessor.RegisterPacket<SPacketFirst>((packet, peer) =>
