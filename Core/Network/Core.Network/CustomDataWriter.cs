@@ -16,17 +16,6 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
         return writer;
     }
 
-    private void SerializeUsingAdapter<T>(T obj) where T : ICustomSerializable
-    {
-        var adapter = new LiteNetSerializableAdapter<T>(obj);
-        adapter.Serialize(writer);
-    }
-
-    private LiteNetSerializableAdapter<T>[] AdaptArray<T>(T[] value) where T : ICustomSerializable, new()
-    {
-        return Array.ConvertAll(value, item => new LiteNetSerializableAdapter<T>(item));
-    }
-
     public byte[] CopyData()
     {
         return writer.CopyData();
@@ -189,8 +178,12 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
 
     public void PutArray<T>(params T[] value) where T : ICustomSerializable, new()
     {
-        var adapters = AdaptArray(value);
-        writer.PutArray(adapters);
+        writer.Put(value.Length);
+        
+        foreach (var item in value)
+        {
+            item.Serialize(this);
+        }
     }
 
     public void Put(IPEndPoint endPoint)
@@ -218,6 +211,11 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
         if (obj == null)
             throw new ArgumentNullException(nameof(obj));
 
-        SerializeUsingAdapter(obj);
+        obj.Serialize(this);
+    }
+    
+    public void Reset()
+    {
+        writer.Reset();
     }
 }

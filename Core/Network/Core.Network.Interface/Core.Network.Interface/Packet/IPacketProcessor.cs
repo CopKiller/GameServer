@@ -24,7 +24,7 @@ public interface IPacketProcessor
 
     void SendPacketToAll(byte[] data, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered);
 
-    void RegisterNestedType<T>() where T : ICustomSerializable;
+    void RegisterNestedType<T>() where T : ICustomSerializable, new();
 
     void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new();
 

@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Core.Network.SerializationObjects\Core.Network.SerializationObjects.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -11,15 +11,15 @@
 
         <ProjectReference Include="..\Server\Core.Server.Network\Core.Server.Network.csproj"/>
 
-        <ProjectReference Include="..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj"/>
-        <ProjectReference Include="..\Cryptography\Core.Cryptography\Core.Cryptography.csproj" >
-            <PrivateAssets>All</PrivateAssets>
-        </ProjectReference>
-
         <ProjectReference Include="..\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj"/>
 
         <ProjectReference Include="..\Database\Core.Database\Core.Database.csproj"/>
 
+
+        <ProjectReference Include="..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj"/>
+        <ProjectReference Include="..\Cryptography\Core.Cryptography\Core.Cryptography.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
         
         <ProjectReference Include="..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj"/>
         <ProjectReference Include="..\Logger\Core.Logger\Core.Logger.csproj">

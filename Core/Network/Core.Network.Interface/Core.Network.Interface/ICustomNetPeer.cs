@@ -13,4 +13,6 @@ public interface ICustomNetPeer
 
     // TODO: Deixar os métodos de envio gerenciados a partir do ConnectionManager ou algo do tipo...
     void Send(byte[] data, CustomDeliveryMethod deliveryMethod);
+    
+    void Send(ICustomDataWriter writer, CustomDeliveryMethod deliveryMethod);
 }

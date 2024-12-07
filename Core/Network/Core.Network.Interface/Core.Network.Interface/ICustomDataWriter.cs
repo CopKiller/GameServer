@@ -42,4 +42,6 @@ public interface ICustomDataWriter
     void Put(string value);
     void Put(string value, int maxLength);
     void Put<T>(T obj) where T : ICustomSerializable;
+    
+    void Reset();
 }

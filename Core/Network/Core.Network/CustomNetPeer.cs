@@ -33,4 +33,9 @@ public sealed class CustomNetPeer : ICustomNetPeer
 
         Peer.Send(data, liteDeliveryMethod);
     }
+
+    public void Send(ICustomDataWriter writer, CustomDeliveryMethod deliveryMethod)
+    {
+        Send(writer.CopyData(), deliveryMethod);
+    }
 }

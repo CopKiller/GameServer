@@ -58,7 +58,7 @@ public class ClientPacketProcessor(
         packetProcessor.SendPacket(ServerPeer, data, deliveryMethod);
     }
 
-    public void RegisterNestedType<T>() where T : ICustomSerializable
+    public void RegisterNestedType<T>() where T : ICustomSerializable, new()
     {
         packetProcessor.RegisterNestedType<T>();
     }
