@@ -8,3 +8,6 @@
 [submodule "External/BCrypt"]
 	path = External/BCrypt
 	url = https://github.com/CopKiller/bcrypt.net
+[submodule "External/VelcroPhysics"]
+	path = External/VelcroPhysics
+	url = https://github.com/CopKiller/VelcroPhysics
