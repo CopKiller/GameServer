@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/External/AutoMapper" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/BCrypt" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/External/LiteNetLib" vcs="Git" />
   </component>
 </project>
