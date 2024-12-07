@@ -17,7 +17,7 @@ public static class Program
         var services = new ServiceCollection();
 
         services.AddCryptography();
-        services.AddLogger(LogLevel.Debug);
+        services.AddLogger(LogLevel.Trace);
         services.AddDatabase();
         services.AddNetwork();
         services.AddNetworkClient();
@@ -44,6 +44,13 @@ public static class Program
         clientPacketProcessor?.SendPacket(packet);
 
         var packet2 = new SPacketSecond();
+        
+        packet2.Player.Name = "Test";
+        packet2.Player.Level = 1;
+        packet2.Player.Position = new();
+        packet2.Player.Vitals = new();
+        packet2.Player.Stats = new();
+        
         clientPacketProcessor?.SendPacket(packet2);
 
         Console.CancelKeyPress += (sender, eventArgs) =>

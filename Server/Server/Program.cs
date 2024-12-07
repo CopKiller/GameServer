@@ -15,7 +15,7 @@ public static class Program
         var services = new ServiceCollection();
 
         services.AddCryptography();
-        services.AddLogger(LogLevel.Debug);
+        services.AddLogger(LogLevel.Trace);
         services.AddDatabase();
         services.AddNetwork();
         services.AddNetworkServer();
