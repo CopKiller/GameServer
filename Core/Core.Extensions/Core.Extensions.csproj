@@ -39,6 +39,7 @@
         <ProjectReference Include="..\Service\Core.Service\Core.Service.csproj">
             <PrivateAssets>All</PrivateAssets>
         </ProjectReference>
+        <ProjectReference Include="..\Utils\Physics\Core.Physics\Core.Physics.csproj" />
     </ItemGroup>
 
 </Project>

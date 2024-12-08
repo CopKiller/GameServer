@@ -102,6 +102,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VelcroPhysics", "VelcroPhys
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelcroPhysics", "External\VelcroPhysics\src\VelcroPhysics\VelcroPhysics.csproj", "{C460A6D7-31BA-4239-BAE0-ED7AC19D9631}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Physics.Abstraction", "Core\Utils\Physics\Core.Physics.Abstraction\Core.Physics.Abstraction.csproj", "{10B2E4D1-C351-4EAA-977B-1C1834168198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -224,6 +226,10 @@ Global
 		{C460A6D7-31BA-4239-BAE0-ED7AC19D9631}.Debug|Any CPU.Build.0 = WindowsDebug|Any CPU
 		{C460A6D7-31BA-4239-BAE0-ED7AC19D9631}.Release|Any CPU.ActiveCfg = WindowsDebug|Any CPU
 		{C460A6D7-31BA-4239-BAE0-ED7AC19D9631}.Release|Any CPU.Build.0 = WindowsDebug|Any CPU
+		{10B2E4D1-C351-4EAA-977B-1C1834168198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B2E4D1-C351-4EAA-977B-1C1834168198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B2E4D1-C351-4EAA-977B-1C1834168198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B2E4D1-C351-4EAA-977B-1C1834168198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2C835F6A-48CE-48B9-806D-59D3CED20422} = {483B9A74-4FED-479D-824B-AE0ADC67B1BA}
@@ -273,5 +279,6 @@ Global
 		{EF88BD18-CFD4-4942-B5E0-39EB4C13B61B} = {04AC8892-FA81-4CE6-8AC5-C116ECE4C8C9}
 		{8844F2CF-E877-4C16-A2D8-DE830786034B} = {3F8D6104-E475-44BB-BD3C-00AC20DFAFFB}
 		{C460A6D7-31BA-4239-BAE0-ED7AC19D9631} = {8844F2CF-E877-4C16-A2D8-DE830786034B}
+		{10B2E4D1-C351-4EAA-977B-1C1834168198} = {04AC8892-FA81-4CE6-8AC5-C116ECE4C8C9}
 	EndGlobalSection
 EndGlobal

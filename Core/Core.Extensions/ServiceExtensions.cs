@@ -99,4 +99,11 @@ public static class ServiceExtensions
         AddMapper(services);
         services.AddAutoMapper(profiles);
     }
+    
+    public static void AddPhysics(this IServiceCollection services)
+    {
+        /*services.AddTransient<IBodyDefBuilder, BodyDefBuilder>();
+        services.AddSingleton<IWorldPhysics, WorldPhysics>();
+        services.AddSingleton<IPhysicsManager, PhysicsManager>();*/
+    }
 }
