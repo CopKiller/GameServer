@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.Numerics;
 using System.Text;
-using Core.Physics.Abstraction;
 using Genbox.VelcroPhysics;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 
-namespace Core.Physics;
+namespace Core.Physics.Shared;
 
 public class GameVertices : List<Vector2>
 {
@@ -29,7 +28,7 @@ public class GameVertices : List<Vector2>
     /// You can add holes to this collection. It will get respected by some of the triangulation algoithms, but
     /// otherwise not used.
     /// </summary>
-    public List<GameVertices> Holes { get; set; }
+    public List<GameVertices> Holes { get; set; } = [];
 
     /// <summary>Gets the next index. Used for iterating all the edges with wrap-around.</summary>
     /// <param name="index">The current index</param>

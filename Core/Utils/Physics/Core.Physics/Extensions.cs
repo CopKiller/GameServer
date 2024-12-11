@@ -1,7 +1,7 @@
 using System.Numerics;
-using Core.Physics.Abstraction;
-using Core.Physics.Abstraction.Enum;
-using Core.Physics.Prefab;
+using Core.Physics.Interface;
+using Core.Physics.Interface.Builder;
+using Core.Physics.Interface.Enum;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 
@@ -29,20 +29,5 @@ public static class Extensions
             BodyType.Dynamic => EBodyType.Dynamic,
             _ => EBodyType.Static
         };
-    }
-    
-    public static BodyDef ToVelcroPhysics(this IBodyDefBuilder iBodyDef)
-    {
-        var def = new BodyDef
-        {
-            Position = new Vector2(iBodyDef.Position.X, iBodyDef.Position.Y),
-            Type = iBodyDef.Type.ToVelcroPhysics(),
-            FixedRotation = iBodyDef.FixedRotation,
-            IsBullet = iBodyDef.IsBullet,
-            Angle = iBodyDef.Angle,
-            Enabled = iBodyDef.Enabled
-        };
-        
-        return def;
     }
 }

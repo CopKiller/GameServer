@@ -1,4 +1,5 @@
-using Core.Physics.Abstraction;
+using Core.Physics.Interface;
+using Core.Physics.Dynamics;
 using Core.Service.Interfaces;
 
 namespace Core.Physics.Tests;

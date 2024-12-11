@@ -11,7 +11,7 @@
           <PrivateAssets>all</PrivateAssets>
       </ProjectReference>
       <ProjectReference Include="..\..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj" />
-      <ProjectReference Include="..\Core.Physics.Abstraction\Core.Physics.Abstraction.csproj" />
+      <ProjectReference Include="..\Core.Physics.Interface\Core.Physics.Interface.csproj" />
     </ItemGroup>
 
 </Project>

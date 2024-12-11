@@ -1,6 +1,12 @@
 ﻿using Core.Client.Network;
 using Core.Client.Network.Interface;
+using Core.Physics;
+using Core.Physics.Builder;
+using Core.Physics.Interface;
+using Core.Physics.Interface.Builder;
+using Core.Physics.Shared;
 using Core.Service;
+
 
 namespace Core.Extensions;
 
@@ -102,8 +108,11 @@ public static class ServiceExtensions
     
     public static void AddPhysics(this IServiceCollection services)
     {
-        /*services.AddTransient<IBodyDefBuilder, BodyDefBuilder>();
-        services.AddSingleton<IWorldPhysics, WorldPhysics>();
-        services.AddSingleton<IPhysicsManager, PhysicsManager>();*/
+        services.AddTransient<IBodyBuilder, BodyBuilder>();
+        services.AddTransient<IWorldBuilder, WorldBuilder>();
+        services.AddSingleton<IWorldManager, WorldManager>();
+        services.AddSingleton<IWorldService, WorldService>();
+        
+        services.AddSingleton<ISingleService, PhysicService>();
     }
 }

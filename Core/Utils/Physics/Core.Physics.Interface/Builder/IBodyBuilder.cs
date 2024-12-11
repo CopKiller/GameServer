@@ -1,9 +1,9 @@
 using System.Numerics;
-using Core.Physics.Abstraction.Enum;
+using Core.Physics.Interface.Enum;
 
-namespace Core.Physics.Abstraction;
+namespace Core.Physics.Interface.Builder;
 
-public interface IBodyDefBuilder
+public interface IBodyBuilder
 {
     int Id { get; set; }
     EEntityType EntityType { get; set; }
@@ -25,4 +25,5 @@ public interface IBodyDefBuilder
     float Height { get; set; }
     float Density { get; set; }
     void SetDefaults();
+    object ToVelcroPhysics();
 }

@@ -1,4 +1,4 @@
-namespace Core.Physics.Abstraction.Enum;
+namespace Core.Physics.Interface.Enum;
 
 public enum EEntityType
 {

@@ -1,10 +1,11 @@
 using System.Numerics;
-using Core.Physics.Abstraction.Enum;
+using Core.Physics.Interface.Enum;
 
-namespace Core.Physics.Abstraction;
+namespace Core.Physics.Interface.Dynamics;
 
 public interface IBodyPhysics
 {
+    Vector2 GetPosition();
     void ApplyForce(Vector2 force);
     void ApplyLinearImpulse(Vector2 impulse);
     void ApplyTorque(float torque);
@@ -20,4 +21,5 @@ public interface IBodyPhysics
     void SetAngularDamping(float angularDamping);
     void SetGravityScale(float gravityScale);
     void SetMass(float mass);
+    void Dispose();
 }
