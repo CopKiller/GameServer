@@ -10,17 +10,23 @@ public class PlayerModel : IPlayerModel
 {
     public int Id { get; set; }
 
-    [Required] public int SlotNumber { get; set; }
+    public string Name { get; set; } = string.Empty;
+    
+    public byte SlotNumber { get; set; }
+    
+    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    
+    public DateOnly LastLogin { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-    [Required] public required string Name { get; set; }
+    public int Level { get; set; }
 
-    [Required] public int Level { get; set; }
+    public int Experience { get; set; }
 
-    [Required] public int Experience { get; set; }
+    public int Golds { get; set; }
+    
+    public int Diamonds { get; set; }
 
-    [Required] public int Gold { get; set; }
-
-    [Required] public required Vitals Vitals { get; set; }
+    public Vitals Vitals { get; set; } = new();
 
     IVitals IPlayerModel.Vitals
     {
@@ -28,7 +34,7 @@ public class PlayerModel : IPlayerModel
         set => Vitals = (Vitals)value;
     }
 
-    [Required] public required Stats Stats { get; set; }
+    public Stats Stats { get; set; } = new();
 
     IStats IPlayerModel.Stats
     {
@@ -36,23 +42,14 @@ public class PlayerModel : IPlayerModel
         set => Stats = (Stats)value;
     }
 
-    [Required] public required Position Position { get; set; }
+    public Position Position { get; set; } = new();
 
     IPosition IPlayerModel.Position
     {
         get => Position;
         set => Position = (Position)value;
     }
-
-
-    [ForeignKey("AccountModelId")] // Nome da propriedade de navegação
+    
     public int AccountModelId { get; set; }
-
-    public AccountModel AccountModel { get; set; }
-
-    public override string ToString()
-    {
-        return
-            $"PlayerModel: {Id}, {SlotNumber}, {Name}, {Level}, {Experience}, {Gold}, {Vitals}, {Stats}, {Position}, {AccountModelId}";
-    }
+    public AccountModel AccountModel { get; set; } = null!;
 }

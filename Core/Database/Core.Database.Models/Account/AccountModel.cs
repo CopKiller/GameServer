@@ -9,20 +9,22 @@ namespace Core.Database.Models.Account;
 public class AccountModel : IAccountModel
 {
     public int Id { get; set; }
-
-    [Required] public required string Username { get; set; }
-
-    [Required] public required string Password { get; set; }
-
-    [Required] public required string Email { get; set; }
-
-    [Required] public required string BirthDate { get; set; }
-
-    public List<PlayerModel> Players { get; set; } = [];
-
-    IEnumerable<IPlayerModel> IAccountModel.Players
+    
+    public string Username { get; set; } = string.Empty;
+    
+    public string Password { get; set; } = string.Empty;
+    
+    public string Email { get; set; } = string.Empty;
+    
+    public DateOnly BirthDate { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    
+    public ICollection<PlayerModel> Players { get; set; } = new List<PlayerModel>();
+    
+    ICollection<IPlayerModel> IAccountModel.Players
     {
-        get => Players;
-        set => Players = value.Cast<PlayerModel>().ToList();
+        get => Players.Cast<IPlayerModel>().ToList();
+        set => Players = value?.OfType<PlayerModel>().ToList() ?? [];
     }
 }
