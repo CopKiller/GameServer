@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface;
+using Core.Database.Interface.Player;
 
 namespace Core.Database.Models.Player;
 
@@ -13,7 +13,7 @@ public class Vitals : IVitals
     public double MaxMana { get; set; }
 
     [ForeignKey("PlayerModelId")] public int PlayerModelId { get; set; }
-    public PlayerModel? PlayerModel { get; set; }
+    public PlayerModel PlayerModel { get; set; } = null!;
 
     public override string ToString()
     {

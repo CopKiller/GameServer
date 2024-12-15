@@ -9,8 +9,8 @@ namespace Core.Server.Database;
 
 public class DatabaseService(
     IAccountRepository<AccountModel> accountRepository,
-    IPlayerRepository<PlayerModel> playerRepository,
-    ILogger<IDatabaseService> log) : IDatabaseService
+    IPlayerRepository<PlayerModel> playerRepository) 
+    : IDatabaseService
 {
     public IAccountRepository<AccountModel> GetAccountRepository()
     {

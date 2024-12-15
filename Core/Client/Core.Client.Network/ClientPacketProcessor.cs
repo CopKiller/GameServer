@@ -43,18 +43,34 @@ public class ClientPacketProcessor(
     public void SendPacket<TPacket>(TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
     {
+        if (ServerPeer == null)
+        {
+            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            return;
+        }
+        
         packetProcessor.SendPacket(ServerPeer, packet, deliveryMethod);
     }
 
     public void SendPacket<T>(ref T packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
     {
+        if (ServerPeer == null)
+        {
+            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            return;
+        }
         packetProcessor.SendPacket(ServerPeer, ref packet, deliveryMethod);
     }
 
     public void SendPacket(byte[] data,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
     {
+        if (ServerPeer == null)
+        {
+            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            return;
+        }
         packetProcessor.SendPacket(ServerPeer, data, deliveryMethod);
     }
 

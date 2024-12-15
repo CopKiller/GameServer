@@ -6,9 +6,8 @@ using Microsoft.Extensions.Configuration;
 namespace Core.Database;
 
 /// <summary>
-/// This is used to create a new instance of the Database Context in design time.
-/// This is used by the EF Core tools to create migrations.
-/// This is used by the EF Core tools to drop and recreate the database.
+/// This is used by the EF Core tools to create migrations, update and drop, in design time.
+/// <param> name="args"> The arguments passed to the command ex: dotnet ef update </param>
 /// </summary>
 public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
 {

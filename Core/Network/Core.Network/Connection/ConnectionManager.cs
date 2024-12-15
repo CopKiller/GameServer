@@ -65,9 +65,12 @@ public class ConnectionManager : IConnectionManager
     /// </summary>
     /// <param name="peer"></param>
     /// <param name="disconnectInfo"></param>
-    private void RemovePeer(ICustomNetPeer peer, ICustomDisconnectInfo disconnectInfo = null)
+    private void RemovePeer(ICustomNetPeer peer, ICustomDisconnectInfo? disconnectInfo = null)
     {
-        _logger.LogDebug($"Peer disconnected - id: {peer.Id} address: {peer.EndPoint} ({disconnectInfo.Reason}}})");
+        _logger.LogDebug(disconnectInfo != null
+            ? $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint} ({disconnectInfo.Reason}}})"
+            : $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint}");
+
         _peers.Remove(peer.Id);
     }
 
