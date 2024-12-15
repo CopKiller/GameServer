@@ -1,4 +1,4 @@
-namespace Core.Database.Interfaces;
+namespace Core.Database.Interface;
 
 public interface IEntity
 {

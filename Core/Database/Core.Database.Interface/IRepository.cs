@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
-using Core.Database.Interfaces.Account;
-using Core.Database.Interfaces.Responses;
+using Core.Database.Interface.Responses;
+using Core.Database.Interface.Account;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Core.Database.Interfaces;
+namespace Core.Database.Interface;
 
 public interface IRepository<T> where T : class, IEntity
 {

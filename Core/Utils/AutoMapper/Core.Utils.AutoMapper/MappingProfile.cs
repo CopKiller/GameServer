@@ -1,6 +1,6 @@
 using AutoMapper;
-using Core.Database.Interfaces.Account;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface.Account;
+using Core.Database.Interface.Player;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Network.SerializationObjects;

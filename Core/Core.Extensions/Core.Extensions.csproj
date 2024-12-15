@@ -13,8 +13,10 @@
 
         <ProjectReference Include="..\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
 
-        <ProjectReference Include="..\Database\Core.Database\Core.Database.csproj" />
-
+        <ProjectReference Include="..\Database\Core.Database.Interface\Core.Database.Interface.csproj" />
+        <ProjectReference Include="..\Database\Core.Database\Core.Database.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
 
         <ProjectReference Include="..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj" />
         <ProjectReference Include="..\Cryptography\Core.Cryptography\Core.Cryptography.csproj">
@@ -39,7 +41,16 @@
         <ProjectReference Include="..\Service\Core.Service\Core.Service.csproj">
             <PrivateAssets>All</PrivateAssets>
         </ProjectReference>
-        <ProjectReference Include="..\Utils\Physics\Core.Physics\Core.Physics.csproj" />
+        
+        <ProjectReference Include="..\Utils\Physics\Core.Physics.Interface\Core.Physics.Interface.csproj" />
+        <ProjectReference Include="..\Utils\Physics\Core.Physics\Core.Physics.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+        
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     </ItemGroup>
 
 </Project>

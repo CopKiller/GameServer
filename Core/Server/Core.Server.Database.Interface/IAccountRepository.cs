@@ -1,7 +1,7 @@
 using Core.Database.Consistency.Interface.Validator;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Account;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface;
+using Core.Database.Interface.Account;
+using Core.Database.Interface.Player;
 
 namespace Core.Server.Database.Interface;
 

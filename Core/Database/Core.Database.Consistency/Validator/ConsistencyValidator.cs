@@ -1,7 +1,7 @@
 
 using System.Text.RegularExpressions;
 using Core.Database.Consistency.Interface.Validator;
-using Core.Database.Interfaces;
+using Core.Database.Interface;
 
 namespace Core.Database.Consistency.Validator;
 

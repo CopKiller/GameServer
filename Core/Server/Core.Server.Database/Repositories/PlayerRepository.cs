@@ -1,8 +1,8 @@
 using Core.Database.Consistency;
 using Core.Database.Consistency.Interface.Validator;
 using Core.Database.Consistency.Validator;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface;
+using Core.Database.Interface.Player;
 using Core.Server.Database.Interface;
 
 namespace Core.Server.Database.Repositories;

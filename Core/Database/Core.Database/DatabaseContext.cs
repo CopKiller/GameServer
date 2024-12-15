@@ -1,11 +1,8 @@
 using System.Reflection;
-using Core.Database.Interfaces;
-using Core.Database.Models;
+using Core.Database.Interface;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
 
 namespace Core.Database;
 

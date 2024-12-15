@@ -1,11 +1,12 @@
+
 using Core.Database.Consistency;
-using Core.Database.Interfaces;
+using Core.Database.Interface;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Moq;
 using Xunit;
 
-namespace Tests.Server.Database;
+namespace Core.Tests.Database;
 
 public class ConsistencyServiceTests
 {

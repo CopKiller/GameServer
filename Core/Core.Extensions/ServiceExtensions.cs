@@ -10,6 +10,7 @@ using Core.Physics.Shared;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.Extensions.Configuration;
 
 
@@ -18,7 +19,7 @@ namespace Core.Extensions;
 using Cryptography;
 using Cryptography.Interface;
 using Database;
-using Database.Interfaces;
+using Database.Interface;
 using Database.Models.Account;
 using Database.Models.Player;
 using Database.Repositories;
@@ -91,20 +92,35 @@ public static class ServiceExtensions
     /// <param name="connectionString">
     /// The connection string to the database
     /// </param>
-    public static void AddDatabase(this IServiceCollection services, string? connectionString = null)
+    /// <param name="useInMemory">
+    /// If true, the database will be in memory, for testing purposes
+    /// </param>
+    public static void AddDatabase(this IServiceCollection services, 
+        string? connectionString = null,
+        bool useInMemory = false)
     {
         var configuration = new ConfigurationBuilder()
-            .AddUserSecrets(Assembly.GetAssembly(typeof(DatabaseContext))!).Build();
-        
-        var cnn = connectionString ?? configuration.GetConnectionString("DefaultConnection");
+            .AddUserSecrets(Assembly.GetAssembly(typeof(DatabaseContext))!)
+            .Build();
 
-        services.AddDbContext<IDbContext, DatabaseContext>(o =>
-        {
-            o.UseSqlServer(cnn);
-        });
+        var cnn = connectionString ?? configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(cnn) && !useInMemory)
+            throw new InvalidOperationException("A valid connection string is required unless using InMemory database.");
+        
+        services.AddDbContext<IDbContext, DatabaseContext>(DbContextOptions);
         
         services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
         services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
+
+        return;
+        
+        void DbContextOptions(DbContextOptionsBuilder options)
+        {
+            if (!useInMemory)
+                options.UseSqlServer(cnn);
+            else
+                options.UseInMemoryDatabase("InMemoryDatabase");
+        }
     }
     
     /// <summary>

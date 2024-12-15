@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface;
+using Core.Database.Interface.Player;
 using Core.Database.Models.Account;
 
 namespace Core.Database.Models.Player;

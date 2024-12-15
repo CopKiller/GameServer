@@ -1,6 +1,6 @@
 using Core.Database.Consistency.Interface.Validator;
 using Core.Database.Constants;
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface.Player;
 
 namespace Core.Database.Consistency.Validator.SyntaxValidator.Entities;
 

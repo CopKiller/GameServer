@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Database\Core.Database.Interfaces\Core.Database.Interfaces.csproj"/>
+        <ProjectReference Include="..\..\Database\Core.Database.Interface\Core.Database.Interface.csproj" />
         <ProjectReference Include="..\..\Database\Core.Database.Models\Core.Database.Models.csproj"/>
         <ProjectReference Include="..\..\Database\Core.Database.Consistency.Interface\Core.Database.Consistency.Interface.csproj" />
         <ProjectReference Include="..\..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj"/>

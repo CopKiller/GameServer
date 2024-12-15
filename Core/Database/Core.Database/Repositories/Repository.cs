@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Responses;
+using Core.Database.Interface;
+using Core.Database.Interface.Responses;
 using Core.Database.Responses;
 using Microsoft.EntityFrameworkCore;
 

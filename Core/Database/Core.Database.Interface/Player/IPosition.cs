@@ -1,4 +1,4 @@
-namespace Core.Database.Interfaces.Player;
+namespace Core.Database.Interface.Player;
 
 public interface IPosition
 {

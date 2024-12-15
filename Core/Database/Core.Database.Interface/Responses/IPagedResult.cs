@@ -1,4 +1,4 @@
-namespace Core.Database.Interfaces.Responses;
+namespace Core.Database.Interface.Responses;
 
 public interface IPagedResult<T>
 {

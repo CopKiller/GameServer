@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.5"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
         <PackageReference Include="Moq" Version="4.20.72"/>
         <PackageReference Include="xunit" Version="2.9.2"/>
@@ -19,9 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Core\Core.Extensions\Core.Extensions.csproj" />
-      <ProjectReference Include="..\..\..\Core\Network\Core.Network\Core.Network.csproj" />
-      <ProjectReference Include="..\..\..\Core\Server\Core.Server.Database\Core.Server.Database.csproj" />
+      <ProjectReference Include="..\Core.Extensions\Core.Extensions.csproj" />
+      <ProjectReference Include="..\Database\Core.Database.Consistency\Core.Database.Consistency.csproj" />
     </ItemGroup>
 
 </Project>

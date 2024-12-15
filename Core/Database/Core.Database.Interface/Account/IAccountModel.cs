@@ -1,6 +1,6 @@
-using Core.Database.Interfaces.Player;
+using Core.Database.Interface.Player;
 
-namespace Core.Database.Interfaces.Account;
+namespace Core.Database.Interface.Account;
 
 public interface IAccountModel : IEntity
 {

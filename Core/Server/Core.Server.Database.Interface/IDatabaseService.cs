@@ -1,4 +1,4 @@
-using Core.Database.Interfaces.Account;
+using Core.Database.Interface.Account;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 

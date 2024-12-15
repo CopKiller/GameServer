@@ -3,8 +3,8 @@ using Core.Database.Consistency.Interface.Validator;
 using Core.Database.Consistency.Validator;
 using Core.Database.Consistency.Validator.DataValidator.Entities;
 using Core.Database.Consistency.Validator.SyntaxValidator.Entities;
-using Core.Database.Interfaces;
-using Core.Database.Interfaces.Account;
+using Core.Database.Interface;
+using Core.Database.Interface.Account;
 
 namespace Core.Database.Consistency;
 

@@ -1,4 +1,4 @@
-namespace Core.Database.Interfaces.Enum;
+namespace Core.Database.Interface.Enum;
 
 public enum Direction : byte
 {

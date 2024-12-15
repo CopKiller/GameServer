@@ -1,5 +1,4 @@
-using System.Collections;
-using Core.Database.Interfaces.Responses;
+using Core.Database.Interface.Responses;
 
 namespace Core.Database.Responses;
 
