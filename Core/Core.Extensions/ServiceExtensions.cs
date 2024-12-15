@@ -43,11 +43,26 @@ using Core.Utils.AutoMapper.Interface;
 
 public static class ServiceExtensions
 {
+    /// <summary>
+    /// Add cryptography services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddCryptography(this IServiceCollection services)
     {
         services.AddScoped<ICrypto, Cryptography>();
     }
 
+    /// <summary>
+    /// Add logger services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
+    /// <param name="logLevel">
+    /// The minimum log level to be logged
+    /// </param>
     public static void AddLogger(this IServiceCollection services, LogLevel logLevel = LogLevel.Trace)
     {
         services.AddLogging(loggingBuilder =>
@@ -57,11 +72,25 @@ public static class ServiceExtensions
         });
     }
     
+    /// <summary>
+    /// Add service manager to the service collection
+    /// This service is responsible for managing all singletons services of type <see cref="ISingleService"/>
+    /// </summary>
+    /// <param name="services"></param>
     public static void AddServiceManager(this IServiceCollection services)
     {
         services.AddSingleton<IServiceManager, ServiceManager>();
     }
 
+    /// <summary>
+    /// Add database services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
+    /// <param name="connectionString">
+    /// The connection string to the database
+    /// </param>
     public static void AddDatabase(this IServiceCollection services, string? connectionString = null)
     {
         var configuration = new ConfigurationBuilder()
@@ -76,11 +105,28 @@ public static class ServiceExtensions
         
         services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
         services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
+    }
+    
+    /// <summary>
+    /// Add server database services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
+    public static void AddServerDatabase(this IServiceCollection services)
+    {
+        // Core.Server.Database abstractions
         services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
         services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
         services.AddScoped<IDatabaseService, DatabaseService>();
     }
 
+    /// <summary>
+    /// Add network services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddNetwork(this IServiceCollection services)
     {
         // Core.Network abstractions
@@ -92,6 +138,12 @@ public static class ServiceExtensions
         services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
     }
 
+    /// <summary>
+    /// Add network server services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddNetworkServer(this IServiceCollection services)
     {
         // Core.Server.Network abstractions
@@ -100,6 +152,12 @@ public static class ServiceExtensions
         services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
     }
 
+    /// <summary>
+    /// Add network client services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddNetworkClient(this IServiceCollection services)
     {
         // Core.Server.Network abstractions
@@ -108,18 +166,43 @@ public static class ServiceExtensions
         services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 
+    /// <summary>
+    /// Add mapper services to the service collection
+    /// Register the <see cref="IMapperService"/> and the <see cref="AutoMapper.MapperConfigurationExpression"/>
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile))); // Automatically scans profiles in the assembly
         services.AddScoped<IMapperService, MapperService>();
     }
     
+    /// <summary>
+    /// Add mapper services to the service collection
+    /// Register the <see cref="IMapperService"/> and the <see cref="AutoMapper.MapperConfigurationExpression"/>
+    /// This method also registers the profiles passed as parameter
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
+    /// <param name="profiles">
+    /// The profiles to be registered in assembly
+    /// </param>
     public static void AddMapper(this IServiceCollection services, params Type[] profiles)
     {
         AddMapper(services);
         services.AddAutoMapper(profiles);
     }
     
+    /// <summary>
+    /// Add physics services to the service collection
+    /// This method registers all physics services and abstractions for the physics engine
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
     public static void AddPhysics(this IServiceCollection services)
     {
         services.AddTransient<IBodyBuilder, BodyBuilder>();

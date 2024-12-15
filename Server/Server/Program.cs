@@ -22,6 +22,7 @@ public static class Program
         services.AddCryptography();
         services.AddLogger(LogLevel.Trace);
         services.AddDatabase();
+        services.AddServerDatabase();
         services.AddNetwork();
         services.AddNetworkServer();
         services.AddMapper();
