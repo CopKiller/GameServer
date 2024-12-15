@@ -45,3 +45,4 @@ Para mais informações, entre em contato:
 
 - **Nome:** CopKiller
 - **GitHub:** [CopKiller](https://github.com/CopKiller)
+- **Discord:** Peixonalta#8962
