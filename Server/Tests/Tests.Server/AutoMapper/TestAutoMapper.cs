@@ -55,7 +55,7 @@ public class TestAutoMapper
             Name = "Test",
             Level = 1,
             Experience = 0,
-            Gold = 0,
+            Golds = 0,
             Vitals = new Vitals(),
             Stats = new Stats(),
             Position = new Position(),
@@ -72,7 +72,8 @@ public class TestAutoMapper
         Assert.Equal(source.Name, destination.Name);
         Assert.Equal(source.Level, destination.Level);
         Assert.Equal(source.Experience, destination.Experience);
-        Assert.Equal(source.Gold, destination.Gold);
+        Assert.Equal(source.Golds, destination.Golds);
+        Assert.Equal(source.Diamonds, destination.Golds);
         Assert.NotNull(destination.Vitals);
         Assert.NotNull(destination.Stats);
         Assert.NotNull(destination.Position);

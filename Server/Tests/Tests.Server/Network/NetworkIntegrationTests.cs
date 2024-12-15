@@ -87,6 +87,8 @@ public class NetworkIntegrationTests
             {
                 Name = "Test",
                 Level = 20,
+                Golds = 10,
+                Diamonds = 15,
                 Position = new PositionDto(),
                 Vitals = new VitalsDto(),
                 Stats = new StatsDto()
@@ -172,6 +174,8 @@ public class NetworkIntegrationTests
             packet.Player.Should().NotBeNull();
             packet.Player.Name.Should().NotBeNullOrEmpty();
             packet.Player.Level.Should().BeGreaterThan(0);
+            packet.Player.Golds.Should().BeGreaterThan(0);
+            packet.Player.Diamonds.Should().BeGreaterThan(0);
         });
 
         serverProcessor.RegisterPacket<SPacketFirst>((packet, peer) =>

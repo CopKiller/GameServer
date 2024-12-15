@@ -3,10 +3,15 @@ using Core.Database;
 using Core.Database.Interfaces;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
+using Core.Database.Repositories;
 using Core.Extensions;
+using Core.Server.Database;
 using Core.Server.Database.Interface;
+using Core.Server.Database.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -21,11 +26,20 @@ public class TestRepositories
 
         // Configuração do banco de dados em memória
         services.AddDbContext<IDbContext, DatabaseContext>(options =>
-            options.UseInMemoryDatabase("TestDatabase"));
+        {
+            options.UseInMemoryDatabase("TestDatabase");
+            options.ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+        });
+        
 
         // Registro de repositórios, serviços e dependências
         
-        services.AddDatabase();
+        services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
+        services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
+        services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
+        services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
+        services.AddScoped<IDatabaseService, DatabaseService>();
+        
         services.AddCryptography();
         services.AddLogger(LogLevel.Debug);
 
@@ -59,14 +73,16 @@ public class TestRepositories
             Username = "testuser",
             Password = "password",
             Email = "testuser@example.com",
-            BirthDate = "01/01/2000"
-        };
+            BirthDate = new DateOnly(2000, 1, 1)
+        }; 
 
         // Act: Adiciona uma conta
-        await accountRepository.AddAccountAsync(account);
-
-        // Debug log
-        Debug.Print(account.Password);
+        var result = await accountRepository.AddAccountAsync(account);
+        
+        // Assert
+        result.Item1.IsValid.Should().BeTrue();
+        result.Item2.Should().NotBeNull();
+        result.Item2.Password.Should().NotBe("password", "Password should be hashed.");
 
         // Act: Recupera a conta
         var retrievedAccount = await accountRepository.GetAccountAsync("testuser", "password");
@@ -89,24 +105,25 @@ public class TestRepositories
 
         var account = new AccountModel
         {
-            Username = "testuser",
-            Password = "password",
-            Email = "testuser@example.com",
-            BirthDate = "01/01/2000"
+            Username = "testuser1",
+            Password = "password1",
+            Email = "testuser1@example.com",
+            BirthDate = new DateOnly(2000, 1, 1)
         };
 
         await accountRepository.AddAccountAsync(account);
-        var retrievedAccount = await accountRepository.GetAccountAsync("testuser", "password");
+        var retrievedAccount = await accountRepository.GetAccountAsync("testuser1", "password1");
         var accountEntity = retrievedAccount.Item2;
 
         Assert.NotNull(accountEntity);
+        accountEntity.Players.Should().HaveCount(0, "Player count should be 0.");
 
         var player = new PlayerModel
         {
-            Name = "testplayer",
+            Name = "testplayer1",
             Level = 1,
             Experience = 0,
-            Gold = 0,
+            Golds = 0,
             Vitals = new Vitals(),
             Position = new Position(),
             Stats = new Stats()
@@ -118,11 +135,10 @@ public class TestRepositories
         var updateResult = await accountRepository.UpdateAccountAsync(accountEntity);
 
         // Assert
-        updateResult.IsError.Should().BeFalse();
-        updateResult.Message.Should().Be("Account updated");
+        updateResult.IsValid.Should().BeTrue();
 
         // Act: Recupera a conta novamente
-        var updatedAccount = await accountRepository.GetAccountAsync("testuser", "password");
+        var updatedAccount = await accountRepository.GetAccountAsync("testuser1", "password1");
 
         // Assert
         updatedAccount.Item2?.Players.Should().HaveCount(1, "Player count should be 1.");
@@ -133,7 +149,7 @@ public class TestRepositories
         var players = await playerRepository.GetPlayersAsync(updatedAccount.Item2.Id);
 
         // Assert
-        players.Item1.IsError.Should().BeFalse();
+        players.Item1.IsValid.Should().BeTrue();
         players.Item2.Should().HaveCount(1, "Player count should be 1.");
         var retrievedPlayer = players.Item2.First();
         retrievedPlayer.Position.Should().NotBeNull();
