@@ -1,4 +1,6 @@
-﻿using Core.Client.Network;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Physics;
 using Core.Physics.Builder;
@@ -6,6 +8,9 @@ using Core.Physics.Interface;
 using Core.Physics.Interface.Builder;
 using Core.Physics.Shared;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Core.Extensions;
@@ -16,7 +21,7 @@ using Database;
 using Database.Interfaces;
 using Database.Models.Account;
 using Database.Models.Player;
-using Database.Repositorys;
+using Database.Repositories;
 using Network;
 using Network.Connection;
 using Network.Event;
@@ -57,9 +62,18 @@ public static class ServiceExtensions
         services.AddSingleton<IServiceManager, ServiceManager>();
     }
 
-    public static void AddDatabase(this IServiceCollection services)
+    public static void AddDatabase(this IServiceCollection services, string? connectionString = null)
     {
-        services.AddDbContext<IDbContext, DatabaseContext>();
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets(Assembly.GetAssembly(typeof(DatabaseContext))!).Build();
+        
+        var cnn = connectionString ?? configuration.GetConnectionString("DefaultConnection");
+
+        services.AddDbContext<IDbContext, DatabaseContext>(o =>
+        {
+            o.UseSqlServer(cnn);
+        });
+        
         services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
         services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
         services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
@@ -96,7 +110,7 @@ public static class ServiceExtensions
 
     public static void AddMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(MapperService)); // Automatically scans profiles in the assembly
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile))); // Automatically scans profiles in the assembly
         services.AddScoped<IMapperService, MapperService>();
     }
     
