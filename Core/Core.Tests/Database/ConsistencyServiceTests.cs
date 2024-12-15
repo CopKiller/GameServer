@@ -93,7 +93,7 @@ public class ConsistencyServiceTests
         var player = new PlayerModel
         {
             Name = "ValidPlayer",
-            Stats = null,
+            Stats = null!,
             Vitals = new Vitals(),
             Position = new Position()
         };
