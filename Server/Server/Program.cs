@@ -1,6 +1,11 @@
-﻿using Core.Extensions;
+﻿using System.Numerics;
+using Core.Extensions;
+using Core.Physics.Interface;
+using Core.Physics.Interface.Builder;
+using Core.Physics.Interface.Enum;
 using Core.Service;
 using Core.Service.Interfaces.Types;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -21,20 +26,20 @@ public static class Program
         services.AddNetworkServer();
         services.AddMapper();
         services.AddServiceManager();
-        
+        services.AddPhysics();
+
         var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = false,
             ValidateScopes = false
         });
-        
-        _serviceManager = serviceProvider.GetRequiredService<IServiceManager>();
 
-        _serviceManager.Register();
-        _serviceManager.Start();
+        var serviceManager = serviceProvider.GetRequiredService<IServiceManager>();
+        serviceManager.Register();
+        serviceManager.Start();
 
         var logger = serviceProvider?.GetRequiredService<ILogger<IServiceManager>>();
-
+        
         Console.CancelKeyPress += (sender, eventArgs) =>
         {
             eventArgs.Cancel = true; // Cancela a finalização automática
