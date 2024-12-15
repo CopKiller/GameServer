@@ -11,7 +11,10 @@
         <ProjectReference Include="..\..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj">
             <PrivateAssets>all</PrivateAssets>
         </ProjectReference>
-        <ProjectReference Include="..\..\Database\Core.Database.Consistency\Core.Database.Consistency.csproj"/>
+        
+        <ProjectReference Include="..\..\Database\Core.Database.Consistency\Core.Database.Consistency.csproj" >
+            <PrivateAssets>all</PrivateAssets>
+        </ProjectReference>
 
         <ProjectReference Include="..\Core.Server.Database.Interface\Core.Server.Database.Interface.csproj"/>
     </ItemGroup>

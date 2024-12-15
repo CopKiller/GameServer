@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using Core.Database.Interfaces;
-using Core.Database.Interfaces.Account;
+using Core.Database.Interfaces.Responses;
+using Core.Database.Responses;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Core.Database.Repositorys;
+namespace Core.Database.Repositories;
 
 public class Repository<T>(IDbContext context) : IRepository<T>
     where T : class, IEntity
@@ -21,7 +21,7 @@ public class Repository<T>(IDbContext context) : IRepository<T>
         return await query.FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<IEnumerable<T>> GetEntitiesAsync(
+    public async Task<ICollection<T>?> GetEntitiesAsync(
         Expression<Func<T, bool>> predicate,
         params Expression<Func<T, object>>[] includes)
     {
@@ -30,7 +30,9 @@ public class Repository<T>(IDbContext context) : IRepository<T>
         // Aplica os includes, se houver
         foreach (var include in includes) query = query.Include(include);
 
-        return await query.Where(predicate).ToListAsync();
+        var result = await query.Where(predicate).ToListAsync();
+        
+        return result.Count != 0 ? result : null;
     }
 
     public async Task<bool> ExistEntityAsync(Expression<Func<T, bool>> predicate)
@@ -38,12 +40,22 @@ public class Repository<T>(IDbContext context) : IRepository<T>
         return await context.Query<T>().AnyAsync(predicate);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(int page = 1, int pageSize = 10)
+    public async Task<IPagedResult<T>> GetPagedAsync(int page = 1, int pageSize = 10)
     {
-        return await context.Query<T>()
+        var totalCount = await context.Query<T>().CountAsync();
+        var results = await context.Query<T>()
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
+            .OrderBy(x => x.Id)
             .ToListAsync();
+        
+        return new PagedResult<T>
+        {
+            Results = results,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<T> AddAsync(T entity)

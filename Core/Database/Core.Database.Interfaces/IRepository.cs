@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Database.Interfaces.Account;
+using Core.Database.Interfaces.Responses;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Core.Database.Interfaces;
@@ -10,13 +11,13 @@ public interface IRepository<T> where T : class, IEntity
         Expression<Func<T, bool>> predicate,
         params Expression<Func<T, object>>[] includes);
 
-    Task<IEnumerable<T>> GetEntitiesAsync(
+    Task<ICollection<T>?> GetEntitiesAsync(
         Expression<Func<T, bool>> predicate,
         params Expression<Func<T, object>>[] includes);
 
     Task<bool> ExistEntityAsync(Expression<Func<T, bool>> predicate);
 
-    Task<IEnumerable<T>> GetAllAsync(int page = 1, int pageSize = 10);
+    Task<IPagedResult<T>> GetPagedAsync(int page = 1, int pageSize = 10);
 
     Task<T> AddAsync(T entity);
 

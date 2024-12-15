@@ -1,6 +1,8 @@
+using Core.Database.Consistency;
+using Core.Database.Consistency.Interface.Validator;
+using Core.Database.Consistency.Validator;
 using Core.Database.Interfaces;
 using Core.Database.Interfaces.Player;
-using Core.Server.Database.Exceptions;
 using Core.Server.Database.Interface;
 
 namespace Core.Server.Database.Repositories;
@@ -9,8 +11,10 @@ public class PlayerRepository<T>(IRepository<T> context) : IPlayerRepository<T>
     where T : class, IPlayerModel
 {
     private IRepository<T> Context => context;
+    
+    private readonly PlayerValidator<T> _validator = new(context);
 
-    public async Task<(IDatabaseException, IEnumerable<T>)> GetPlayersAsync(int accountId)
+    public async Task<(IValidatorResult, ICollection<T>?)> GetPlayersAsync(int accountId)
     {
         // Recupera os jogadores do banco de dados
         var players = await Context.GetEntitiesAsync(
@@ -20,33 +24,28 @@ public class PlayerRepository<T>(IRepository<T> context) : IPlayerRepository<T>
             p => p.Stats
         );
 
-        var enumerable = players as T[] ?? players.ToArray();
+        var validatorResult = new ValidatorResult(true);
 
-        if (!enumerable.Any())
-            return (new DatabaseException(true, "Players not found"), enumerable);
-
-        return (new DatabaseException(false, $"Players found Count:{enumerable.Count()}"), enumerable);
+        if (players == null)
+        {
+            validatorResult.AddError("Players not found");
+            return (validatorResult, null);
+        }
+        
+        return (validatorResult, players);
     }
 
-    public async Task<IDatabaseException> NameExistsAsync(string username)
+    public async Task<IValidatorResult> UpdatePlayerAsync(T player)
     {
-        var result = await Context.ExistEntityAsync(p => p.Name == username);
-
-        if (result)
-            return new DatabaseException(true, "Player already exists");
-        else
-            return new DatabaseException(false, "Player not found");
-    }
-
-    public async Task<IDatabaseException> UpdatePlayerAsync(T player)
-    {
+        var validatorResult = await _validator.ValidateAsync(player);
+        
         Context.Update(player);
 
         var result = await Context.SaveChangesAsync() > 0;
-
-        if (result)
-            return new DatabaseException(false, "Player updated");
-        else
-            return new DatabaseException(true, "Failed to update player");
+        
+        if (!result)
+            validatorResult.AddError("Player not updated");
+        
+        return validatorResult;
     }
 }
