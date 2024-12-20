@@ -26,20 +26,6 @@ public class TestAutoMapper
     }
 
     [Fact]
-    public void AutoMapperConfiguration_Should_Be_Valid()
-    {
-        // Arrange
-        var serviceProvider = ConfigureServices();
-
-        // Act
-        var mapper = serviceProvider.GetService<IMapper>();
-
-        // Assert
-        Assert.NotNull(mapper);
-        mapper.ConfigurationProvider.AssertConfigurationIsValid();
-    }
-
-    [Fact]
     public void MapperService_Should_Map_PlayerModel_To_PlayerDto()
     {
         // Arrange

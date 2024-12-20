@@ -1,4 +1,6 @@
 ﻿
+using Core.Database.Models.Account;
+using Core.Server.Database.Interface;
 using Core.Server.Extensions;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,8 @@ public static class Program
         _serviceManager.Start();
 
         var logger = serviceProvider?.GetRequiredService<ILogger<IServiceManager>>();
+        
+        var accountRepository = serviceProvider?.GetService<IAccountRepository<AccountModel>>();
         
         Console.CancelKeyPress += (sender, eventArgs) =>
         {

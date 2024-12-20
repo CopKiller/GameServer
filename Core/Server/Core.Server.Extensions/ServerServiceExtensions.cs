@@ -94,6 +94,7 @@ public static class ServerServiceExtensions
     {
         var configuration = new ConfigurationBuilder()
             .AddUserSecrets(Assembly.GetAssembly(typeof(DatabaseContext))!)
+            .AddEnvironmentVariables()
             .Build();
 
         var cnn = connectionString ?? configuration.GetConnectionString("DefaultConnection");
@@ -110,7 +111,11 @@ public static class ServerServiceExtensions
         void DbContextOptions(DbContextOptionsBuilder options)
         {
             if (!useInMemory)
+            {
                 options.UseSqlServer(cnn);
+                //options.EnableSensitiveDataLogging();
+                //options.EnableDetailedErrors();
+            }
             else
                 options.UseInMemoryDatabase("InMemoryDatabase");
         }

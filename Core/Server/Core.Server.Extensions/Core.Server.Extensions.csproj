@@ -10,12 +10,11 @@
     <ItemGroup>
 
         <ProjectReference Include="..\Core.Server.Network\Core.Server.Network.csproj" />
+        
+        <ProjectReference Include="..\..\Utils\AutoMapper\Core.Utils.AutoMapper.Interface\Core.Utils.AutoMapper.Interface.csproj" />
         <ProjectReference Include="..\..\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
-
-        <ProjectReference Include="..\..\Database\Core.Database.Interface\Core.Database.Interface.csproj" />
-        <ProjectReference Include="..\..\Database\Core.Database\Core.Database.csproj" >
-            <PrivateAssets>All</PrivateAssets>
-        </ProjectReference>
+        
+        <ProjectReference Include="..\..\Database\Core.Database\Core.Database.csproj" />
 
         <ProjectReference Include="..\..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj" />
         <ProjectReference Include="..\..\Cryptography\Core.Cryptography\Core.Cryptography.csproj">
