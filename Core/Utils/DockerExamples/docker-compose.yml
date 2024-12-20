@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=GameServerDb;User ID=sa;Password=Fb6apl8*;Trusted_Connection=False;TrustServerCertificate=True;
+    ports:
+      - "9050:9050/udp"  # Exponha somente se necessário
+
+# O serviço sqlserver foi removido, pois ele já existe
