@@ -1,5 +1,5 @@
 using Core.Cryptography.Interface;
-using Core.Extensions;
+using Core.Server.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

@@ -18,8 +18,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core.Extensions\Core.Extensions.csproj" />
+      <ProjectReference Include="..\Client\Core.Client.Extensions\Core.Client.Extensions.csproj" />
       <ProjectReference Include="..\Database\Core.Database.Consistency\Core.Database.Consistency.csproj" />
+      <ProjectReference Include="..\Server\Core.Server.Extensions\Core.Server.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

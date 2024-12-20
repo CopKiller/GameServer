@@ -1,7 +1,7 @@
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
-using Core.Extensions;
 using Core.Server.Database.Interface;
+using Core.Server.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

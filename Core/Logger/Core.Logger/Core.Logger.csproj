@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Infrastructure.Logger</RootNamespace>
         <LangVersion>latest</LangVersion>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

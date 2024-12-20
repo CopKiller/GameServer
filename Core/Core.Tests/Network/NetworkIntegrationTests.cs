@@ -1,14 +1,12 @@
 
+using Core.Client.Extensions;
 using Core.Client.Network.Interface;
-using Core.Extensions;
-using Core.Network;
 using Core.Network.Packets.Client;
 using Core.Network.Packets.Server;
 using Core.Network.SerializationObjects;
 using Core.Network.SerializationObjects.Player;
-using Core.Server.Network;
+using Core.Server.Extensions;
 using Core.Server.Network.Interface;
-using Core.Service;
 using Core.Service.Interfaces.Types;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -133,7 +131,7 @@ public class NetworkIntegrationTests
         var serverManager = CreateAndStartManager(serverCollection);
         
         var clientCollection = new ServiceCollection();
-        clientCollection.AddNetworkClient();
+        ClientServiceExtensions.AddNetworkClient(clientCollection);
         var clientManager = CreateAndStartManager(clientCollection);
         
         return (serverManager, clientManager);
@@ -141,11 +139,11 @@ public class NetworkIntegrationTests
 
     private IServiceManager CreateAndStartManager(IServiceCollection services)
     {
-        services.AddCryptography();
-        services.AddLogger(LogLevel.Debug);
-        services.AddNetwork();
+        ServerServiceExtensions.AddCryptography(services);
+        ServerServiceExtensions.AddLogger(services, LogLevel.Debug);
+        ServerServiceExtensions.AddNetwork(services);
         services.AddMapper();
-        services.AddServiceManager();
+        ServerServiceExtensions.AddServiceManager(services);
 
         var manager = services.BuildServiceProvider(new ServiceProviderOptions
             {

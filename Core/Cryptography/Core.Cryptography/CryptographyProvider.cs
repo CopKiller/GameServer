@@ -4,7 +4,7 @@ namespace Core.Cryptography;
 
 using BCrypt.Net;
 
-public class Cryptography : ICrypto
+public class CryptographyProvider : ICrypto
 {
     public string HashString(string value)
     {

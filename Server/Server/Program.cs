@@ -1,5 +1,5 @@
 ﻿
-using Core.Extensions;
+using Core.Server.Extensions;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

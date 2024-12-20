@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+
+        <ProjectReference Include="..\Core.Server.Network\Core.Server.Network.csproj" />
+        <ProjectReference Include="..\..\Utils\AutoMapper\Core.Utils.AutoMapper\Core.Utils.AutoMapper.csproj" />
+
+        <ProjectReference Include="..\..\Database\Core.Database.Interface\Core.Database.Interface.csproj" />
+        <ProjectReference Include="..\..\Database\Core.Database\Core.Database.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Cryptography\Core.Cryptography.Interface\Core.Cryptography.Interface.csproj" />
+        <ProjectReference Include="..\..\Cryptography\Core.Cryptography\Core.Cryptography.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Logger\Core.Logger.Interface\Core.Logger.Interface.csproj" />
+        <ProjectReference Include="..\..\Logger\Core.Logger\Core.Logger.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Network\Core.Network.Interface\Core.Network.Interface\Core.Network.Interface.csproj" />
+        <ProjectReference Include="..\..\Network\Core.Network\Core.Network.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+        <ProjectReference Include="..\Core.Server.Database.Interface\Core.Server.Database.Interface.csproj" />
+        <ProjectReference Include="..\Core.Server.Database\Core.Server.Database.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj" />
+        <ProjectReference Include="..\..\Service\Core.Service\Core.Service.csproj">
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+        <ProjectReference Include="..\..\Utils\Physics\Core.Physics.Interface\Core.Physics.Interface.csproj" />
+        <ProjectReference Include="..\..\Utils\Physics\Core.Physics\Core.Physics.csproj" >
+            <PrivateAssets>All</PrivateAssets>
+        </ProjectReference>
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    </ItemGroup>
+
+</Project>

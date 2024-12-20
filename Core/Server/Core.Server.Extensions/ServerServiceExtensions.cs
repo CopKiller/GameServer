@@ -1,48 +1,41 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using Core.Client.Network;
-using Core.Client.Network.Interface;
+using System.Reflection;
+using Core.Cryptography;
+using Core.Cryptography.Interface;
+using Core.Database;
+using Core.Database.Interface;
+using Core.Database.Models.Account;
+using Core.Database.Models.Player;
+using Core.Database.Repositories;
+using Core.Network;
+using Core.Network.Connection;
+using Core.Network.Event;
+using Core.Network.Interface;
+using Core.Network.Interface.Connection;
+using Core.Network.Interface.Packet;
+using Core.Network.Packet;
 using Core.Physics;
 using Core.Physics.Builder;
 using Core.Physics.Interface;
 using Core.Physics.Interface.Builder;
 using Core.Physics.Shared;
-using Core.Service;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using Microsoft.Extensions.Configuration;
-
-
-namespace Core.Extensions;
-
-using Cryptography;
-using Cryptography.Interface;
-using Database;
-using Database.Interface;
-using Database.Models.Account;
-using Database.Models.Player;
-using Database.Repositories;
-using Network;
-using Network.Connection;
-using Network.Event;
-using Network.Interface;
-using Network.Interface.Connection;
-using Network.Interface.Packet;
-using Network.Packet;
-using Infrastructure.Logger;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Core.Server.Database;
 using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
 using Core.Server.Network;
 using Core.Server.Network.Interface;
-using Service.Interfaces.Types;
+using Core.Service;
+using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
 using Core.Utils.AutoMapper.Interface;
+using Infrastructure.Logger;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-public static class ServiceExtensions
+namespace Core.Server.Extensions;
+
+public static class ServerServiceExtensions
 {
     /// <summary>
     /// Add cryptography services to the service collection
@@ -52,7 +45,7 @@ public static class ServiceExtensions
     /// </param>
     public static void AddCryptography(this IServiceCollection services)
     {
-        services.AddScoped<ICrypto, Cryptography>();
+        services.AddScoped<ICrypto, CryptographyProvider>();
     }
 
     /// <summary>
@@ -166,20 +159,6 @@ public static class ServiceExtensions
         services.AddSingleton<ISingleService, ServerNetworkService>();
         services.AddSingleton<IServerPacketProcessor, ServerPacketProcessor>();
         services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
-    }
-
-    /// <summary>
-    /// Add network client services to the service collection
-    /// </summary>
-    /// <param name="services">
-    /// The <see cref="IServiceCollection"/> to add the services to
-    /// </param>
-    public static void AddNetworkClient(this IServiceCollection services)
-    {
-        // Core.Server.Network abstractions
-        services.AddSingleton<ISingleService, ClientNetworkService>();
-        services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
-        services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }
 
     /// <summary>

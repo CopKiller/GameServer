@@ -15,6 +15,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContex
     {
         var configuration = new ConfigurationBuilder()
             .AddUserSecrets(Assembly.GetExecutingAssembly())
+            .AddEnvironmentVariables()
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");

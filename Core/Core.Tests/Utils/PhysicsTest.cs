@@ -1,8 +1,8 @@
 using System.Numerics;
-using Core.Extensions;
 using Core.Physics.Interface;
 using Core.Physics.Interface.Builder;
 using Core.Physics.Interface.Enum;
+using Core.Server.Extensions;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
