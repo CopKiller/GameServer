@@ -1,0 +1,14 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1734661903
+README.md::TextFile::-1::1734287818::0::1::::<><>::
+::res://Client/::1734661178
+icon.svg::CompressedTexture2D::1178882127214286455::1734656448::1734660924::1::::<><>::
+::res://Client/Resources/::1734661826
+::res://Client/Resources/Transitions/::1734661903
+SplashImage.jpg::CompressedTexture2D::5429762246765695197::1734661865::1734661903::1::::<><>::
+::res://Client/Scenes/::1734661756
+::res://Client/Scenes/Transitions/::1734661756
+LoadingScene.tscn::PackedScene::4620611436606996953::1734661652::0::1::::<><>::
+SplashScene.tscn::PackedScene::2011543368824211248::1734661710::0::1::::<><>::
+::res://Client/Scripts/::1734661840
+::res://Client/Scripts/Transitions/::1734661840

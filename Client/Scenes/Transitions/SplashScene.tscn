@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://3wn3cfkhgsu7"]
+
+[ext_resource type="Texture2D" uid="uid://cjmhnj5f2uxxd" path="res://Client/Resources/Transitions/SplashImage.jpg" id="1_1u416"]
+[ext_resource type="PackedScene" uid="uid://b63i2bly2xrwb" path="res://Client/Scenes/Transitions/LoadingScene.tscn" id="2_nsxxq"]
+
+[node name="SplashScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SplashImage" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_1u416")
+expand_mode = 1
+
+[node name="LoadingScene" parent="." instance=ExtResource("2_nsxxq")]
+layout_mode = 1

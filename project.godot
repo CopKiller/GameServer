@@ -1,0 +1,36 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="GameClient"
+run/main_scene="res://Client/Scenes/Transitions/SplashScene.tscn"
+config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
+config/icon="res://Client/icon.svg"
+
+[dotnet]
+
+project/assembly_name="Game"
+
+[file_customization]
+
+folder_colors={
+"res://Client/Resources/": "orange",
+"res://Client/Scenes/": "red",
+"res://Client/Scripts/": "purple",
+"res://Core/": "orange",
+"res://External/": "red",
+"res://Server/": "red"
+}
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

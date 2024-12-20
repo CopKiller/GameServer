@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://b63i2bly2xrwb"]
+
+[ext_resource type="Script" path="res://Client/Scripts/Transitions/LoadingScript.cs" id="1_brj3t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20tsv"]
+bg_color = Color(0.60059, 0.607633, 0.585383, 1)
+skew = Vector2(1, 0)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bbksu"]
+bg_color = Color(0.6, 0.956863, 0.6, 1)
+skew = Vector2(1, 0)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="LoadingScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_brj3t")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -48.0
+offset_right = 400.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_20tsv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bbksu")
+value = 20.0

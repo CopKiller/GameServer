@@ -1,0 +1,5 @@
+res://Client/Scenes/LoadingScene.tscn
+res://Client/Scenes/SplashScene.tscn
+res://Client/Scenes/Transitions/SplashScene.tscn
+res://Client/Scenes/Transitions/LoadingScene.tscn
+res://Client/Scripts/Transitions/LoadingScript.cs
