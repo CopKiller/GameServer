@@ -26,6 +26,9 @@ public static class Program
         services.AddServiceManager();
         services.AddPhysics();
 
+        _serviceManager?.Start();
+        
+
         var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = false,
