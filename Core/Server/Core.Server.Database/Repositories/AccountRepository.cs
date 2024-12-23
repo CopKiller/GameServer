@@ -11,8 +11,6 @@ namespace Core.Server.Database.Repositories;
 public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAccountRepository<T>
     where T : class, IAccountModel
 {
-    private IRepository<T> Context => context;
-    
     private readonly AccountValidator<T> _validator = new(context);
 
     public async Task<(IValidatorResult, T?)> AddAccountAsync(T account)
@@ -24,9 +22,9 @@ public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAcc
 
         account.Password = crypto.HashString(account.Password);
 
-        var result = await Context.AddAsync(account);
+        var result = await context.AddAsync(account);
 
-        var changes = await Context.SaveChangesAsync() > 0;
+        var changes = await context.SaveChangesAsync() > 0;
         
         if (!changes)
             validationResult.AddError("Failed to add account");
@@ -36,7 +34,7 @@ public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAcc
 
     public async Task<(IValidatorResult, T?)> GetAccountAsync(string username, string password)
     {
-        var accountResult = await Context.GetEntityAsync(a => a.Username == username, model => model.Players);
+        var accountResult = await context.GetEntityAsync(a => a.Username == username, model => model.Players);
 
         var validator = new ValidatorResult(true);
 
@@ -62,9 +60,9 @@ public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAcc
         if (!validationResult.IsValid)
             return validationResult;
         
-        Context.Update(account);
+        context.Update(account);
 
-        var result = await Context.SaveChangesAsync() > 0;
+        var result = await context.SaveChangesAsync() > 0;
         
         if (!result)
             validationResult.AddError("Failed to update account");
