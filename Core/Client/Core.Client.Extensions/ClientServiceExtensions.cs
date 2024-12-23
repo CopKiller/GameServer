@@ -3,6 +3,7 @@ using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Cryptography;
 using Core.Cryptography.Interface;
+using Core.Logger.Interface;
 using Core.Network;
 using Core.Network.Connection;
 using Core.Network.Event;
@@ -45,9 +46,16 @@ public static class ClientServiceExtensions
         services.AddLogging(loggingBuilder =>
         {
             loggingBuilder.SetMinimumLevel(logLevel);
-            loggingBuilder.AddProvider(new CustomLoggerProvider(logLevel));
+
+            // Resolva o ILogOutput do contêiner de serviços
+            loggingBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider =>
+            {
+                var logOutput = serviceProvider.GetRequiredService<ILogOutput>();
+                return new CustomLoggerProvider(logOutput, logLevel);
+            });
         });
     }
+
     
     /// <summary>
     /// Add service manager to the service collection

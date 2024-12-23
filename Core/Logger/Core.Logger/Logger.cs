@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Logger;
 
-public class Logger(string categoryName, LogLevel minLogLevel) : ILog
+public class Logger(string categoryName, LogLevel minLogLevel, ILogOutput? output) : ILog
 {
     public IDisposable? BeginScope<TState>(TState state)
     {
@@ -20,8 +20,26 @@ public class Logger(string categoryName, LogLevel minLogLevel) : ILog
     {
         if (!IsEnabled(logLevel))
             return;
-
-        var message = formatter(state, exception);
-        Console.WriteLine($"[{logLevel}] {categoryName}: {message}");
+        var message = $" [{logLevel.ToString()}] {categoryName}: {formatter(state, exception)}";
+        
+        switch (logLevel)
+        {
+            case LogLevel.Critical:
+            case LogLevel.Error:
+                output?.WriteError(message);    
+                return;
+            case LogLevel.Warning:
+                output?.WriteWarning(message);
+                return;
+            case LogLevel.Information:
+                output?.WriteInfo(message);
+                return;
+            case LogLevel.Trace:
+            case LogLevel.Debug:
+            case LogLevel.None:
+            default:
+                output?.Write(message);
+                break;
+        }
     }
 }

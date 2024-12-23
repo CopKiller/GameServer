@@ -6,6 +6,7 @@ using Core.Database.Interface;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Database.Repositories;
+using Core.Logger.Interface;
 using Core.Network;
 using Core.Network.Connection;
 using Core.Network.Event;
@@ -62,7 +63,13 @@ public static class ServerServiceExtensions
         services.AddLogging(loggingBuilder =>
         {
             loggingBuilder.SetMinimumLevel(logLevel);
-            loggingBuilder.AddProvider(new CustomLoggerProvider(logLevel));
+
+            // Resolva o ILogOutput do contêiner de serviços
+            loggingBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider =>
+            {
+                var logOutput = serviceProvider.GetRequiredService<ILogOutput>();
+                return new CustomLoggerProvider(logOutput, logLevel);
+            });
         });
     }
     
@@ -144,7 +151,7 @@ public static class ServerServiceExtensions
     public static void AddNetwork(this IServiceCollection services)
     {
         // Core.Network abstractions
-        services.AddScoped<ICustomDataWriter, CustomDataWriter>();
+        services.AddTransient<ICustomDataWriter, CustomDataWriter>();
         services.AddSingleton<INetworkManager, NetworkManager>();
         services.AddSingleton<IPacketProcessor, PacketProcessor>();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
