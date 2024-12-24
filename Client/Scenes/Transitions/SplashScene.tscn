@@ -1,8 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://3wn3cfkhgsu7"]
+[gd_scene load_steps=2 format=3 uid="uid://3wn3cfkhgsu7"]
 
 [ext_resource type="PackedScene" uid="uid://b63i2bly2xrwb" path="res://Client/Scenes/Transitions/LoadingScene.tscn" id="2_nsxxq"]
-[ext_resource type="Script" path="res://Client/Scenes/Transitions/ExcluirResources.cs" id="3_o1feb"]
-[ext_resource type="Script" path="res://Client/Scenes/Transitions/CarregarResources.cs" id="4_hlljv"]
 
 [node name="SplashScene" type="Control"]
 layout_mode = 3
@@ -23,23 +21,3 @@ expand_mode = 1
 
 [node name="LoadingScene" parent="." instance=ExtResource("2_nsxxq")]
 layout_mode = 1
-
-[node name="ExcluirResources" type="Button" parent="." node_paths=PackedStringArray("TextureRect")]
-layout_mode = 0
-offset_left = 82.0
-offset_top = 57.0
-offset_right = 90.0
-offset_bottom = 65.0
-text = "Excluir Resources"
-script = ExtResource("3_o1feb")
-TextureRect = NodePath("../SplashImage")
-
-[node name="CarregarResources" type="Button" parent="." node_paths=PackedStringArray("TextureRect")]
-layout_mode = 0
-offset_left = 78.0
-offset_top = 127.0
-offset_right = 237.0
-offset_bottom = 158.0
-text = "Carregar Resources"
-script = ExtResource("4_hlljv")
-TextureRect = NodePath("../SplashImage")

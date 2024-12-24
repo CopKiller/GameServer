@@ -1,6 +1,7 @@
 using System;
 using Core.Client.Resource;
 using Godot;
+using ResourceLoader = Game.Scripts.Resources.ResourceLoader;
 
 namespace Game.Scripts.Singletons;
 
@@ -13,14 +14,17 @@ public partial class ResourceManager : Node
     
     public override void _Ready()
     {
-        ResourcePaths.LoadResourcesPath();
+        ResourcePath.LoadResourcesPath();
         LoadResources();
     }
     
     public void LoadResources()
     {
-        // Scenes
+        // Textures
         _resourceManager.LoadResource(EResourceType.Texture, EResource.SplashScreen);
+        
+        // Scenes
+        _resourceManager.LoadResource(EResourceType.Scene, EResource.LoadingScene);
         
         /*// Sprites
         _resourceManager.LoadResource(EResourceType.Texture, EResource.PlayerTexture);

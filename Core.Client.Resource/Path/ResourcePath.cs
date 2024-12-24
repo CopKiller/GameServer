@@ -1,6 +1,6 @@
 namespace Core.Client.Resource;
 
-public static class ResourcePaths
+public static class ResourcePath
 {
     private static readonly Dictionary<EResourceType, string> MainPaths = new();
 
@@ -18,7 +18,12 @@ public static class ResourcePaths
 
     private static void PopulateResourceMap()
     {
+        // Textures
         ResourceMap.Add(EResource.SplashScreen, (EResourceType.Texture, "SplashImage.jpg"));
+        
+        // Scenes
+        ResourceMap.Add(EResource.LoadingScene, (EResourceType.Scene, "Transitions/LoadingScene.tscn"));
+        ResourceMap.Add(EResource.LoadingScene, (EResourceType.Scene, "Transitions/SplashScene.tscn"));
     }
 
     public static string GetResourcePath(EResource resource)

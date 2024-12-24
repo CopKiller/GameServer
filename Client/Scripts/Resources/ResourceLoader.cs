@@ -1,7 +1,7 @@
 using Core.Client.Resource.Interface;
 using Godot;
 
-namespace Game.Scripts.Singletons;
+namespace Game.Scripts.Resources;
 
 public class ResourceLoader : IResourceLoader
 {

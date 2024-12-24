@@ -3,8 +3,7 @@ namespace Core.Client.Resource;
 public enum EResource
 {
     // Scenes
-    MainMenu,
-    Game,
+    LoadingScene,
     
     // Sprites
     SplashScreen,

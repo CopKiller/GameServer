@@ -1,4 +1,5 @@
 using Core.Logger.Interface;
+using Game.Scripts.Logger;
 using Game.Scripts.Singletons;
 using Microsoft.Extensions.DependencyInjection;
 

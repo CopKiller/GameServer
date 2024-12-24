@@ -32,7 +32,7 @@ public class ResourceManager<T> where T : class
             }
         }
         
-        var path = ResourcePaths.GetResourcePath(resourceType);
+        var path = ResourcePath.GetResourcePath(resourceType);
                 
         T? resource = _resourceLoader.Load<T>(path);
         if (resource != null)
