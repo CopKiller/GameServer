@@ -1,8 +1,7 @@
-
 using Core.Logger.Interface;
 using Godot;
 
-namespace Game.Scripts.Singletons;
+namespace Game.Scripts.Logger;
 
 public class GodotLogOutput : ILogOutput
 {
