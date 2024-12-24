@@ -1,3 +1,9 @@
+ColorRect
+Node3D
+Container
+VBoxContainer
+Label
+BoxContainer
 Button
 TextureRect
 ProgressBar
