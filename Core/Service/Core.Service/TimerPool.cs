@@ -24,8 +24,9 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
             while (!cancellationToken.IsCancellationRequested)
             {
                 var startTick = MainTimer.ElapsedMilliseconds;
-
-                Parallel.ForEach(ServiceLastTick.Keys, service =>
+                
+                // Usar foreach para atualizar todos os serviços em sequência.
+                foreach (var service in ServiceLastTick.Keys)
                 {
                     try
                     {
@@ -36,7 +37,21 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
                         logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.",
                             service.ServiceConfiguration.ServiceType);
                     }
-                });
+                }
+
+                // Usar Parallel.ForEach para atualizar todos os serviços em paralelo.
+                /*Parallel.ForEach(ServiceLastTick.Keys, service =>
+                {
+                    try
+                    {
+                        Update(service);
+                    }
+                    catch (Exception e)
+                    {
+                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.",
+                            service.ServiceConfiguration.ServiceType);
+                    }
+                });*/
 
                 var elapsed = MainTimer.ElapsedMilliseconds - startTick;
                 if (elapsed > configuration.UpdateIntervalMs)
