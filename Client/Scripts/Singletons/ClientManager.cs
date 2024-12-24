@@ -9,8 +9,11 @@ namespace Game.Scripts.Singletons;
 
 public partial class ClientManager : Node
 {
-    private readonly IServiceProvider? _serviceProvider;
     private readonly IServiceManager? _serviceManager;
+    
+    private ResourceManager? _resourceManager;
+    private PackedScene? _loadingScene;
+    private PackedScene? _splashScreen;
     
     public ClientManager()
     {
@@ -19,12 +22,26 @@ public partial class ClientManager : Node
         services.AddGodotLoggerOutput();
         services.AddServiceManager();
         
-        _serviceProvider = services.BuildServiceProvider();
+        var provider = services.BuildServiceProvider();
         
-        _serviceManager = _serviceProvider.GetService<IServiceManager>();
+        _serviceManager = provider.GetService<IServiceManager>();
         
         _serviceManager?.Register();
         _serviceManager?.Start();
+    }
+    
+    public override void _Ready()
+    {
+        _resourceManager = this.GetSingleton<ResourceManager>();
+    }
+    
+    private void ChangeScene(PackedScene scene)
+    {
+        var result = GetTree().ChangeSceneToPacked(scene);
         
+        if (result != Error.Ok)
+        {
+            GD.PrintErr("Erro ao carregar cena!");
+        }
     }
 }

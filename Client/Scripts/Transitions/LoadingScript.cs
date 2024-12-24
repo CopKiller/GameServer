@@ -11,17 +11,19 @@ using System.Threading.Tasks;
 public partial class LoadingScript : Control
 {
 	private ProgressBar? _progressBar;
+	private Label? _lblTaskName;
 	
-	private readonly List<Task> _loadingSteps = [];
+	private readonly List<(Func<Task>, string?)> _loadingSteps = [];
 
 	public override void _Ready()
 	{
-		_progressBar = GetNode<ProgressBar>("ProgressBar");
+		_progressBar = GetNode<ProgressBar>("%ProgressBar");
+		_lblTaskName = GetNode<Label>("%lblTaskName");
 	}
 	
-	public void AddTask(Action task)
+	public void AddTask(Func<Task> task, string? taskName = null)
 	{
-		_loadingSteps.Add(new Task(task));
+		_loadingSteps.Add((task, taskName));
 	}
 
 	public async Task StartLoading(Action? onLoadingComplete = null)
@@ -37,13 +39,24 @@ public partial class LoadingScript : Control
 
 		foreach (var step in _loadingSteps)
 		{
-			await step;
+			if (_lblTaskName != null)
+				_lblTaskName.Text = step.Item2;
 			
-			currentStep++;
-			_progressBar.Value = (currentStep / (float)totalSteps) * 100;
-		}
+			try
+			{
+				await step.Item1();
+			}
+			catch (Exception ex)
+			{
+				GD.PrintErr($"Erro ao executar tarefa: {step.Item2}. Exception: {ex.Message}");
+			}
 
-		GD.Print("Carregamento concluído!");
+			currentStep++;
+			_progressBar.Value = (currentStep / (float)totalSteps) * _progressBar.MaxValue;
+		}
+		
+		if (_lblTaskName != null)
+			_lblTaskName.Text = "Carregamento concluído!";
 		
 		onLoadingComplete?.Invoke();
 	}
