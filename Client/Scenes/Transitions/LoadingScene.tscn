@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://b63i2bly2xrwb"]
+[gd_scene load_steps=5 format=3 uid="uid://b63i2bly2xrwb"]
 
 [ext_resource type="Script" path="res://Client/Scripts/Transitions/LoadingScript.cs" id="1_brj3t"]
+[ext_resource type="Texture2D" uid="uid://cjmhnj5f2uxxd" path="res://Client/Resources/Texture/SplashImage.jpg" id="2_ac0ni"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20tsv"]
 bg_color = Color(0.60059, 0.607633, 0.585383, 1)
@@ -27,6 +28,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_brj3t")
 
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ac0ni")
+expand_mode = 1
+
 [node name="BoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
@@ -35,8 +47,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -400.0
-offset_top = -50.0
+offset_top = -58.0
 offset_right = 400.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
@@ -56,6 +69,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 0.662745)
 theme_override_styles/background = SubResource("StyleBoxFlat_20tsv")
 theme_override_styles/fill = SubResource("StyleBoxFlat_bbksu")
-value = 20.0
+rounded = true

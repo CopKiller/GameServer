@@ -2,6 +2,7 @@ using System;
 using Core.Client.Extensions;
 using Core.Service.Interfaces.Types;
 using Game.Scripts.Extensions;
+using Game.Scripts.Extensions.Services;
 using Godot;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,6 @@ public partial class ClientManager : Node
 {
     private readonly IServiceManager? _serviceManager;
     
-    private ResourceManager? _resourceManager;
     private PackedScene? _loadingScene;
     private PackedScene? _splashScreen;
     
@@ -32,7 +32,7 @@ public partial class ClientManager : Node
     
     public override void _Ready()
     {
-        _resourceManager = this.GetSingleton<ResourceManager>();
+        
     }
     
     private void ChangeScene(PackedScene scene)

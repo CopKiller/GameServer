@@ -22,8 +22,13 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="Core.Client.Resource\Core.Client.Resource.csproj" />
     <ProjectReference Include="Core\Client\Core.Client.Extensions\Core.Client.Extensions.csproj" />
+    <ProjectReference Include="Core\Client\Core.Client.Validator\Core.Client.Validator.csproj" />
+    <ProjectReference Include="Core\Database\Core.Database.Constants\Core.Database.Constants.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Readme.txt" />
   </ItemGroup> 
   
 </Project>

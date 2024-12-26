@@ -1,9 +1,8 @@
 using Core.Logger.Interface;
 using Game.Scripts.Logger;
-using Game.Scripts.Singletons;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Game.Scripts.Extensions;
+namespace Game.Scripts.Extensions.Services;
 
 public static class GodotServicesExtension
 {
