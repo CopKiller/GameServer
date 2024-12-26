@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://t4m4dgov1k5q"]
+
+[ext_resource type="Script" path="res://Client/Scripts/BaseControls/ButtonBase.cs" id="1_073an"]
+
+[node name="ButtonBase" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Text Here"
+script = ExtResource("1_073an")
+
+[connection signal="pressed" from="." to="." method="OnPressed"]
