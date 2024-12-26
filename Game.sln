@@ -48,6 +48,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Network", "Core\Network\Core.Network\Core.Network.csproj", "{99CC594E-1F14-4B36-9CF5-BFCCCE014D8F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{3F8D6104-E475-44BB-BD3C-00AC20DFAFFB}"
+	ProjectSection(SolutionItems) = preProject
+		External\VelcroPhysics\src\VelcroPhysics.MonoGame.Samples.Testbed\Tests\Velcro\YuPengPolygonTest.cs = External\VelcroPhysics\src\VelcroPhysics.MonoGame.Samples.Testbed\Tests\Velcro\YuPengPolygonTest.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetLib", "External\LiteNetLib\LiteNetLib\LiteNetLib.csproj", "{DE2CAF20-CC2B-4FCD-9380-31068D952FB9}"
 EndProject
