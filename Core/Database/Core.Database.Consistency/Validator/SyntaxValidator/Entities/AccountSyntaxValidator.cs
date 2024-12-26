@@ -4,7 +4,7 @@ using Core.Database.Interface.Account;
 
 namespace Core.Database.Consistency.Validator.SyntaxValidator.Entities;
 
-internal class AccountSyntaxValidator<T> : ConsistencyValidator<T> where T : class, IAccountModel
+public class AccountSyntaxValidator<T> : ConsistencyValidator<T> where T : class, IAccountModel
 {
     public override Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
     {
@@ -15,33 +15,66 @@ internal class AccountSyntaxValidator<T> : ConsistencyValidator<T> where T : cla
         }
         
         // Username
-        ValidateString(entity.Username, "Username", CharactersLength.MinUsernameLength, CharactersLength.MaxUsernameLength, MyRegex.NameRegexCompiled);
-
+        ValidateUsername(entity.Username);
+        
         // Password
-        if (isUpdate && entity.Password.Length == CharactersLength.MaxEncryptedPasswordLength)
-        {
-            ValidateString(entity.Password, "Password", CharactersLength.MaxEncryptedPasswordLength, CharactersLength.MaxEncryptedPasswordLength);
-        }
-        else
-        {
-            ValidateString(entity.Password, "Password", CharactersLength.MinPasswordLength, CharactersLength.MaxPasswordLength, MyRegex.NameRegexCompiled);
-        }
+        ValidatePassword(entity.Password, isUpdate);
 
         // Email
-        ValidateString(entity.Email, "Email", CharactersLength.MinEmailLength, CharactersLength.MaxEmailLength, MyRegex.EmailRegexCompiled);
+        ValidateEmail(entity.Email);
         
         // BirthDate
-        if (entity?.BirthDate == null || entity?.BirthDate.Year is < CharactersLength.MinYear or > CharactersLength.MaxYear)
-        {
-            AddError($"BirthDate {entity?.BirthDate} is invalid");
-        }
+        ValidateBirthDate(entity.BirthDate);
         
         // CreatedAt
-        if (entity?.CreatedAt == null)
-        {
-            AddError($"CreatedAt {entity?.CreatedAt} is invalid");
-        }
+        ValidateCreatedAt(entity.CreatedAt);
 
         return Task.FromResult(ValidatorResult);
+    }
+    
+    public IValidatorResult ValidateUsername(string username)
+    {
+        ValidateString(username, "Username", CharactersLength.MinUsernameLength, CharactersLength.MaxUsernameLength, MyRegex.NameRegexCompiled);
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidatePassword(string password, bool isUpdate = false)
+    {
+        if (isUpdate && password.Length == CharactersLength.MaxEncryptedPasswordLength)
+            ValidateString(password, "Password", CharactersLength.MaxEncryptedPasswordLength, CharactersLength.MaxEncryptedPasswordLength);
+        else
+            ValidateString(password, "Password", CharactersLength.MinPasswordLength, CharactersLength.MaxPasswordLength);
+        
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateEmail(string email)
+    {
+        ValidateString(email, "Email", CharactersLength.MinEmailLength, CharactersLength.MaxEmailLength, MyRegex.EmailRegexCompiled);
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateBirthDate(DateOnly? birthDate)
+    {
+        if (birthDate == null || birthDate.Value.Year is < CharactersLength.MinYear or > CharactersLength.MaxYear)
+        {
+            AddError($"BirthDate {birthDate} is invalid");
+        }
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateCreatedAt(DateTime? createdAt)
+    {
+        if (createdAt == null)
+        {
+            AddError($"CreatedAt {createdAt} is invalid");
+        }
+        return ValidatorResult;
+    }
+    
+    public void ClearErrors()
+    {
+        ValidatorResult.Errors.Clear();
+        ValidatorResult.IsValid = true;
     }
 }
