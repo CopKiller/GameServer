@@ -14,15 +14,23 @@ internal class PlayerDataValidator<T>(IRepository<T> repository) : ConsistencyVa
             return ValidatorResult;
         }
         
-        if (await repository.ExistEntityAsync(x => x.Name.Equals(entity.Name, StringComparison.CurrentCultureIgnoreCase)))
+        // Name
+        await ValidateName(entity.Name, isUpdate);
+        
+        return ValidatorResult;
+    }
+    
+    public async Task<IValidatorResult> ValidateName(string name, bool isUpdate = false)
+    {
+        if (await repository.ExistEntityAsync(x => x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
         {
             if (!isUpdate)
-                AddError($"Player name {entity.Name} already exists");
+                AddError($"Player name {name} already exists");
         }
         else
         {
             if (isUpdate)
-                AddError($"Player name {entity.Name} not found for update this player");
+                AddError($"Player name {name} not found for update this player");
         }
         
         return ValidatorResult;

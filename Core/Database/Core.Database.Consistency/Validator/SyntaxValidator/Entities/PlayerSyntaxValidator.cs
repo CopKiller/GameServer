@@ -4,7 +4,7 @@ using Core.Database.Interface.Player;
 
 namespace Core.Database.Consistency.Validator.SyntaxValidator.Entities;
 
-internal class PlayerSyntaxValidator<T> : ConsistencyValidator<T> where T : class, IPlayerModel
+public class PlayerSyntaxValidator<T> : ConsistencyValidator<T> where T : class, IPlayerModel
 {
     public override Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
     {
@@ -15,28 +15,64 @@ internal class PlayerSyntaxValidator<T> : ConsistencyValidator<T> where T : clas
         }
         
         // Name
-        ValidateString(entity.Name, "Name", CharactersLength.MinNameLength, CharactersLength.MaxNameLength, MyRegex.NameRegexCompiled);
+        ValidateName(entity.Name);
 
         // Created At
-        if (entity.CreatedAt == default)
+        ValidateCreatedAt(entity.CreatedAt);
+        
+        // Children
+        ValidateStats(entity.Stats);
+        ValidateVitals(entity.Vitals);
+        ValidatePosition(entity.Position);
+
+        return Task.FromResult(ValidatorResult);
+    }
+    
+    public IValidatorResult ValidateName(string name)
+    {
+        ValidateString(name, "Name", CharactersLength.MinNameLength, CharactersLength.MaxNameLength, MyRegex.NameRegexCompiled);
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateCreatedAt(DateOnly createdAt)
+    {
+        if (createdAt == default)
         {
             AddError("Created Date is null or empty");
         }
-        
-        // Children
-        if (entity?.Stats == null)
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateStats(IStats? stats)
+    {
+        if (stats == null)
         {
             AddError("Stats is null");
         }
-        if (entity?.Vitals == null)
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateVitals(IVitals? vitals)
+    {
+        if (vitals == null)
         {
             AddError("Vitals is null");
         }
-        if (entity?.Position == null)
+        return ValidatorResult;
+    }
+    
+    public IValidatorResult ValidatePosition(IPosition? position)
+    {
+        if (position == null)
         {
             AddError("Position is null");
         }
-
-        return Task.FromResult(ValidatorResult);
+        return ValidatorResult;
+    }
+    
+    public void ClearErrors()
+    {
+        ValidatorResult.Errors.Clear();
+        ValidatorResult.IsValid = true;
     }
 }
