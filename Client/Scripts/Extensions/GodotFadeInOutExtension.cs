@@ -20,7 +20,7 @@ public static class GodotFadeInOutExtension
 
         tween.SetEase(ease);
         tween.TweenProperty(node, "modulate:a", 1f, duration);
-        await node.ToSignal(tween, "finished");
+        await node.ToSignal(tween, Tween.SignalName.Finished);
     }
     
     public static async Task FadeOut(this CanvasItem node, float duration = 1f, Tween.EaseType ease = Tween.EaseType.InOut)
@@ -34,6 +34,6 @@ public static class GodotFadeInOutExtension
 
         tween.SetEase(ease);
         tween.TweenProperty(node, "modulate:a", 0f, duration);
-        await node.ToSignal(tween, "finished");
+        await node.ToSignal(tween, Tween.SignalName.Finished);
     }
 }
