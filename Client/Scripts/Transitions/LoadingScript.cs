@@ -12,6 +12,8 @@ namespace Game.Scripts.Transitions
         private ProgressBar? _progressBar;
         private Label? _lblTaskName;
         private Tween? _tween;
+        
+        [Export] public PackedScene? NextScene { get; set; }
 
         private readonly List<(Func<Task>, string?)> _loadingSteps = [];
 
@@ -20,6 +22,12 @@ namespace Game.Scripts.Transitions
             _background = GetNode<TextureRect>("%Background");
             _progressBar = GetNode<ProgressBar>("%ProgressBar");
             _lblTaskName = GetNode<Label>("%lblTaskName");
+            
+            if (_background == null || _progressBar == null || _lblTaskName == null)
+            {
+                GD.PrintErr("Componentes obrigatórios não foram encontrados!");
+                return;
+            }
             
             TestAddTask();
         }
@@ -59,18 +67,20 @@ namespace Game.Scripts.Transitions
                 currentStep++;
                 double targetValue = (currentStep / (float)totalSteps) * _progressBar.MaxValue;
                 
-                SmoothUpdateProgressBar(targetValue, 0.5f);
+                await SmoothUpdateProgressBar(targetValue, 0.5f);
             }
 
             if (_lblTaskName != null)
                 _lblTaskName.Text = "Carregamento concluído!";
+
+            await Task.Delay(200);
             
             await this.FadeOut();
 
             onLoadingComplete?.Invoke();
         }
 
-        private void SmoothUpdateProgressBar(double targetValue, float duration)
+        private async Task SmoothUpdateProgressBar(double targetValue, float duration)
         {
             _tween = CreateTween();
 
@@ -79,6 +89,7 @@ namespace Game.Scripts.Transitions
             _tween.SetEase(Tween.EaseType.InOut);
             _tween.SetTrans(Tween.TransitionType.Cubic);
             _tween.TweenProperty(_progressBar, "value", targetValue, duration);
+            await ToSignal(_tween, Tween.SignalName.Finished);
         }
         
         private void TestAddTask()
@@ -110,13 +121,18 @@ namespace Game.Scripts.Transitions
             
             AddTask(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(1000); 
             }, "Teste 6");
 
             StartLoading(() =>
             {
                 if (_lblTaskName != null)
                     _lblTaskName.Text = "Carregamento concluído!";
+                
+                if (NextScene != null)
+                {
+                    GetTree().ChangeSceneToPacked(NextScene);
+                }
             });
         }
     }
