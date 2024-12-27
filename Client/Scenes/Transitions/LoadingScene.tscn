@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://b63i2bly2xrwb"]
+[gd_scene load_steps=6 format=3 uid="uid://b63i2bly2xrwb"]
 
 [ext_resource type="Script" path="res://Client/Scripts/Transitions/LoadingScript.cs" id="1_brj3t"]
 [ext_resource type="Texture2D" uid="uid://cjmhnj5f2uxxd" path="res://Client/Resources/Texture/SplashImage.jpg" id="2_ac0ni"]
+[ext_resource type="PackedScene" uid="uid://brsyug3yx44jd" path="res://Client/Scenes/MainScenes/MainMenuScene.tscn" id="2_koea0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20tsv"]
 bg_color = Color(0.60059, 0.607633, 0.585383, 1)
@@ -27,6 +28,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_brj3t")
+NextScene = ExtResource("2_koea0")
 
 [node name="Background" type="TextureRect" parent="."]
 unique_name_in_owner = true

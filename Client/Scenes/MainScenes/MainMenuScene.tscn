@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://brsyug3yx44jd"]
+[gd_scene load_steps=11 format=3 uid="uid://brsyug3yx44jd"]
 
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs" id="1_g8h0f"]
 [ext_resource type="Texture2D" uid="uid://joyt6cvhx0f6" path="res://Client/Resources/Texture/MainMenu/BG.jpg" id="1_t2e0c"]
 [ext_resource type="PackedScene" uid="uid://dk7ig0f6vfwaq" path="res://Client/Scenes/BaseControls/WindowBase.tscn" id="2_g687l"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MenuWindowScript.cs" id="3_65gus"]
 [ext_resource type="PackedScene" uid="uid://t4m4dgov1k5q" path="res://Client/Scenes/BaseControls/ButtonBase.tscn" id="4_px31k"]
-[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowScript.cs" id="5_o0jjp"]
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/LoginWindowScript.cs" id="5_mrp30"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/UsernameLineScript.cs" id="6_1jjaj"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/PasswordLineScript.cs" id="7_txykb"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/RegisterWindowScript.cs" id="8_hlxr0"]
@@ -17,6 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_g8h0f")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -33,7 +35,6 @@ expand_mode = 1
 [node name="MenuWindow" parent="MainMenuWindows" instance=ExtResource("2_g687l")]
 title = "Menu"
 size = Vector2i(250, 110)
-visible = false
 script = ExtResource("3_65gus")
 CanClose = false
 
@@ -55,7 +56,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start"
-OpenWindow = NodePath("../../../../StartWindow")
+OpenWindow = NodePath("../../../../LoginWindow")
 CloseWindow = NodePath("../../..")
 
 [node name="RegisterButton" parent="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer" node_paths=PackedStringArray("OpenWindow", "CloseWindow") instance=ExtResource("4_px31k")]
@@ -70,14 +71,14 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
 
-[node name="StartWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
+[node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
 title = "Login"
 size = Vector2i(230, 200)
 visible = false
-script = ExtResource("5_o0jjp")
+script = ExtResource("5_mrp30")
 OpenWindowWhenClosed = NodePath("../MenuWindow")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMenuWindows/StartWindow"]
+[node name="MarginContainer" type="MarginContainer" parent="MainMenuWindows/LoginWindow"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -88,47 +89,48 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuWindows/StartWindow/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuWindows/LoginWindow/MarginContainer"]
 layout_mode = 2
 
-[node name="username" type="Label" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="username" type="Label" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Username:"
 
-[node name="UsernameLine" type="LineEdit" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="UsernameLine" type="LineEdit" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 placeholder_text = "username here"
 clear_button_enabled = true
 script = ExtResource("6_1jjaj")
 
-[node name="password" type="Label" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="password" type="Label" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Password:"
 
-[node name="PasswordLine" type="LineEdit" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="PasswordLine" type="LineEdit" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 placeholder_text = "password here"
 clear_button_enabled = true
 script = ExtResource("7_txykb")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SaveUserCheckbox" type="CheckBox" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SaveUserCheckbox" type="CheckBox" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Save User"
 
-[node name="SavePassCheckbox" type="CheckBox" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SavePassCheckbox" type="CheckBox" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Save Pass"
 
-[node name="Button" type="Button" parent="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Start Game"
 
 [node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
 title = "Register"
 size = Vector2i(230, 365)
+visible = false
 wrap_controls = true
 script = ExtResource("8_hlxr0")
 DatePickWindow = NodePath("../DatePicker")
@@ -195,8 +197,8 @@ text = "Confirm"
 visible = false
 unresizable = false
 
-[connection signal="text_changed" from="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
-[connection signal="text_changed" from="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/PasswordLine" to="MainMenuWindows/StartWindow/MarginContainer/VBoxContainer/PasswordLine" method="OnTextChanged"]
+[connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
+[connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" method="OnTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/UsernameLineEdit" to="MainMenuWindows/RegisterWindow" method="OnUsernameTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/PasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnPasswordTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/ConfirmPasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnConfirmPasswordTextChanged"]
