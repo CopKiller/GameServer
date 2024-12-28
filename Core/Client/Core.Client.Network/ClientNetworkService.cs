@@ -22,8 +22,11 @@ public class ClientNetworkService(
 
         if (serverPeer is not null)
         {
-            logger.LogError("Server peer is already connected.");
-            return;
+            if (serverPeer.IsConnected)
+            {
+                logger.LogError("Server peer is already connected.");
+                return;
+            }
         }
 
         networkManager.StartClient();
