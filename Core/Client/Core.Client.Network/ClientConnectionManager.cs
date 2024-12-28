@@ -10,9 +10,10 @@ public class ClientConnectionManager : IClientConnectionManager
     private readonly IConnectionManager _connectionManager;
     private readonly INetworkEventsListener _listener;
     private readonly ILogger<ClientConnectionManager> _logger;
-    public int Latency { get; private set; }
 
     private ICustomNetPeer? CurrentPeer { get; set; }
+
+    public bool IsConnected => CurrentPeer is { IsConnected: true };
     
     public ClientConnectionManager(
         IConnectionManager connectionManager,
@@ -23,15 +24,7 @@ public class ClientConnectionManager : IClientConnectionManager
         _listener = listener;
         _logger = logger;
         
-        _listener.OnNetworkLatencyUpdate += OnNetworkLatencyUpdate;
         _listener.OnPeerDisconnected += OnPeerDisconnected;
-    }
-    
-    private void OnNetworkLatencyUpdate(ICustomNetPeer peer, int latency)
-    {
-        Latency = latency;
-        
-        _logger.LogInformation($"Latency updated: {latency}");
     }
     
     private void OnPeerDisconnected(ICustomNetPeer peer, ICustomDisconnectInfo disconnectInfo)

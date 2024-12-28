@@ -13,4 +13,6 @@ public interface IClientConnectionManager
     /// </summary>
     ICustomNetPeer? GetServerPeer();
     void SetServerPeer(ICustomNetPeer peer);
+    
+    bool IsConnected { get; }
 }
