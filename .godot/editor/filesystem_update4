@@ -1,2 +1,15 @@
+res://Client/Scripts/Transitions/LoadingScript.cs
+res://Client/Scripts/Singletons/ClientManager.cs
+res://Client/Scripts/BaseControls/WindowBase.cs
+res://Client/Scripts/Singletons/ServiceManager.cs
+res://Client/Scripts/BaseControls/ButtonBase.cs
+res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs
+res://Client/Scripts/MainScenes/MainMenu/LoginWindowScript.cs
+res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/UsernameLineScript.cs
+res://Client/Scripts/Singletons/NetworkManager.cs
+res://Client/Scripts/MainScenes/MainMenu/MenuWindowScript.cs
+res://Client/Scripts/MainScenes/MainMenu/RegisterWindowScript.cs
+res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/PasswordLineScript.cs
+res://Client/Scripts/BaseControls/DatePicker.cs
 res://Client/Scenes/MainScenes/MainMenuScene.tscn
 res://Client/Scenes/Transitions/LoadingScene.tscn

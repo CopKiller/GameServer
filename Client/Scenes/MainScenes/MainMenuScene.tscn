@@ -66,10 +66,11 @@ text = "Register"
 OpenWindow = NodePath("../../../../RegisterWindow")
 CloseWindow = NodePath("../../..")
 
-[node name="ExitButton" parent="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer" instance=ExtResource("4_px31k")]
+[node name="ExitButton" parent="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer" node_paths=PackedStringArray("CloseWindow") instance=ExtResource("4_px31k")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
+CloseWindow = NodePath("../../..")
 
 [node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
 title = "Login"
@@ -197,6 +198,7 @@ text = "Confirm"
 visible = false
 unresizable = false
 
+[connection signal="pressed" from="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer/ExitButton" to="." method="OnExitButtonPressed"]
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" method="OnTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/UsernameLineEdit" to="MainMenuWindows/RegisterWindow" method="OnUsernameTextChanged"]

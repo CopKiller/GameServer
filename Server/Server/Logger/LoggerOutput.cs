@@ -1,8 +1,8 @@
 using Core.Logger.Interface;
 
-namespace Server.Extensions;
+namespace Server.Logger;
 
-public class ConsoleLogOutput : ILogOutput
+public class LoggerOutput : ILogOutput
 {
     public void Write(string message, params object[] args)
     {
