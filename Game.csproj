@@ -29,6 +29,10 @@
   
   <ItemGroup>
     <Content Include="Readme.txt" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Client\Scripts\Network\" />
   </ItemGroup> 
   
 </Project>

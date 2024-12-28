@@ -1,4 +1,6 @@
 using Game.Scripts.BaseControls;
+using Game.Scripts.Extensions;
+using Game.Scripts.Singletons;
 using Godot;
 
 namespace Game.Scripts.MainScenes.MainMenu;

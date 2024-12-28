@@ -68,13 +68,12 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
         if (!service.ServiceConfiguration.Enabled) return;
         if (!service.ServiceConfiguration.NeedUpdate) return;
 
-        ServiceLastTick.TryAdd(service, 0); // Tentativa de adicionar o serviço caso não exista
+        ServiceLastTick.TryAdd(service, 0);
 
         var tick = MainTimer.ElapsedMilliseconds;
 
         var lastTick = ServiceLastTick.GetValueOrDefault(service, 0);
-
-        // Valor inicial
+        
         var tickCounter = tick - lastTick;
         if (tickCounter < service.ServiceConfiguration.UpdateIntervalMs && !force) return;
 
@@ -110,9 +109,9 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
         ServiceLastTick.TryAdd(service, 0);
     }
 
-    public void Dispose()
+    public async void Dispose()
     {
-        StopAsync().GetAwaiter().GetResult();
+        await StopAsync();
 
         foreach (var service in ServiceLastTick.Keys)
         {
