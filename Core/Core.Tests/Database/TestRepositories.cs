@@ -1,5 +1,6 @@
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
+using Core.Logger.Interface;
 using Core.Server.Database.Interface;
 using Core.Server.Extensions;
 using FluentAssertions;
@@ -19,9 +20,9 @@ public class TestRepositories
 
         services.AddDatabase(useInMemory: true);
         services.AddServerDatabase();
-
         services.AddCryptography();
         services.AddLogger(LogLevel.Debug);
+        services.AddSingleton<ILogOutput, LoggerOutput>();
 
         return services.BuildServiceProvider();
     }

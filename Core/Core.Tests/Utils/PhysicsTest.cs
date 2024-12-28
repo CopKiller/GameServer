@@ -1,4 +1,5 @@
 using System.Numerics;
+using Core.Logger.Interface;
 using Core.Physics.Interface;
 using Core.Physics.Interface.Builder;
 using Core.Physics.Interface.Enum;
@@ -19,6 +20,7 @@ public class PhysicsTest
         services.AddPhysics();
         services.AddServiceManager();
         services.AddLogger();
+        services.AddSingleton<ILogOutput, LoggerOutput>();
         
         _serviceProvider = services.BuildServiceProvider();
     }

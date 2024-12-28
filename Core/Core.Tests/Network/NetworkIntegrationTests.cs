@@ -1,6 +1,7 @@
 
 using Core.Client.Extensions;
 using Core.Client.Network.Interface;
+using Core.Logger.Interface;
 using Core.Network.Packets.Client;
 using Core.Network.Packets.Server;
 using Core.Network.SerializationObjects;
@@ -144,6 +145,7 @@ public class NetworkIntegrationTests
         ServerServiceExtensions.AddNetwork(services);
         services.AddMapper();
         ServerServiceExtensions.AddServiceManager(services);
+        services.AddSingleton<ILogOutput, LoggerOutput>();
 
         var manager = services.BuildServiceProvider(new ServiceProviderOptions
             {
