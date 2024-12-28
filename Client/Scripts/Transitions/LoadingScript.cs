@@ -28,8 +28,6 @@ namespace Game.Scripts.Transitions
                 GD.PrintErr("Componentes obrigatórios não foram encontrados!");
                 return;
             }
-            
-            TestAddTask();
         }
 
         public void AddTask(Func<Task> task, string? taskName = null)
@@ -37,7 +35,7 @@ namespace Game.Scripts.Transitions
             _loadingSteps.Add((task, taskName));
         }
 
-        public async void StartLoading(Action? onLoadingComplete = null)
+        public async void StartLoading(Action? onLoadingComplete = null, bool openNextScene = true)
         {
             await this.FadeIn();
             
@@ -58,6 +56,7 @@ namespace Game.Scripts.Transitions
                 try
                 {
                     await step.Item1();
+                    GD.Print($"Tarefa concluída: {step.Item2}");
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +75,15 @@ namespace Game.Scripts.Transitions
             await Task.Delay(200);
             
             await this.FadeOut();
-
+            
+            if (openNextScene)
+            {
+                if (NextScene != null)
+                    GetTree().ChangeSceneToPacked(NextScene);
+                else
+                    GD.PrintErr("Próxima cena não foi definida!");
+            }
+            
             onLoadingComplete?.Invoke();
         }
 
@@ -123,17 +130,6 @@ namespace Game.Scripts.Transitions
             {
                 await Task.Delay(1000); 
             }, "Teste 6");
-
-            StartLoading(() =>
-            {
-                if (_lblTaskName != null)
-                    _lblTaskName.Text = "Carregamento concluído!";
-                
-                if (NextScene != null)
-                {
-                    GetTree().ChangeSceneToPacked(NextScene);
-                }
-            });
         }
     }
 }
