@@ -5,6 +5,7 @@ using Core.Server.Extensions;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Server.Extensions;
 
 namespace Server;
 
@@ -18,6 +19,7 @@ public static class Program
 
         services.AddCryptography();
         services.AddLogger(LogLevel.Trace);
+        services.AddServerLogOutput();
         services.AddDatabase();
         services.AddServerDatabase();
         services.AddNetwork();
