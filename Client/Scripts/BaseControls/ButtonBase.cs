@@ -7,14 +7,14 @@ public partial class ButtonBase : Button
     [Export] public Window? OpenWindow { get; set; }
     [Export] public Window? CloseWindow { get; set; }
     
-    public virtual void OnPressed()
+    public void OnPressed()
     {
-        if (OpenWindow != null)
-        {
-            OpenWindow.Visible = !OpenWindow.Visible;
-            
-            if (CloseWindow != null)
-                CloseWindow.Hide();
-        }
+
+        if (OpenWindow?.Visible == false)
+            OpenWindow?.Show();
+        else
+            OpenWindow?.Hide();
+
+        CloseWindow?.Hide();
     }
 }
