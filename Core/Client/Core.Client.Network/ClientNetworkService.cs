@@ -7,36 +7,18 @@ using Microsoft.Extensions.Logging;
 namespace Core.Client.Network;
 
 public class ClientNetworkService(
-    INetworkConfiguration networkConfiguration,
     INetworkManager networkManager,
     IClientPacketProcessor packetProcessor,
-    IClientConnectionManager connectionManager,
-    ILogger<ClientNetworkService> logger) : ISingleService
+    IClientConnectionManager connectionManager) : ISingleService
 {
-    public IServiceConfiguration ServiceConfiguration { get; } = new ServiceConfiguration();
+    public IServiceConfiguration ServiceConfiguration { get; } = new ClientNetworConfiguration();
 
     // ISingleService
     public void Start()
     {
-        var serverPeer = connectionManager.GetServerPeer();
-
-        if (serverPeer is not null)
-        {
-            if (serverPeer.IsConnected)
-            {
-                logger.LogError("Server peer is already connected.");
-                return;
-            }
-        }
-
         networkManager.StartClient();
-        
-        var peer = networkManager.ConnectToServer(networkConfiguration.Address, networkConfiguration.Port,
-            networkConfiguration.Key);
-        
-        connectionManager.SetServerPeer(peer);
 
-        packetProcessor.Initialize(peer);
+        packetProcessor.Initialize();
 
         ServiceConfiguration.Enabled = true;
     }
@@ -45,29 +27,16 @@ public class ClientNetworkService(
     {
         networkManager.Stop();
         packetProcessor.Stop();
-        connectionManager.Disconnect();
+        connectionManager.DisconnectFromServer();
         ServiceConfiguration.Enabled = false;
     }
 
     public void Update(long currentTick)
     {
-        if (connectionManager.GetServerPeer() is null)
-        {
-            logger.LogError("Update service failed: Server peer is null.");
-            Stop();
-            return;
-        }
-
         networkManager.PollEvents();
     }
 
-    public void Register()
-    {
-        networkConfiguration.AutoRecycle = true;
-        networkConfiguration.EnableStatistics = false;
-        networkConfiguration.UnconnectedMessagesEnabled = false;
-        networkConfiguration.UseNativeSockets = true;
-    }
+    public void Register() { }
 
     public void Restart()
     {

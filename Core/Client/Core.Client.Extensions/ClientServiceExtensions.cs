@@ -93,7 +93,7 @@ public static class ClientServiceExtensions
     public static void AddNetworkClient(this IServiceCollection services)
     {
         // Core.Server.Network abstractions
-        services.AddSingleton<ISingleService, ClientNetworkService>();
+        services.AddSingleton<ISingleService ,ClientNetworkService>();
         services.AddSingleton<IClientPacketProcessor, ClientPacketProcessor>();
         services.AddSingleton<IClientConnectionManager, ClientConnectionManager>();
     }

@@ -10,15 +10,13 @@ namespace Core.Client.Network;
 public class ClientPacketProcessor(
     IPacketProcessor packetProcessor,
     INetworkEventsListener netListener,
+    IClientConnectionManager clientConnectionManager,
     ILogger<ClientPacketProcessor> logger) : IClientPacketProcessor
 {
     private readonly ClientNetworkPacket _clientNetworkPacket = new(logger);
-    private ICustomNetPeer? ServerPeer { get; set; }
 
-    public void Initialize(ICustomNetPeer peer)
+    public void Initialize()
     {
-        ServerPeer = peer;
-
         packetProcessor.RegisterPacket<CPacketFirst>(_clientNetworkPacket.OnFirstPacket);
         packetProcessor.RegisterPacket<CPacketSecond>(_clientNetworkPacket.OnSecondPacket);
 
@@ -30,8 +28,6 @@ public class ClientPacketProcessor(
         packetProcessor.UnregisterPackets();
 
         netListener.OnNetworkReceive -= ProcessPacket;
-
-        ServerPeer = null;
     }
 
     private void ProcessPacket(ICustomNetPeer peer, ICustomNetPacketReader reader, byte channel,
@@ -39,39 +35,46 @@ public class ClientPacketProcessor(
     {
         ReadAllPackets(reader, peer);
     }
+    
+    private bool IsServerPeerConnected => clientConnectionManager.CurrentPeer != null && clientConnectionManager.IsConnected;
 
     public void SendPacket<TPacket>(TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new()
     {
-        if (ServerPeer == null)
+        if (!IsServerPeerConnected)
         {
-            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            logger.LogError($"ServerPeer not connected in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
             return;
         }
-        
-        packetProcessor.SendPacket(ServerPeer, packet, deliveryMethod);
+
+        if (clientConnectionManager.CurrentPeer != null)
+            packetProcessor.SendPacket(clientConnectionManager.CurrentPeer, packet, deliveryMethod);
     }
 
     public void SendPacket<T>(ref T packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable
     {
-        if (ServerPeer == null)
+        if (!IsServerPeerConnected)
         {
-            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            logger.LogError($"ServerPeer not connected in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
             return;
         }
-        packetProcessor.SendPacket(ServerPeer, ref packet, deliveryMethod);
+
+        if (clientConnectionManager.CurrentPeer != null)
+            packetProcessor.SendPacket(clientConnectionManager.CurrentPeer, ref packet, deliveryMethod);
     }
 
     public void SendPacket(byte[] data,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
     {
-        if (ServerPeer == null)
+        if (!IsServerPeerConnected)
         {
-            logger.LogError($"ServerPeer is null in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
+            logger.LogError($"ServerPeer not connected in method: {nameof(SendPacket)} in class: {nameof(ClientPacketProcessor)}");
             return;
         }
-        packetProcessor.SendPacket(ServerPeer, data, deliveryMethod);
+
+        if (clientConnectionManager.CurrentPeer != null)
+            packetProcessor.SendPacket(clientConnectionManager.CurrentPeer, data, deliveryMethod);
     }
 
     public void RegisterNestedType<T>() where T : ICustomSerializable, new()
