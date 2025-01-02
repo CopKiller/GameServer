@@ -49,7 +49,8 @@ public class NetworkManager : INetworkManager
 
     public void Stop()
     {
-        _networkManager.Stop();
+        if (_networkManager.IsRunning)
+            _networkManager.Stop();
     }
 
     public void PollEvents()
