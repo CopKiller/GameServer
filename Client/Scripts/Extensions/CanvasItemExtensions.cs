@@ -7,7 +7,7 @@ namespace Game.Scripts.Extensions;
 /// <summary>
 /// Classe de extensão para realizar fade in e fade out em um nó do tipo CanvasItem.
 /// </summary>
-public static class GodotFadeInOutExtension
+public static class CanvasItemExtensions
 {
     public static async Task FadeIn(this CanvasItem node, float duration = 1f, Tween.EaseType ease = Tween.EaseType.InOut)
     {
