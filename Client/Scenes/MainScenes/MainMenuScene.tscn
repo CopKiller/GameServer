@@ -32,7 +32,7 @@ expand_mode = 1
 
 [node name="MainMenuWindows" type="Node" parent="."]
 
-[node name="MenuWindow" parent="MainMenuWindows" instance=ExtResource("2_g687l")]
+[node name="MenuWindow" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Menu"
 size = Vector2i(250, 110)
 script = ExtResource("3_65gus")
@@ -72,7 +72,7 @@ layout_mode = 2
 text = "Exit"
 CloseWindow = NodePath("../../..")
 
-[node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
+[node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Login"
 size = Vector2i(230, 200)
 visible = false
@@ -128,7 +128,7 @@ text = "Save Pass"
 layout_mode = 2
 text = "Start Game"
 
-[node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") instance=ExtResource("2_g687l")]
+[node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Register"
 size = Vector2i(230, 365)
 visible = false
@@ -194,9 +194,17 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "Confirm"
 
-[node name="DatePicker" parent="MainMenuWindows" instance=ExtResource("9_fg5ma")]
+[node name="DatePicker" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("9_fg5ma")]
 visible = false
 unresizable = false
+
+[node name="LatencyLabel" type="Label" parent="."]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Ping: 0ms"
+horizontal_alignment = 1
+text_direction = 1
 
 [connection signal="pressed" from="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer/ExitButton" to="." method="OnExitButtonPressed"]
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
