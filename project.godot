@@ -11,15 +11,18 @@ config_version=5
 [application]
 
 config/name="GameClient"
-run/main_scene="res://Client/Scenes/Transitions/LoadingScene.tscn"
+run/main_scene="res://Client/Scenes/FirstScene.tscn"
 config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 config/icon="res://Client/icon.svg"
 
 [autoload]
 
 ServiceManager="*res://Client/Scripts/Singletons/ServiceManager.cs"
-ClientManager="*res://Client/Scripts/Singletons/ClientManager.cs"
+SceneManager="*res://Client/Scripts/Singletons/SceneManager.cs"
 NetworkManager="*res://Client/Scripts/Singletons/NetworkManager.cs"
+CustomLoader="*res://Client/Scripts/Singletons/CustomLoader.cs"
+LoadingManager="*res://Client/Scripts/Singletons/LoadingManager.cs"
+GameStateManager="*res://Client/Scripts/Singletons/GameStateManager.cs"
 
 [dotnet]
 

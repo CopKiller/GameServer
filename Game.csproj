@@ -28,11 +28,12 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Include="Client\Scenes\BaseControls\ButtonBase.tscn" />
+    <Content Include="Client\Scenes\BaseControls\DatePicker.tscn" />
+    <Content Include="Client\Scenes\BaseControls\WindowBase.tscn" />
+    <Content Include="Client\Scenes\MainScenes\MainMenuScene.tscn" />
+    <Content Include="Client\Scenes\Transitions\LoadingScene.tscn" />
     <Content Include="Readme.txt" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Client\Scripts\Network\" />
   </ItemGroup> 
   
 </Project>
