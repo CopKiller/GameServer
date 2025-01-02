@@ -2,10 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Core.Client.Extensions;
 using Core.Service.Interfaces.Types;
+using Game.Scripts.Extensions;
 using Game.Scripts.Extensions.Services;
-using Game.Scripts.Transitions;
 using Godot;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Game.Scripts.Singletons;
 
@@ -13,67 +14,80 @@ public partial class ServiceManager : Node
 {
     private IServiceManager? _serviceManager;
     private static IServiceProvider? _serviceProvider;
-    
+
     public override void _Ready()
     {
-        var loadingScript = GetTree().CurrentScene as LoadingScript;
-        loadingScript?.AddTask(ConfigureServices, "Registrando serviços...");
-        loadingScript?.AddTask(InitializeServices, "Inicializando serviços...");
+        GD.Print("ServiceManager ready!");
+
+        ConfigureServices();
+
+        var loadingManager = this.GetSingleton<LoadingManager>();
+        loadingManager?.AddTask(RegisterServices, "Registrando serviços...");
+        loadingManager?.AddTask(StartServices, "Iniciando serviços...");
     }
-    
+
     public static T? GetService<T>()
     {
         if (_serviceProvider == null)
-        {
             throw new NullReferenceException("ServiceProvider não foi inicializado.");
-        }
-        
-        return _serviceProvider.GetService<T>();
+
+        var service = _serviceProvider.GetService<T>();
+
+        return service;
     }
-    
+
     public static T GetRequiredService<T>() where T : notnull
     {
         if (_serviceProvider == null)
-        {
             throw new NullReferenceException("ServiceProvider não foi inicializado.");
-        }
+
+        var service = _serviceProvider.GetRequiredService<T>();
+
+        return service;
+    }
+
+    private void ConfigureServices()
+    {
+        var services = new ServiceCollection();
+        services.AddLogger(logLevel: LogLevel.Debug);
+        services.AddNetwork();
+        services.AddNetworkClient();
+        services.AddServiceManager();
+
+        services.AddGodotLoggerOutput();
+        services.AddGodotTree(this);
+        services.AddGodotGameStateManager();
+        services.AddGodotGameState();
+        services.AddGodotNetworkManager();
+        services.AddGodotSceneManager();
+        services.AddGodotServiceManager();
+        services.AddGodotLoadingManager();
+        services.AddGodotScenePathCache();
+        services.AddGodotLoaderService();
+        services.AddGodotCustomLoader();
+
+        _serviceProvider = services.BuildServiceProvider();
+    }
+
+    private Task RegisterServices()
+    {
+        _serviceManager = _serviceProvider?.GetRequiredService<IServiceManager>();
+
+        _serviceManager?.Register();
         
-        return _serviceProvider.GetRequiredService<T>();
+        return Task.CompletedTask;
     }
     
-    private async Task ConfigureServices()
+    private Task StartServices()
     {
-        await Task.Run(() =>
-        {
-            var services = new ServiceCollection();
-            services.AddLogger();
-            services.AddGodotLoggerOutput();
-            services.AddNetwork();
-            services.AddNetworkClient();
-            services.AddServiceManager();
-            
-            _serviceProvider = services.BuildServiceProvider();
-        });
+        _serviceManager?.Start();
+        
+        return Task.CompletedTask;
     }
-    
-    private async Task InitializeServices()
-    {
-        await Task.Run(() =>
-        {
-            _serviceManager = _serviceProvider?.GetRequiredService<IServiceManager>();
-            
-            _serviceManager?.Register();
-            //_serviceManager?.Start(); -- Não é necessário iniciar os serviços agora, mas nos provedores de cada serviço.
-        });
-    }
-    
-    private void StopServices()
+
+    public override void _ExitTree()
     {
         _serviceManager?.Stop();
-    }
-    
-    private void DisposeServices()
-    {
         _serviceManager?.Dispose();
     }
 }

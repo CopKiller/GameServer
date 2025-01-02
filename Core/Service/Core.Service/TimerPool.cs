@@ -16,12 +16,14 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
     public void Start(CancellationToken cancellationToken)
     {
         if (UpdateLoopTask != null) return;
+        
+        configuration.Enabled = true;
 
         MainTimer.Start();
 
         UpdateLoopTask = Task.Run(async () =>
         {
-            while (!cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested && configuration.Enabled)
             {
                 var startTick = MainTimer.ElapsedMilliseconds;
                 
@@ -65,8 +67,13 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
 
     internal void Update(ISingleService service, bool force = false)
     {
+        if (!configuration.UpdateWithManager)
+        {
+            logger?.LogDebug("Atualização de serviço desabilitada.");
+            return;
+        }
         if (!service.ServiceConfiguration.Enabled) return;
-        if (!service.ServiceConfiguration.NeedUpdate) return;
+        if (!service.ServiceConfiguration.UpdateWithManager) return;
 
         ServiceLastTick.TryAdd(service, 0);
 
@@ -83,6 +90,8 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
 
     public async Task StopAsync()
     {
+        configuration.Enabled = false;
+        
         if (UpdateLoopTask != null)
             try
             {

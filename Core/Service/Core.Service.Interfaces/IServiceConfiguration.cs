@@ -9,6 +9,8 @@ public interface IServiceConfiguration
 {
     Type ServiceType { get; }
     bool Enabled { get; set; }
-    bool NeedUpdate { get; set; }
+    bool StartWithManager { get; set; }
+    bool StopWithManager { get; set; }
+    bool UpdateWithManager { get; set; }
     int UpdateIntervalMs { get; set; }
 }

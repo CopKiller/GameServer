@@ -44,8 +44,20 @@ public class ServiceManager(IServiceProvider serviceProvider) : IServiceManager
             }
     }
 
-    public void Update(long currentTick)
+    public void Update(long currentTick = 0)
     {
+        if (!ServiceConfiguration.UpdateWithManager)
+        {
+            Log?.LogDebug("ServiceManager.Update disabled.");    
+            return;
+        }
+        
+        if (!ServiceConfiguration.Enabled)
+        {
+            Log?.LogDebug("ServiceManager is disabled.");
+            return;
+        }
+        
         Log?.LogDebug("Forcing service updates...");
 
         foreach (var service in Services.OfType<ISingleService>())
@@ -62,9 +74,15 @@ public class ServiceManager(IServiceProvider serviceProvider) : IServiceManager
 
     public void Start()
     {
+        if (!ServiceConfiguration.StartWithManager)
+        {
+            Log?.LogDebug("ServiceManager.Start disabled.");
+            return;
+        }
+        
         Log?.LogDebug("Starting services...");
         var servicesToStart = Services
-            .Where(a => !a.ServiceConfiguration.Enabled)
+            .Where(a => a.ServiceConfiguration is { Enabled: false, StartWithManager: true })
             .ToList();
 
         foreach (var singleService in servicesToStart)
@@ -82,6 +100,12 @@ public class ServiceManager(IServiceProvider serviceProvider) : IServiceManager
 
     public void Stop()
     {
+        if (!ServiceConfiguration.StartWithManager)
+        {
+            Log?.LogDebug("ServiceManager.Stop disabled.");
+            return;
+        }
+        
         Log?.LogDebug("Stopping services...");
         _updateCancellationTokenSource?.Cancel();
         _updateCancellationTokenSource?.Dispose();
