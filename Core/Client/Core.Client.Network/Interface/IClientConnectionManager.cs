@@ -4,15 +4,8 @@ namespace Core.Client.Network.Interface;
 
 public interface IClientConnectionManager
 {
-    /// <summary>
-    /// Desconecta o jogador local.
-    /// </summary>
-    void Disconnect();
-    /// <summary>
-    /// Obter o peer do servidor.
-    /// </summary>
-    ICustomNetPeer? GetServerPeer();
-    void SetServerPeer(ICustomNetPeer peer);
-    
     bool IsConnected { get; }
+    ICustomNetPeer? CurrentPeer { get; set; }
+    void ConnectToServer();
+    void DisconnectFromServer();
 }

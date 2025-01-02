@@ -5,7 +5,7 @@ namespace Core.Client.Network.Interface;
 
 public interface IClientPacketProcessor
 {
-    public void Initialize(ICustomNetPeer peer);
+    public void Initialize();
     public void Stop();
 
     public void SendPacket<TPacket>(TPacket packet,
