@@ -33,13 +33,7 @@ public partial class SceneManager : Node
         _sceneTree = null;
         _currentScene = null;
     }
-    
-    public void ClearCurrentScene()
-    {
-        _currentScene?.QueueFree();
-        _currentScene = null;
-    }
-    
+
     public bool LoadSceneInBackground<T>() where T : Node
     {
         if (_scenePathCache == null)
@@ -60,11 +54,7 @@ public partial class SceneManager : Node
     /// <param name="fadeout">Whether to fade out the current scene.</param>
     /// <param name="fadeIn">Whether to fade in the new scene.</param>
     /// <param name="duration">Duration of the fade effects.</param>
-    public async Task ChangeSceneLoadedInBackground<T>(
-        bool fadeout = true,
-        bool fadeIn = true,
-        float duration = 0.5f)
-        where T : CanvasItem
+    public async Task ChangeSceneLoadedInBackground<T>() where T : CanvasItem
     {
         if (_sceneTree == null || _scenePathCache == null)
         {
@@ -84,10 +74,6 @@ public partial class SceneManager : Node
         {
             var packedScene = ResourceLoader.LoadThreadedGet(scenePath) as PackedScene;
             
-            // Fade out the current scene
-            if (_currentScene != null && fadeout)
-                await _currentScene.FadeOut(duration);
-            
             _sceneTree.ChangeSceneToPacked(packedScene);
             await ToSignal(_sceneTree, SceneTree.SignalName.TreeChanged);
 
@@ -103,10 +89,6 @@ public partial class SceneManager : Node
             
             // Emit the scene-loaded signal
             EmitSignal(SignalName.SceneLoaded, _currentScene);
-
-            // Fade in the new scene
-            if (fadeIn)
-                await _currentScene.FadeIn(duration);
         }
         else
         {

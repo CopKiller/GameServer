@@ -1,9 +1,8 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Game.Scripts.Extensions.Attributes;
+using Game.Scripts.Extensions;
 using Game.Scripts.GameState.Interface;
-using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Singletons;
 using Godot;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,27 @@ public class GameState<T>(
     LoadingManager loadingManager,
     ILogger<GameState<T>> logger) : IGameState<T> where T : CanvasItem
 {
-    public virtual async void EnterState()
+    private T? _scene;
+
+    private bool FadeIn { get; set; } = true;
+    private float FadeInDuration { get; set; } = 0.5f;
+    private bool FadeOut { get; set; } = true;
+    private float FadeOutDuration { get; set; } = 0.5f;
+
+    public void SetFadeIn(bool fadeIn, float duration = 0.5f)
+    {
+        FadeIn = fadeIn;
+        FadeInDuration = duration;
+    }
+
+    public void SetFadeOut(bool fadeOut, float duration = 0.5f)
+    {
+        FadeOut = fadeOut;
+        FadeOutDuration = duration;
+    }
+
+
+    public virtual async Task EnterState()
     {
         try
         {
@@ -31,7 +50,7 @@ public class GameState<T>(
                     return Task.CompletedTask;
                 }, $"Loading {typeof(T).Name}");
 
-            await loadingManager.StartLoading(() => sceneManager.ChangeSceneLoadedInBackground<T>());
+            await loadingManager.StartLoading(OnSceneLoaded);
         }
         catch (Exception e)
         {
@@ -39,8 +58,39 @@ public class GameState<T>(
         }
     }
 
-    public virtual void ExitState()
+    private async Task OnSceneLoaded()
     {
-        logger.LogInformation($"{typeof(T).Name} exited!");
+        await sceneManager.ChangeSceneLoadedInBackground<T>();
+        _scene = sceneManager.GetCurrentScene() as T;
+
+        if (_scene == null)
+        {
+            logger.LogError($"Failed to enter {typeof(T).Name}: Scene is null!");
+            return;
+        }
+
+        if (FadeIn)
+            await _scene.FadeIn(FadeInDuration);
+    }
+
+    public virtual async Task ExitState()
+    {
+        try
+        {
+            logger.LogInformation($"{typeof(T).Name} exited!");
+
+            if (_scene == null)
+            {
+                logger.LogError($"Failed to exit {typeof(T).Name}: Scene is null!");
+                return;
+            }
+            
+            if (FadeOut)
+                await _scene.FadeOut(FadeOutDuration);
+        }
+        catch (Exception e)
+        {
+            logger.LogError($"Failed to exit {typeof(T).Name}: {e.Message}");
+        }
     }
 }
