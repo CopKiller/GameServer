@@ -53,13 +53,22 @@ public partial class DatePicker : WindowBase
         int year = _startYear + _yearOptionButton.Selected;
         int month = _monthOptionButton.Selected + 1;
         int daysInMonth = DateTime.DaysInMonth(year, month);
+        
+        var lastSelectedDay = _dayOptionButton.Selected;
 
         _dayOptionButton.Clear();
         for (int day = 1; day <= daysInMonth; day++)
         {
             _dayOptionButton.AddItem(day.ToString());
         }
-        _dayOptionButton.Selected = 0;
+
+        if (lastSelectedDay < 0)
+            lastSelectedDay = 0;
+        
+        if (lastSelectedDay < daysInMonth)
+            _dayOptionButton.Selected = lastSelectedDay;
+        else
+            _dayOptionButton.Selected = daysInMonth - 1;
     }
 
     private void OnYearOrMonthChanged(int index)
