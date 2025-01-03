@@ -56,6 +56,7 @@ public partial class LoadingManager : Node
 
         _loadingScene = _loadingPackedScene.Instantiate<LoadingScript>();
         await AddChildAsync(_loadingScene);
+        await _loadingScene.FadeIn();
 
         while (_tasks.Count > 0)
         {
