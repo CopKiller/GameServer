@@ -14,13 +14,22 @@ public partial class RegisterWindowScript : WindowBase
 	private LineEdit? _confirmPasswordLineEdit;
 	private LineEdit? _birthdateLineEdit;
 	private LineEdit? _emailLineEdit;
+	
+	private Button? _hideRegisterPasswordButton;
+	private Button? _hideRegisterConfirmPasswordButton;
+	bool _isPasswordVisible = false;
+	bool _isConfirmPasswordVisible = false;
+	
 	public override void _Ready()
 	{
 		_usernameLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/UsernameLineEdit");
-		_passwordLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/PasswordLineEdit");
-		_confirmPasswordLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/ConfirmPasswordLineEdit");
+		_passwordLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/HBoxContainer/PasswordLineEdit");
+		_confirmPasswordLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/HBoxContainer2/ConfirmPasswordLineEdit");
 		_birthdateLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/BirthdateLineEdit");
 		_emailLineEdit = GetNode<LineEdit>("MarginContainer/VBoxContainer/EmailLineEdit");
+		
+		_hideRegisterPasswordButton = GetNode<Button>("MarginContainer/VBoxContainer/HBoxContainer/HideRegisterPasswordButton");
+		_hideRegisterConfirmPasswordButton = GetNode<Button>("MarginContainer/VBoxContainer/HBoxContainer2/HideRegisterConfirmPasswordButton");
 		
 		DatePickWindow?.Connect(DatePicker.SignalName.DateSelected, Callable.From<string>((text) =>
 		{
@@ -107,4 +116,47 @@ public partial class RegisterWindowScript : WindowBase
 			lineEdit.AddThemeColorOverride("font_color", new Color(1, 0, 0));
 	}
 	
+	private void OnHidePasswordButtonPressed()
+	{
+		
+		if (_hideRegisterPasswordButton == null)
+		{
+			GD.PrintErr("Hide password button not found!");
+			return;
+		}
+		
+		_isPasswordVisible = !_isPasswordVisible;
+		
+		var eyeImage = _hideRegisterPasswordButton.GetChild<TextureRect>(0);
+
+		eyeImage.Texture = _isPasswordVisible
+			? GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/ShowImage.png")
+			: GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/HideImage.png");
+		
+		if (_passwordLineEdit == null) return;
+		
+		_passwordLineEdit.Secret = !_isPasswordVisible;
+	}
+	
+	private void OnHideConfirmPasswordButtonPressed()
+	{
+		
+		if (_hideRegisterConfirmPasswordButton == null)
+		{
+			GD.PrintErr("Hide password button not found!");
+			return;
+		}
+		
+		_isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+		
+		var eyeImage = _hideRegisterConfirmPasswordButton.GetChild<TextureRect>(0);
+
+		eyeImage.Texture = _isConfirmPasswordVisible
+			? GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/ShowImage.png")
+			: GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/HideImage.png");
+		
+		if (_confirmPasswordLineEdit == null) return;
+		
+		_confirmPasswordLineEdit.Secret = !_isConfirmPasswordVisible;
+	}
 }

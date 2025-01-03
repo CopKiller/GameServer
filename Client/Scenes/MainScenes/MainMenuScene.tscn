@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://brsyug3yx44jd"]
+[gd_scene load_steps=12 format=3 uid="uid://brsyug3yx44jd"]
 
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs" id="1_g8h0f"]
 [ext_resource type="Texture2D" uid="uid://joyt6cvhx0f6" path="res://Client/Resources/Texture/MainMenu/BG.jpg" id="1_t2e0c"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/PasswordLineScript.cs" id="7_txykb"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/RegisterWindowScript.cs" id="8_hlxr0"]
 [ext_resource type="PackedScene" uid="uid://m1n8nod1ijp" path="res://Client/Scenes/BaseControls/DatePicker.tscn" id="9_fg5ma"]
+[ext_resource type="Texture2D" uid="uid://br8we67py886l" path="res://Client/Resources/Texture/MainMenu/Secret/HideImage.png" id="9_wmk4i"]
 
 [node name="MainMenuScene" type="Control"]
 layout_mode = 3
@@ -107,11 +108,38 @@ script = ExtResource("6_1jjaj")
 layout_mode = 2
 text = "Password:"
 
-[node name="PasswordLine" type="LineEdit" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="PasswordLine" type="LineEdit" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "password here"
 clear_button_enabled = true
+secret = true
 script = ExtResource("7_txykb")
+
+[node name="HidePasswordButton" type="Button" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/HidePasswordButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_wmk4i")
+expand_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -130,7 +158,7 @@ text = "Start Game"
 
 [node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Register"
-size = Vector2i(230, 365)
+size = Vector2i(230, 373)
 visible = false
 wrap_controls = true
 script = ExtResource("8_hlxr0")
@@ -162,15 +190,65 @@ layout_mode = 2
 layout_mode = 2
 text = "Password:"
 
-[node name="PasswordLineEdit" type="LineEdit" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="PasswordLineEdit" type="LineEdit" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+secret = true
+
+[node name="HideRegisterPasswordButton" type="Button" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer/HideRegisterPasswordButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_wmk4i")
+expand_mode = 1
 
 [node name="password2" type="Label" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Retype password:"
 
-[node name="ConfirmPasswordLineEdit" type="LineEdit" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="ConfirmPasswordLineEdit" type="LineEdit" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+secret = true
+
+[node name="HideRegisterConfirmPasswordButton" type="Button" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer2/HideRegisterConfirmPasswordButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_wmk4i")
+expand_mode = 1
 
 [node name="birthdate" type="Label" parent="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -208,10 +286,13 @@ text_direction = 1
 
 [connection signal="pressed" from="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer/ExitButton" to="." method="OnExitButtonPressed"]
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
-[connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/PasswordLine" method="OnTextChanged"]
+[connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/PasswordLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/PasswordLine" method="OnTextChanged"]
+[connection signal="pressed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/HidePasswordButton" to="MainMenuWindows/LoginWindow" method="OnHidePasswordButtonPressed"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/UsernameLineEdit" to="MainMenuWindows/RegisterWindow" method="OnUsernameTextChanged"]
-[connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/PasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnPasswordTextChanged"]
-[connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/ConfirmPasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnConfirmPasswordTextChanged"]
+[connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer/PasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnPasswordTextChanged"]
+[connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer/HideRegisterPasswordButton" to="MainMenuWindows/RegisterWindow" method="OnHidePasswordButtonPressed"]
+[connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer2/ConfirmPasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnConfirmPasswordTextChanged"]
+[connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer2/HideRegisterConfirmPasswordButton" to="MainMenuWindows/RegisterWindow" method="OnHideConfirmPasswordButtonPressed"]
 [connection signal="focus_entered" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/BirthdateLineEdit" to="MainMenuWindows/RegisterWindow" method="ShowDatePicker"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/BirthdateLineEdit" to="MainMenuWindows/MenuWindow" method="OnBirthdateTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/EmailLineEdit" to="MainMenuWindows/RegisterWindow" method="OnEmailTextChanged"]

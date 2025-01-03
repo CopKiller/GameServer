@@ -5,14 +5,13 @@ namespace Game.Scripts.MainScenes.MainMenu;
 
 public partial class LoginWindowScript : WindowBase
 {
-	// Called when the node enters the scene tree for the first time.
+	private Button? _hidePasswordButton;
+	
+	private bool _isPasswordVisible = false;
+	
 	public override void _Ready()
 	{
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+		_hidePasswordButton = GetNode<Button>("%HidePasswordButton");
 	}
 	
 	public void OnTextChanged(string newText, bool isUsername = false, bool isPassword = false)
@@ -27,5 +26,25 @@ public partial class LoginWindowScript : WindowBase
 		}
 		else
 			GD.Print($"Text changed to: {newText}");
+	}
+
+	private void OnHidePasswordButtonPressed()
+	{
+		if (_hidePasswordButton == null)
+		{
+			return;
+		}
+		
+		_isPasswordVisible = !_isPasswordVisible;
+		
+		var eyeImage = _hidePasswordButton.GetChild<TextureRect>(0);
+
+		eyeImage.Texture = _isPasswordVisible
+			? GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/ShowImage.png")
+			: GD.Load<Texture2D>("res://Client/Resources/Texture/MainMenu/Secret/HideImage.png");
+		
+		var passwordField = GetNode<LineEdit>("%PasswordLine");
+		
+		passwordField.Secret = !_isPasswordVisible;
 	}
 }
