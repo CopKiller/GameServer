@@ -12,7 +12,7 @@ public class MainMenuState(
 {
     private readonly SceneManager _sceneManager = sceneManager;
 
-    public override async Task ExitState()
+    public override async Task ExitStateAsync()
     {
         var currentScene = _sceneManager.GetCurrentScene();
         if (currentScene is MainMenuScript mainMenu)
@@ -20,6 +20,6 @@ public class MainMenuState(
             mainMenu.CloseAllWindows();
         }
         
-        await base.ExitState();
+        await base.ExitStateAsync();
     }
 }

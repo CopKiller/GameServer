@@ -27,12 +27,12 @@ public partial class GameStateManager : Node
             }
             
             if (_currentState != null)
-                await _currentState.ExitState();
+                await _currentState.ExitStateAsync();
             
             _currentState = newState;
             
             if (_currentState != null)
-                await _currentState.EnterState();
+                await _currentState.EnterStateAsync();
             
             _inChangeState = false;
         }
@@ -49,6 +49,6 @@ public partial class GameStateManager : Node
 
     public override void _ExitTree()
     {
-        _currentState?.ExitState();
+        _currentState?.ExitStateAsync();
     }
 }

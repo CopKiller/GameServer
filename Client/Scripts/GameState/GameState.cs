@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Game.Scripts.Extensions;
 using Game.Scripts.GameState.Interface;
+using Game.Scripts.Loader;
 using Game.Scripts.Singletons;
 using Godot;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,8 @@ public class GameState<T>(
     private bool FadeOut { get; set; } = true;
     private float FadeOutDuration { get; set; } = 0.5f;
 
+    private const LoaderPriority LoaderPriority = Loader.LoaderPriority.High;
+
     public void SetFadeIn(bool fadeIn, float duration = 0.5f)
     {
         FadeIn = fadeIn;
@@ -33,35 +36,20 @@ public class GameState<T>(
         FadeOutDuration = duration;
     }
 
-
-    public virtual async Task EnterState()
+    public virtual async Task EnterStateAsync()
     {
-        try
-        {
-            logger.LogInformation($"{nameof(GameState<T>)}: {typeof(T).Name} entered!");
+        logger.LogInformation($"{nameof(GameState<T>)}: {typeof(T).Name} entered!");
 
-            loadingManager.AddTask(() =>
-                {
-                    var result = sceneManager.LoadSceneInBackground<T>();
-
-                    if (!result)
-                        logger.LogError($"Failed to load {typeof(T).Name}");
-
-                    return Task.CompletedTask;
-                }, $"Loading {typeof(T).Name}");
-
-            await loadingManager.StartLoading(OnSceneLoaded);
-        }
-        catch (Exception e)
-        {
-            logger.LogError($"Failed to enter {typeof(T).Name}: {e.Message}");
-        }
+        sceneManager.Connect(SceneManager.SignalName.SceneChanged, Callable.From<Node>(OnSceneChanged));
+        
+        loadingManager.AddTask(() => sceneManager.LoadSceneInBackground<T>(LoaderPriority), $"Loading {typeof(T).Name} scene...");
+        
+        await loadingManager.StartLoading();
     }
-
-    private async Task OnSceneLoaded()
+    
+    private void OnSceneChanged(Node scene)
     {
-        await sceneManager.ChangeSceneLoadedInBackground<T>();
-        _scene = sceneManager.GetCurrentScene() as T;
+        _scene = scene as T;
 
         if (_scene == null)
         {
@@ -70,10 +58,10 @@ public class GameState<T>(
         }
 
         if (FadeIn)
-            await _scene.FadeIn(FadeInDuration);
+            _scene?.FadeIn(FadeInDuration);
     }
 
-    public virtual async Task ExitState()
+    public virtual async Task ExitStateAsync()
     {
         try
         {
@@ -84,7 +72,7 @@ public class GameState<T>(
                 logger.LogError($"Failed to exit {typeof(T).Name}: Scene is null!");
                 return;
             }
-            
+
             if (FadeOut)
                 await _scene.FadeOut(FadeOutDuration);
         }

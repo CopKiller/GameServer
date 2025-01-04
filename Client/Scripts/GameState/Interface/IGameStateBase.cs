@@ -22,10 +22,10 @@ public interface IGameStateBase
     /// Entra no estado.
     /// </summary>
     /// <param name="node">Caso seja o primeiro nó a ser executado, configura o estado para ele.</param>
-    Task EnterState();
+    Task EnterStateAsync();
     
     /// <summary>
     /// Sai do estado.
     /// </summary>
-    Task ExitState();
+    Task ExitStateAsync();
 }
