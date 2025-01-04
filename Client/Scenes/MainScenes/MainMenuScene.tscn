@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://m1n8nod1ijp" path="res://Client/Scenes/BaseControls/DatePicker.tscn" id="9_fg5ma"]
 [ext_resource type="Texture2D" uid="uid://br8we67py886l" path="res://Client/Resources/Texture/MainMenu/Secret/HideImage.png" id="9_wmk4i"]
 
-[node name="MainMenuScene" type="Control"]
+[node name="MainMenuScene" type="Control" node_paths=PackedStringArray("FirstWindowOpened")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,6 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_g8h0f")
+FirstWindowOpened = NodePath("MainMenuWindows/MenuWindow")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -36,6 +37,7 @@ expand_mode = 1
 [node name="MenuWindow" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Menu"
 size = Vector2i(250, 110)
+visible = false
 script = ExtResource("3_65gus")
 CanClose = false
 

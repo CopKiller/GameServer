@@ -12,38 +12,43 @@ namespace Game.Scripts.MainScenes.MainMenu;
 [ScenePath("res://Client/Scenes/MainScenes/MainMenuScene.tscn")]
 public partial class MainMenuScript : Control
 {
-    private Label? _LatencyLabel;
+    private Label? _latencyLabel;
+    
+    [Export]
+    public WindowBase? FirstWindowOpened { get; set; }
     
     public override void _Ready()
     {
         GD.Print("MainMenuScene ready!");
         
-        _LatencyLabel = GetNode<Label>("LatencyLabel");
+        _latencyLabel = GetNode<Label>("LatencyLabel");
 
         var networkManager = ServiceManager.GetRequiredService<NetworkManager>();
 
         networkManager.Connect(NetworkManager.SignalName.NetworkLatencyUpdated, Callable.From<int>(ProcessLatency));
+        
+        FirstWindowOpened?.Show();
     }
     
     private void ProcessLatency(int latency)
     {
-        if (_LatencyLabel == null)
+        if (_latencyLabel == null)
         {
             return;
         }
         
-        _LatencyLabel.Text = latency + "ms";
+        _latencyLabel.Text = latency + "ms";
 
         switch (latency)
         {
             case < 50:
-                _LatencyLabel.AddThemeColorOverride("font_color", new Color(0, 1, 0));
+                _latencyLabel.AddThemeColorOverride("font_color", new Color(0, 1, 0));
                 break;
             case < 100:
-                _LatencyLabel.AddThemeColorOverride("font_color", new Color(1, 1, 0));
+                _latencyLabel.AddThemeColorOverride("font_color", new Color(1, 1, 0));
                 break;
             default:
-                _LatencyLabel.AddThemeColorOverride("font_color", new Color(1, 0, 0));
+                _latencyLabel.AddThemeColorOverride("font_color", new Color(1, 0, 0));
                 break;
         }
     }
