@@ -14,7 +14,7 @@ public partial class CustomLoader : Node
     public delegate void LoadProgressEventHandler(string resourcePath, float progress);
 
     [Signal]
-    public delegate void LoadCompletedEventHandler(string resourcePath, Resource? resource);
+    public delegate void LoadCompletedEventHandler(string resourcePath, Resource resource);
 
     [Signal]
     public delegate void LoadFailedEventHandler(string resourcePath, string error);
@@ -50,13 +50,13 @@ public partial class CustomLoader : Node
         EmitSignal(SignalName.LoadProgress, resourcePath, progress);
     }
 
-    private void OnLoadCompleted(string resourcePath, Resource? resource)
+    private void OnLoadCompleted(string resourcePath, Resource resource)
     {
         EmitSignal(SignalName.LoadCompleted, resourcePath, resource);
     }
 
     private void OnLoadFailed(string resourcePath, string error)
     {
-        EmitSignal(nameof(LoadFailedEventHandler), resourcePath, error);
+        EmitSignal(SignalName.LoadFailed, resourcePath, error);
     }
 }

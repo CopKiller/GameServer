@@ -20,6 +20,8 @@ corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
 [node name="LoadingScene" type="Control"]
+z_index = 1000
+z_as_relative = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

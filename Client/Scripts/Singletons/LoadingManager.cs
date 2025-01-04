@@ -12,9 +12,13 @@ public partial class LoadingManager : Node
     private PackedScene? _loadingPackedScene;
     
     private LoadingScript? _loadingScene;
+    
+    private SceneManager? _sceneManager;
 
     private readonly Queue<(Func<Task>, string)> _tasks = new();
     private bool _isLoading;
+    
+    public bool IsLoading => _isLoading;
 
     [Signal]
     public delegate void LoadingCompleteEventHandler();
@@ -25,8 +29,9 @@ public partial class LoadingManager : Node
     {
         GD.Print("LoadingManager ready!");
         
-        var sceneManager = ServiceManager.GetRequiredService<SceneManager>();
-        _loadingPackedScene = sceneManager.LoadScenePacked<LoadingScript>();
+        _sceneManager = ServiceManager.GetRequiredService<SceneManager>();
+        _loadingPackedScene = _sceneManager.LoadScenePacked<LoadingScript>();
+        _sceneManager.Connect(SceneManager.SignalName.SceneLoaded, Callable.From<Resource>(OnSceneLoaded));
     }
 
     public override void _ExitTree()
@@ -34,7 +39,7 @@ public partial class LoadingManager : Node
         ResetLoading();
     }
 
-    public async Task StartLoading(Func<Task>? nextSceneTask = null)
+    public async Task StartLoading()
     {
         if (_isLoading) return;
         _isLoading = true;
@@ -75,18 +80,29 @@ public partial class LoadingManager : Node
             progress++;
             await _loadingScene.SmoothUpdateProgressBar(progress / (float)totalTasks, 0.5f);
         }
+    }
+    
+    private async void OnSceneLoaded(Resource newScene)
+    {
+        if (!_isLoading) return;
+        
+        if (_loadingScene is null)
+        {
+            GD.PrintErr("Loading scene not found!");
+            return;
+        }
         
         _loadingScene.UpdateMessage("Carregamento completo!");
-        await _loadingScene.SmoothUpdateProgressBar(progress / (float)totalTasks, 0.5f);
+
+        await Task.Delay(100);
 
         await _loadingScene.FadeOut(0.5f);
-        
-        if (nextSceneTask != null)
-            await nextSceneTask();
 
         EmitSignal(SignalName.LoadingComplete);
 
         ResetLoading();
+        
+        _sceneManager?.ChangeSceneToPacked(newScene);
     }
 
     private Task AddChildAsync(Node child)
@@ -105,7 +121,7 @@ public partial class LoadingManager : Node
         }
     }
 
-    private void ResetLoading()
+    public void ResetLoading()
     {
         _isLoading = false;
         _loadingScene?.QueueFree();

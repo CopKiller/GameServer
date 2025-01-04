@@ -1,8 +1,8 @@
 namespace Game.Scripts.Loader;
 
-public enum LoaderPriority: byte
+public enum LoaderPriority
 {
-    High = 0,
-    Medium = 1,
-    Low = 2   
+    High,
+    Medium,
+    Low,
 }

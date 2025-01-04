@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Game.Scripts.Cache;
 using Game.Scripts.Extensions;
 using Game.Scripts.Extensions.Attributes;
+using Game.Scripts.Loader;
 using Godot;
 
 namespace Game.Scripts.Singletons;
@@ -12,20 +13,34 @@ public partial class SceneManager : Node
 {
     private SceneTree? _sceneTree;
     private ScenePathCache? _scenePathCache;
-    private CanvasItem? _currentScene;
-    
+    private LoadingManager? _loadingManager;
+    private Node? _currentScene;
+    private CustomLoader? _customLoader;
+
     /// <summary>
     /// Emitted when a new scene is successfully loaded and assigned.
     /// </summary>
     [Signal]
-    public delegate void SceneLoadedEventHandler(CanvasItem newScene);
+    public delegate void SceneLoadedEventHandler(Node newScene);
+    
+    [Signal]
+    public delegate void SceneChangedEventHandler(Node newScene);
+
+    public Node? GetCurrentScene() => _currentScene;
 
     public override void _Ready()
     {
         GD.Print("SceneManager ready!");
-        
+
         _sceneTree = GetTree();
         _scenePathCache = ServiceManager.GetRequiredService<ScenePathCache>();
+        _customLoader = ServiceManager.GetRequiredService<CustomLoader>();
+        _loadingManager = ServiceManager.GetRequiredService<LoadingManager>();
+
+        _customLoader.Connect(CustomLoader.SignalName.LoadStarted, Callable.From<string>(OnSceneLoadStarted));
+        _customLoader.Connect(CustomLoader.SignalName.LoadCompleted, Callable.From<string, Resource>(OnSceneLoadCompleted));
+        _customLoader.Connect(CustomLoader.SignalName.LoadFailed, Callable.From<string, string>(OnSceneLoadFailed));
+        _customLoader.Connect(CustomLoader.SignalName.LoadProgress, Callable.From<string, float>(OnSceneLoadProgress));
     }
 
     public override void _ExitTree()
@@ -34,83 +49,21 @@ public partial class SceneManager : Node
         _currentScene = null;
     }
 
-    public bool LoadSceneInBackground<T>() where T : Node
+    public Task LoadSceneInBackground<T>(LoaderPriority priority) where T : Node
     {
-        if (_scenePathCache == null)
+        if (_scenePathCache == null || _sceneTree == null || _customLoader == null)
         {
             GD.PrintErr("SceneManager not ready!");
-            return false;
+            return Task.CompletedTask;
         }
-        
-        var scenePath = _scenePathCache.GetScenePath<T>();
-        
-        return LoadResource(scenePath);
-    }
-    
-    /// <summary>
-    /// Changes the currently loaded scene in the background with optional fade transitions.
-    /// </summary>
-    /// <typeparam name="T">The type of the scene to load.</typeparam>
-    /// <param name="fadeout">Whether to fade out the current scene.</param>
-    /// <param name="fadeIn">Whether to fade in the new scene.</param>
-    /// <param name="duration">Duration of the fade effects.</param>
-    public async Task ChangeSceneLoadedInBackground<T>() where T : CanvasItem
-    {
-        if (_sceneTree == null || _scenePathCache == null)
-        {
-            GD.PrintErr("SceneManager not ready!");
-            return;
-        }
-        
-        var scenePath = _scenePathCache.GetScenePath<T>();
-        
-        while (ResourceLoader.LoadThreadedGetStatus(scenePath) == ResourceLoader.ThreadLoadStatus.InProgress)
-        {
-            await Task.Delay(100); // Aguarde 100ms entre verificações
-        }
-        
-        var status = ResourceLoader.LoadThreadedGetStatus(scenePath);
-        if (status == ResourceLoader.ThreadLoadStatus.Loaded)
-        {
-            var packedScene = ResourceLoader.LoadThreadedGet(scenePath) as PackedScene;
-            
-            _sceneTree.ChangeSceneToPacked(packedScene);
-            await ToSignal(_sceneTree, SceneTree.SignalName.TreeChanged);
 
-            // Assign and validate the new scene
-            var scene = _sceneTree.CurrentScene as T;
-            if (scene == null)
-            {
-                GD.PrintErr($"Scene {scenePath} is not of type {typeof(T).Name}!");
-                return;
-            }
-
-            _currentScene = scene;
-            
-            // Emit the scene-loaded signal
-            EmitSignal(SignalName.SceneLoaded, _currentScene);
-        }
-        else
-        {
-            GD.PrintErr($"Failed to load resource. Status: {status}");
-            // Carregar agora!
-            LoadResource(scenePath);
-        }
-    }
-    
-    public T? LoadSceneInstance<T>() where T : Node
-    {
-        if (_scenePathCache == null)
-        {
-            GD.PrintErr("SceneManager not ready!");
-            return null;
-        }
-        
         var scenePath = _scenePathCache.GetScenePath<T>();
 
-        return ResourceLoader.Load<PackedScene>(scenePath)?.Instantiate<T>();
+        LoadResource(scenePath, priority);
+        
+        return Task.CompletedTask;
     }
-    
+
     public PackedScene? LoadScenePacked<T>() where T : Node
     {
         if (_scenePathCache == null)
@@ -118,27 +71,72 @@ public partial class SceneManager : Node
             GD.PrintErr("SceneManager not ready!");
             return null;
         }
-        
+
         var scenePath = _scenePathCache.GetScenePath<T>();
 
         return ResourceLoader.Load<PackedScene>(scenePath);
     }
-    
-    
-    private bool LoadResource(string path)
+
+    private void LoadResource(string path, LoaderPriority priority)
     {
         // Solicitar o carregamento do recurso
         GD.Print($"Starting to load resource: {path}");
-        var requestId = ResourceLoader.LoadThreadedRequest(path);
 
-        if (requestId == Error.Ok)
-        {
-            return true;
-        }
-        
-        GD.PrintErr("Failed to start loading resource.");
-        return false;
+        _customLoader?.EnqueueResource(path, priority); // Enfileirar o recurso
     }
 
-    public Node? GetCurrentScene() => _currentScene;
+    #region Signals
+
+    private void OnSceneLoadStarted(string resourcePath)
+    {
+        // Reportar para o progresso de carregamento
+        GD.Print($"Resource {resourcePath} started loading...");
+    }
+    
+    private void OnSceneLoadCompleted(string resourcePath, Resource resource)
+    {
+        EmitSignal(SignalName.SceneLoaded, resource);
+    }
+    
+    private void OnSceneChanged(Node newScene)
+    {
+        _currentScene = newScene;
+        EmitSignal(SignalName.SceneChanged, newScene);
+    }
+    
+    public void ChangeSceneToPacked(Resource sceneResource)
+    {
+        if (_sceneTree == null)
+        {
+            GD.PrintErr("SceneManager not ready!");
+            return;
+        }
+
+        var sceneNode = (sceneResource as PackedScene)?.Instantiate();
+        
+        if (sceneNode == null)
+        {
+            GD.PrintErr("Failed to instantiate the scene!");
+            return;
+        }
+        
+        sceneNode.Connect(Node.SignalName.TreeEntered, Callable.From(() => OnSceneChanged(sceneNode)));
+        
+        _sceneTree.CurrentScene.QueueFree();
+        _sceneTree.Root.AddChild(sceneNode);
+        _sceneTree.CurrentScene = sceneNode;
+    }
+    
+    private void OnSceneLoadFailed(string resourcePath, string error)
+    {
+        GD.PrintErr($"Resource Error to load {resourcePath} error: {error}");
+    }
+    
+    private void OnSceneLoadProgress(string resourcePath, float progress)
+    {
+        // Reportar para o progresso de carregamento
+        GD.Print($"Resource {resourcePath} loading progress: {progress:P}");
+    }
+
+    #endregion
 }

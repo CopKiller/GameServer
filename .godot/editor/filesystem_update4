@@ -1,3 +1,6 @@
+res://Client/Scenes/FirstScene.tscn
+res://Client/Scenes/MainScenes/MainMenuScene.tscn
+res://Client/Scenes/Transitions/LoadingScene.tscn
 res://Client/Scripts/Singletons/SceneManager.cs
 res://Client/Scripts/Singletons/CustomLoader.cs
 res://Client/Scripts/FirstSceneScript.cs
@@ -15,7 +18,3 @@ res://Client/Scripts/Singletons/ServiceManager.cs
 res://Client/Scripts/Transitions/LoadingScript.cs
 res://Client/Scripts/Singletons/GameStateManager.cs
 res://Client/Scripts/BaseControls/DatePicker.cs
-res://Client/Scenes/FirstScene.tscn
-res://Client/Scenes/MainScenes/MainMenuScene.tscn
-res://Client/Scenes/Transitions/LoadingScene.tscn
-res://Client/Scenes/BaseControls/DatePicker.tscn
