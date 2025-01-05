@@ -2,7 +2,6 @@
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 using Core.Network.Interface.Packet;
-using Core.Network.Packets.Client;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Client.Network;
@@ -13,12 +12,12 @@ public class ClientPacketProcessor(
     IClientConnectionManager clientConnectionManager,
     ILogger<ClientPacketProcessor> logger) : IClientPacketProcessor
 {
-    private readonly ClientNetworkPacket _clientNetworkPacket = new(logger);
+    //private readonly ClientNetworkPacket _clientNetworkPacket = new(logger);
 
     public void Initialize()
     {
-        packetProcessor.RegisterPacket<CPacketFirst>(_clientNetworkPacket.OnFirstPacket);
-        packetProcessor.RegisterPacket<CPacketSecond>(_clientNetworkPacket.OnSecondPacket);
+        //packetProcessor.RegisterPacket<CPacketFirst>(_clientNetworkPacket.OnFirstPacket);
+        //packetProcessor.RegisterPacket<CPacketSecond>(_clientNetworkPacket.OnSecondPacket);
 
         netListener.OnNetworkReceive += ProcessPacket;
     }

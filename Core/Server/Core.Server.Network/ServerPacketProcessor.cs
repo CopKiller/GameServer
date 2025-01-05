@@ -1,7 +1,6 @@
 ﻿using Core.Network.Interface;
 using Core.Network.Interface.Enum;
 using Core.Network.Interface.Packet;
-using Core.Network.Packets.Server;
 using Core.Server.Network.Interface;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +11,12 @@ public class ServerPacketProcessor(
     INetworkEventsListener netListener,
     ILogger<ServerPacketProcessor> logger) : IServerPacketProcessor
 {
-    private readonly ServerNetworkPacket _serverNetworkPacket = new(packetProcessor, logger);
+    //private readonly ServerNetworkPacket _serverNetworkPacket = new(packetProcessor, logger);
 
     public void Initialize()
     {
-        RegisterPacket<SPacketFirst>(_serverNetworkPacket.OnFirstPacket);
-        RegisterPacket<SPacketSecond>(_serverNetworkPacket.OnSecondPacket);
+        //RegisterPacket<SPacketFirst>(_serverNetworkPacket.OnFirstPacket);
+        //RegisterPacket<SPacketSecond>(_serverNetworkPacket.OnSecondPacket);
 
         netListener.OnNetworkReceive += ProcessPacket;
     }

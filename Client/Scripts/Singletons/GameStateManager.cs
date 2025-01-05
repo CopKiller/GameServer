@@ -1,15 +1,19 @@
 using System;
+using System.Threading;
 using Core.Service.Interfaces.Types;
 using Game.Scripts.GameState.Interface;
+using Game.Scripts.Singletons.Interface;
 using Godot;
 
 namespace Game.Scripts.Singletons;
 
-public partial class GameStateManager : Node
+public partial class GameStateManager : Node, IGameStateManager
 {
     private IGameStateBase? _currentState;
     
     private bool _inChangeState = false;
+    
+    private readonly SemaphoreSlim _stateLock = new(1, 1);
     
     public override void _Ready()
     {
@@ -18,6 +22,8 @@ public partial class GameStateManager : Node
     
     public async void ChangeState<T>(IGameState<T> newState) where T : CanvasItem
     {
+        await _stateLock.WaitAsync();
+        
         try
         {
             if (_inChangeState)
@@ -40,6 +46,15 @@ public partial class GameStateManager : Node
         {
             GD.PrintErr($"Failed to change game state: {e.Message}");
         }
+        finally
+        {
+            _stateLock.Release();
+        }
+    }
+    
+    public IGameStateBase? GetCurrentState()
+    {
+        return _currentState;
     }
 
     public void ExitGame()

@@ -105,25 +105,18 @@ public partial class LoadingManager : Node
         _sceneManager?.ChangeSceneToPacked(newScene);
     }
 
-    private Task AddChildAsync(Node child)
+    private async Task AddChildAsync(Node child)
     {
-        var tcs = new TaskCompletionSource();
-        
-        child.Connect(Node.SignalName.Ready, Callable.From(OnReady));
-        
         GetTree().Root.CallDeferred(Node.MethodName.AddChild, child);
         
-        return tcs.Task;
-        
-        void OnReady()
-        {
-            tcs.TrySetResult();
-        }
+        await ToSignal(child, Node.SignalName.Ready);
     }
 
     public void ResetLoading()
     {
+        if (_loadingScene?.IsInsideTree() == true)
+            _loadingScene.QueueFree();
+
         _isLoading = false;
-        _loadingScene?.QueueFree();
     }
 }

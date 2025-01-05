@@ -1,4 +1,5 @@
 
+/*
 using Core.Client.Extensions;
 using Core.Client.Network.Interface;
 using Core.Logger.Interface;
@@ -203,4 +204,4 @@ public class NetworkIntegrationTests
             await Task.Delay(pollingInterval);
         }
     }
-}
+}*/

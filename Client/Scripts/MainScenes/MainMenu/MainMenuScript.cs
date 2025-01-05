@@ -37,7 +37,7 @@ public partial class MainMenuScript : Control
             return;
         }
         
-        _latencyLabel.Text = latency + "ms";
+        _latencyLabel.Text = "Ping " + latency + "ms";
 
         switch (latency)
         {

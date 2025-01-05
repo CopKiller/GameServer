@@ -13,7 +13,6 @@ public partial class SceneManager : Node
 {
     private SceneTree? _sceneTree;
     private ScenePathCache? _scenePathCache;
-    private LoadingManager? _loadingManager;
     private Node? _currentScene;
     private CustomLoader? _customLoader;
 
@@ -35,7 +34,6 @@ public partial class SceneManager : Node
         _sceneTree = GetTree();
         _scenePathCache = ServiceManager.GetRequiredService<ScenePathCache>();
         _customLoader = ServiceManager.GetRequiredService<CustomLoader>();
-        _loadingManager = ServiceManager.GetRequiredService<LoadingManager>();
 
         _customLoader.Connect(CustomLoader.SignalName.LoadStarted, Callable.From<string>(OnSceneLoadStarted));
         _customLoader.Connect(CustomLoader.SignalName.LoadCompleted, Callable.From<string, Resource>(OnSceneLoadCompleted));
