@@ -5,9 +5,9 @@ using ArgumentNullException = System.ArgumentNullException;
 
 namespace Core.Network;
 
-public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
+public sealed class AdapterDataWriter(NetDataWriter writer) : IAdapterDataWriter
 {
-    public CustomDataWriter() : this(new NetDataWriter())
+    public AdapterDataWriter() : this(new NetDataWriter())
     {
     }
 
@@ -176,7 +176,7 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
         writer.PutArray(value, strMaxLength);
     }
 
-    public void PutArray<T>(params T[] value) where T : ICustomSerializable, new()
+    public void PutArray<T>(params T[] value) where T : IAdapterSerializable, new()
     {
         writer.Put(value.Length);
         
@@ -206,7 +206,7 @@ public sealed class CustomDataWriter(NetDataWriter writer) : ICustomDataWriter
         writer.Put(value, maxLength);
     }
 
-    public void Put<T>(T obj) where T : ICustomSerializable
+    public void Put<T>(T obj) where T : IAdapterSerializable
     {
         if (obj == null)
             throw new ArgumentNullException(nameof(obj));

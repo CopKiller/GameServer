@@ -2,7 +2,7 @@ using System.Net;
 
 namespace Core.Network.Interface;
 
-public interface ICustomDataWriter
+public interface IAdapterDataWriter
 {
     byte[] CopyData();
     void Put(float value);
@@ -36,12 +36,12 @@ public interface ICustomDataWriter
     void PutArray(params bool[] value);
     void PutArray(params string[] value);
     void PutArray(string[] value, int strMaxLength);
-    void PutArray<T>(params T[] value) where T : ICustomSerializable, new();
+    void PutArray<T>(params T[] value) where T : IAdapterSerializable, new();
     void Put(IPEndPoint endPoint);
     void PutLargeString(string value);
     void Put(string value);
     void Put(string value, int maxLength);
-    void Put<T>(T obj) where T : ICustomSerializable;
+    void Put<T>(T obj) where T : IAdapterSerializable;
     
     void Reset();
 }

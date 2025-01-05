@@ -5,7 +5,7 @@ using LiteNetLib;
 
 namespace Core.Network;
 
-public readonly struct CustomDisconnectInfo(DisconnectInfo disconnectInfo) : ICustomDisconnectInfo
+public readonly struct AdapterDisconnectInfo(DisconnectInfo disconnectInfo) : IAdapterDisconnectInfo
 {
     public CustomDisconnectReason Reason => (CustomDisconnectReason)disconnectInfo.Reason;
 

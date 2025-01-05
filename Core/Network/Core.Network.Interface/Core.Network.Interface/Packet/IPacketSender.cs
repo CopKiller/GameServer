@@ -4,20 +4,20 @@ namespace Core.Network.Interface.Packet;
 
 public interface IPacketSender
 {
-    void SendPacket<TPacket>(ICustomNetPeer peer, TPacket packet,
+    void SendPacket<TPacket>(IAdapterNetPeer peer, TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new();
 
-    void SendPacket<T>(ICustomNetPeer peer, ref T packet,
-        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : ICustomSerializable;
+    void SendPacket<T>(IAdapterNetPeer peer, ref T packet,
+        CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where T : IAdapterSerializable;
 
-    void SendPacket(ICustomNetPeer peer, byte[] data,
+    void SendPacket(IAdapterNetPeer peer, byte[] data,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered);
 
     void SendPacketToAll<TPacket>(TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered) where TPacket : class, new();
 
     void SendPacketToAll<T>(ref T packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
-        where T : ICustomSerializable;
+        where T : IAdapterSerializable;
 
     void SendPacketToAll(byte[] data, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered);
 }

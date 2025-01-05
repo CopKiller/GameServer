@@ -2,20 +2,20 @@ using System.Net;
 
 namespace Core.Network.Interface;
 
-public interface ICustomConnectionRequest
+public interface IAdapterConnectionRequest
 {
     // TODO: Implement this property if needed...
     //public NetDataReader Data => InternalPacket.Data;
     IPEndPoint RemoteEndPoint { get; }
-    ICustomNetPeer AcceptIfKey(string key);
-    ICustomNetPeer Accept();
+    IAdapterNetPeer AcceptIfKey(string key);
+    IAdapterNetPeer Accept();
     void Reject(byte[] rejectData, int start, int length, bool force);
     void Reject(byte[] rejectData, int start, int length);
     void RejectForce(byte[] rejectData, int start, int length);
     void RejectForce();
     void RejectForce(byte[] rejectData);
-    void RejectForce(ICustomDataWriter rejectData);
+    void RejectForce(IAdapterDataWriter rejectData);
     void Reject();
     void Reject(byte[] rejectData);
-    void Reject(ICustomDataWriter rejectData);
+    void Reject(IAdapterDataWriter rejectData);
 }

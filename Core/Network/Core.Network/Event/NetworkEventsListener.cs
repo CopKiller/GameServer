@@ -2,108 +2,102 @@ using System.Net;
 using System.Net.Sockets;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
+using Core.Network.Interface.Event;
 using LiteNetLib;
 
 namespace Core.Network.Event;
 
-public sealed class NetworkEventsListener : INetworkEventsListener
+public sealed class NetworkEventsListener(EventBasedNetListener listener) : INetworkEventsListener
 {
-    internal EventBasedNetListener GetListener()
+    public event Action<IAdapterNetPeer>? OnPeerConnected
     {
-        return _listener;
+        add => listener.PeerConnectedEvent += peer => value?.Invoke(new AdapterNetPeer(peer));
+        remove => listener.PeerConnectedEvent -= peer => value?.Invoke(new AdapterNetPeer(peer));
     }
 
-    private readonly EventBasedNetListener _listener = new();
-
-    public event Action<ICustomNetPeer>? OnPeerConnected
+    public event Action<IAdapterNetPeer, IAdapterDisconnectInfo>? OnPeerDisconnected
     {
-        add => _listener.PeerConnectedEvent += peer => value?.Invoke(new CustomNetPeer(peer));
-        remove => _listener.PeerConnectedEvent -= peer => value?.Invoke(new CustomNetPeer(peer));
-    }
-
-    public event Action<ICustomNetPeer, ICustomDisconnectInfo>? OnPeerDisconnected
-    {
-        add => _listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
-            value?.Invoke(new CustomNetPeer(peer), new CustomDisconnectInfo(disconnectInfo));
-        remove => _listener.PeerDisconnectedEvent -= (peer, disconnectInfo) =>
-            value?.Invoke(new CustomNetPeer(peer), new CustomDisconnectInfo(disconnectInfo));
+        add => listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
+            value?.Invoke(new AdapterNetPeer(peer), new AdapterDisconnectInfo(disconnectInfo));
+        remove => listener.PeerDisconnectedEvent -= (peer, disconnectInfo) =>
+            value?.Invoke(new AdapterNetPeer(peer), new AdapterDisconnectInfo(disconnectInfo));
     }
 
     public event Action<IPEndPoint, SocketError>? OnNetworkError
     {
-        add => _listener.NetworkErrorEvent += (endPoint, socketError) =>
+        add => listener.NetworkErrorEvent += (endPoint, socketError) =>
             value?.Invoke(endPoint, socketError);
-        remove => _listener.NetworkErrorEvent -= (endPoint, socketError) =>
+        remove => listener.NetworkErrorEvent -= (endPoint, socketError) =>
             value?.Invoke(endPoint, socketError);
     }
 
-    public event Action<ICustomNetPeer, ICustomNetPacketReader, byte, CustomDeliveryMethod>? OnNetworkReceive
+    public event Action<IAdapterNetPeer, IAdapterNetPacketReader, byte, CustomDeliveryMethod>? OnNetworkReceive
     {
-        add => _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
-            value?.Invoke(new CustomNetPeer(peer), new CustomNetPacketReader(reader), channel,
+        add => listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
+            value?.Invoke(new AdapterNetPeer(peer), new AdapterNetPacketReader(reader), channel,
                 Extensions.ConvertToCustomDeliveryMethod(deliveryMethod));
-        remove => _listener.NetworkReceiveEvent -= (peer, reader, channel, deliveryMethod) =>
-            value?.Invoke(new CustomNetPeer(peer), new CustomNetPacketReader(reader), channel,
+        remove => listener.NetworkReceiveEvent -= (peer, reader, channel, deliveryMethod) =>
+            value?.Invoke(new AdapterNetPeer(peer), new AdapterNetPacketReader(reader), channel,
                 Extensions.ConvertToCustomDeliveryMethod(deliveryMethod));
     }
 
-    public event Action<IPEndPoint, ICustomNetPacketReader, CustomUnconnectedMessageType>? OnNetworkReceiveUnconnected
+    public event Action<IPEndPoint, IAdapterNetPacketReader, CustomUnconnectedMessageType>? OnNetworkReceiveUnconnected
     {
-        add => _listener.NetworkReceiveUnconnectedEvent += (endPoint, reader, messageType) =>
-            value?.Invoke(endPoint, new CustomNetPacketReader(reader),
+        add => listener.NetworkReceiveUnconnectedEvent += (endPoint, reader, messageType) =>
+            value?.Invoke(endPoint, new AdapterNetPacketReader(reader),
                 Extensions.ConvertToCustomUnconnectedMessageType(messageType));
-        remove => _listener.NetworkReceiveUnconnectedEvent -= (endPoint, reader, messageType) =>
-            value?.Invoke(endPoint, new CustomNetPacketReader(reader),
+        remove => listener.NetworkReceiveUnconnectedEvent -= (endPoint, reader, messageType) =>
+            value?.Invoke(endPoint, new AdapterNetPacketReader(reader),
                 Extensions.ConvertToCustomUnconnectedMessageType(messageType));
     }
 
-    public event Action<ICustomNetPeer, int>? OnNetworkLatencyUpdate
+    public event Action<IAdapterNetPeer, int>? OnNetworkLatencyUpdate
     {
-        add => _listener.NetworkLatencyUpdateEvent += (peer, latency) =>
-            value?.Invoke(new CustomNetPeer(peer), latency);
-        remove => _listener.NetworkLatencyUpdateEvent -= (peer, latency) =>
-            value?.Invoke(new CustomNetPeer(peer), latency);
+        add => listener.NetworkLatencyUpdateEvent += (peer, latency) =>
+            value?.Invoke(new AdapterNetPeer(peer), latency);
+        remove => listener.NetworkLatencyUpdateEvent -= (peer, latency) =>
+            value?.Invoke(new AdapterNetPeer(peer), latency);
     }
 
-    public event Action<ICustomConnectionRequest>? OnConnectionRequest
+    public event Action<IAdapterConnectionRequest>? OnConnectionRequest
     {
-        add => _listener.ConnectionRequestEvent += request => value?.Invoke(new CustomConnectionRequest(request));
-        remove => _listener.ConnectionRequestEvent -= request => value?.Invoke(new CustomConnectionRequest(request));
+        add => listener.ConnectionRequestEvent += request => value?.Invoke(new AdapterConnectionRequest(request));
+        remove => listener.ConnectionRequestEvent -= request => value?.Invoke(new AdapterConnectionRequest(request));
     }
 
     public void ClearPeerConnectedEvent()
     {
-        _listener.ClearPeerConnectedEvent();
+        listener.ClearPeerConnectedEvent();
     }
 
     public void ClearPeerDisconnectedEvent()
     {
-        _listener.ClearPeerDisconnectedEvent();
+        listener.ClearPeerDisconnectedEvent();
     }
 
     public void ClearNetworkErrorEvent()
     {
-        _listener.ClearNetworkErrorEvent();
+        listener.ClearNetworkErrorEvent();
     }
 
     public void ClearNetworkReceiveEvent()
     {
-        _listener.ClearNetworkReceiveEvent();
+        listener.ClearNetworkReceiveEvent();
     }
 
     public void ClearNetworkReceiveUnconnectedEvent()
     {
-        _listener.ClearNetworkReceiveUnconnectedEvent();
+        listener.ClearNetworkReceiveUnconnectedEvent();
     }
 
     public void ClearNetworkLatencyUpdateEvent()
     {
-        _listener.ClearNetworkLatencyUpdateEvent();
+        listener.ClearNetworkLatencyUpdateEvent();
     }
 
     public void ClearConnectionRequestEvent()
     {
-        _listener.ClearConnectionRequestEvent();
+        listener.ClearConnectionRequestEvent();
     }
 
     public void ClearEvents()

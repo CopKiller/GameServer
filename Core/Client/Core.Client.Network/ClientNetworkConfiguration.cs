@@ -2,7 +2,7 @@ using Core.Service.Interfaces;
 
 namespace Core.Client.Network;
 
-public class ClientNetworConfiguration : IServiceConfiguration
+public class ClientNetworkConfiguration : IServiceConfiguration
 {
     public Type ServiceType { get; } = typeof(ClientNetworkService);
     public bool Enabled { get; set; } = false;

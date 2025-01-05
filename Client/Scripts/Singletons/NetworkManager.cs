@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Network.Interface;
+using Core.Network.Interface.Event;
 using Core.Service.Interfaces.Types;
 using Game.Scripts.Extensions;
 using Game.Scripts.GameState.Interface;
 using Game.Scripts.MainScenes.MainMenu;
+using Game.Scripts.Network;
 using Game.Scripts.Transitions;
 using Godot;
 
@@ -17,7 +19,6 @@ public partial class NetworkManager : Node
 {
     private ISingleService? _clientNetworkManager;
     private IClientConnectionManager? _clientConnectionManager;
-    private IClientPacketProcessor? _clientPacketProcessor;
     private INetworkEventsListener? _networkEventsListener;
 
     [Signal]
@@ -47,7 +48,6 @@ public partial class NetworkManager : Node
     {
         _clientNetworkManager = null;
         _clientConnectionManager = null;
-        _clientPacketProcessor = null;
     }
 
     public void Reconnect(string reason)
@@ -66,9 +66,12 @@ public partial class NetworkManager : Node
     private Task ConfigureNetwork()
     {
         _clientNetworkManager = ServiceManager.GetRequiredService<ISingleService>();
-        _clientPacketProcessor = ServiceManager.GetRequiredService<IClientPacketProcessor>();
         _clientConnectionManager = ServiceManager.GetRequiredService<IClientConnectionManager>();
         _networkEventsListener = ServiceManager.GetRequiredService<INetworkEventsListener>();
+        
+        var clientRegisterHandler = ServiceManager.GetRequiredService<ClientRegisterHandler>();
+        
+        clientRegisterHandler.Register();
 
         return Task.CompletedTask;
     }
@@ -123,12 +126,12 @@ public partial class NetworkManager : Node
         _networkEventsListener.OnPeerDisconnected -= PeerDisconnectedEvent;
     }
 
-    private void UpdateNetworkLatency(ICustomNetPeer peer, int latency)
+    private void UpdateNetworkLatency(IAdapterNetPeer peer, int latency)
     {
         CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.NetworkLatencyUpdated, latency);
     }
 
-    private void PeerDisconnectedEvent(ICustomNetPeer peer, ICustomDisconnectInfo disconnectInfo)
+    private void PeerDisconnectedEvent(IAdapterNetPeer peer, IAdapterDisconnectInfo disconnectInfo)
     {
         if (_isConnected)
         {

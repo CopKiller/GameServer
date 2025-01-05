@@ -3,9 +3,9 @@ using LiteNetLib;
 
 namespace Core.Network;
 
-public sealed class CustomNetPacketReader(NetPacketReader reader) : CustomDataReader(reader), ICustomNetPacketReader
+public sealed class AdapterNetPacketReader(NetPacketReader reader) : AdapterDataReader(reader), IAdapterNetPacketReader
 {
-    void ICustomNetPacketReader.Recycle()
+    void IAdapterNetPacketReader.Recycle()
     {
         reader.Recycle();
     }

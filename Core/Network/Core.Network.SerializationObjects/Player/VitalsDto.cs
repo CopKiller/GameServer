@@ -2,14 +2,14 @@ using Core.Network.Interface;
 
 namespace Core.Network.SerializationObjects.Player;
 
-public class VitalsDto : ICustomSerializable
+public class VitalsDto : IAdapterSerializable
 {
     public double Health { get; set; }
     public double MaxHealth { get; set; }
     public double Mana { get; set; }
     public double MaxMana { get; set; }
 
-    public void Deserialize(ICustomDataReader reader)
+    public void Deserialize(IAdapterDataReader reader)
     {
         Health = reader.GetDouble();
         MaxHealth = reader.GetDouble();
@@ -17,7 +17,7 @@ public class VitalsDto : ICustomSerializable
         MaxMana = reader.GetDouble();
     }
 
-    public void Serialize(ICustomDataWriter writer)
+    public void Serialize(IAdapterDataWriter writer)
     {
         writer.Put(Health);
         writer.Put(MaxHealth);

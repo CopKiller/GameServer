@@ -5,23 +5,23 @@ using LiteNetLib.Utils;
 
 namespace Core.Network;
 
-public class CustomDataReader : ICustomDataReader
+public class AdapterDataReader : IAdapterDataReader
 {
     private readonly NetDataReader _reader;
 
-    public CustomDataReader(NetDataReader reader)
+    public AdapterDataReader(NetDataReader reader)
     {
         _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     }
 
-    public T Get<T>() where T : struct, ICustomSerializable
+    public T Get<T>() where T : struct, IAdapterSerializable
     {
         var obj = default(T);
         obj.Deserialize(this);
         return obj;
     }
 
-    public T Get<T>(Func<T> constructor) where T : class, ICustomSerializable
+    public T Get<T>(Func<T> constructor) where T : class, IAdapterSerializable
     {
         var obj = constructor();
         obj.Deserialize(this);
@@ -108,14 +108,14 @@ public class CustomDataReader : ICustomDataReader
         return _reader.GetGuid();
     }
 
-    public T[] GetArray<T>(ushort size) where T : struct, ICustomSerializable
+    public T[] GetArray<T>(ushort size) where T : struct, IAdapterSerializable
     {
         var array = new T[size];
         for (ushort i = 0; i < size; i++) array[i] = Get<T>();
         return array;
     }
 
-    public T[] GetArray<T>() where T : ICustomSerializable, new()
+    public T[] GetArray<T>() where T : IAdapterSerializable, new()
     {
         var count = _reader.GetUShort();
         var array = new T[count];
@@ -129,7 +129,7 @@ public class CustomDataReader : ICustomDataReader
         return array;
     }
 
-    public T[] GetArray<T>(Func<T> constructor) where T : class, ICustomSerializable
+    public T[] GetArray<T>(Func<T> constructor) where T : class, IAdapterSerializable
     {
         var count = _reader.GetUShort();
         var array = new T[count];

@@ -5,14 +5,9 @@ using LiteNetLib;
 
 namespace Core.Network;
 
-public sealed class CustomNetPeer : ICustomNetPeer
+public sealed class AdapterNetPeer(NetPeer peer) : IAdapterNetPeer
 {
-    public readonly NetPeer Peer;
-
-    public CustomNetPeer(NetPeer peer)
-    {
-        Peer = peer;
-    }
+    public readonly NetPeer Peer = peer;
 
     public int Id => Peer.Id;
 
@@ -34,7 +29,7 @@ public sealed class CustomNetPeer : ICustomNetPeer
         Peer.Send(data, liteDeliveryMethod);
     }
 
-    public void Send(ICustomDataWriter writer, CustomDeliveryMethod deliveryMethod)
+    public void Send(IAdapterDataWriter writer, CustomDeliveryMethod deliveryMethod)
     {
         Send(writer.CopyData(), deliveryMethod);
     }

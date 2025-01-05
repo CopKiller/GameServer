@@ -3,7 +3,7 @@ using Core.Network.Interface.Enum;
 
 namespace Core.Network.Interface;
 
-public interface ICustomDisconnectInfo
+public interface IAdapterDisconnectInfo
 {
     CustomDisconnectReason Reason { get; }
 

@@ -2,7 +2,7 @@ using Core.Network.Interface;
 
 namespace Core.Network.SerializationObjects.Player;
 
-public class StatsDto : ICustomSerializable
+public class StatsDto : IAdapterSerializable
 {
     public int Strength { get; set; }
     public int Defense { get; set; }
@@ -10,7 +10,7 @@ public class StatsDto : ICustomSerializable
     public int Intelligence { get; set; }
     public int Willpower { get; set; }
 
-    public void Deserialize(ICustomDataReader reader)
+    public void Deserialize(IAdapterDataReader reader)
     {
         Strength = reader.GetInt();
         Defense = reader.GetInt();
@@ -19,7 +19,7 @@ public class StatsDto : ICustomSerializable
         Willpower = reader.GetInt();
     }
 
-    public void Serialize(ICustomDataWriter writer)
+    public void Serialize(IAdapterDataWriter writer)
     {
         writer.Put(Strength);
         writer.Put(Defense);

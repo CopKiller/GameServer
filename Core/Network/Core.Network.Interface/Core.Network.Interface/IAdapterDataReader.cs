@@ -3,11 +3,11 @@ using Core.Network.Interface;
 
 namespace Core.Network.Interface;
 
-public interface ICustomDataReader
+public interface IAdapterDataReader
 {
     // Métodos genéricos para desserialização de tipos
-    T Get<T>() where T : struct, ICustomSerializable;
-    T Get<T>(Func<T> constructor) where T : class, ICustomSerializable;
+    T Get<T>() where T : struct, IAdapterSerializable;
+    T Get<T>(Func<T> constructor) where T : class, IAdapterSerializable;
 
     // Métodos para tipos primitivos e tipos específicos
     IPEndPoint GetIpEndPoint();
@@ -28,9 +28,9 @@ public interface ICustomDataReader
     Guid GetGuid();
 
     // Métodos para arrays
-    T[] GetArray<T>(ushort size) where T : struct, ICustomSerializable;
-    T[] GetArray<T>() where T : ICustomSerializable, new();
-    T[] GetArray<T>(Func<T> constructor) where T : class, ICustomSerializable;
+    T[] GetArray<T>(ushort size) where T : struct, IAdapterSerializable;
+    T[] GetArray<T>() where T : IAdapterSerializable, new();
+    T[] GetArray<T>(Func<T> constructor) where T : class, IAdapterSerializable;
 
     bool[] GetBoolArray();
     ushort[] GetUShortArray();

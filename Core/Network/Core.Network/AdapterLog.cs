@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Network;
 
-public class LiteNetLibLoggerAdapter<T>(ILogger<T> logger) : INetLogger
+public class AdapterLog<T>(ILogger<T> logger) : INetLogger
 {
     public void WriteNet(CustomNetLogLevel level, string str, params object[] args)
     {

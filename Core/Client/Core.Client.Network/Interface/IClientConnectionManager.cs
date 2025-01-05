@@ -4,8 +4,9 @@ namespace Core.Client.Network.Interface;
 
 public interface IClientConnectionManager
 {
+    void ConfigureNetworkSettings();
     bool IsConnected { get; }
-    ICustomNetPeer? CurrentPeer { get; set; }
+    IAdapterNetPeer? CurrentPeer { get; set; }
     void ConnectToServer();
     void DisconnectFromServer();
 }

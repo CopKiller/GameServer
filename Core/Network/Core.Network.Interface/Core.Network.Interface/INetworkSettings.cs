@@ -2,7 +2,7 @@ using Core.Network.Interface.Enum;
 
 namespace Core.Network.Interface;
 
-public interface INetworkConfiguration
+public interface INetworkSettings
 {
     string Address { get; set; }
     int Port { get; set; }

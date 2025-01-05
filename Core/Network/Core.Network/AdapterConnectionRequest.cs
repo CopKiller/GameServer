@@ -5,18 +5,18 @@ using LiteNetLib.Utils;
 
 namespace Core.Network;
 
-public sealed class CustomConnectionRequest(ConnectionRequest connectionRequest) : ICustomConnectionRequest
+public sealed class AdapterConnectionRequest(ConnectionRequest connectionRequest) : IAdapterConnectionRequest
 {
     public IPEndPoint RemoteEndPoint => connectionRequest.RemoteEndPoint;
 
-    public ICustomNetPeer AcceptIfKey(string key)
+    public IAdapterNetPeer AcceptIfKey(string key)
     {
-        return new CustomNetPeer(connectionRequest.AcceptIfKey(key));
+        return new AdapterNetPeer(connectionRequest.AcceptIfKey(key));
     }
 
-    public ICustomNetPeer Accept()
+    public IAdapterNetPeer Accept()
     {
-        return new CustomNetPeer(connectionRequest.Accept());
+        return new AdapterNetPeer(connectionRequest.Accept());
     }
 
     public void Reject(byte[] rejectData, int start, int length, bool force)
@@ -44,7 +44,7 @@ public sealed class CustomConnectionRequest(ConnectionRequest connectionRequest)
         connectionRequest.RejectForce(rejectData);
     }
 
-    public void RejectForce(ICustomDataWriter rejectData)
+    public void RejectForce(IAdapterDataWriter rejectData)
     {
         connectionRequest.RejectForce(ValidateAndExtract(rejectData));
     }
@@ -59,14 +59,14 @@ public sealed class CustomConnectionRequest(ConnectionRequest connectionRequest)
         connectionRequest.Reject(rejectData);
     }
 
-    public void Reject(ICustomDataWriter rejectData)
+    public void Reject(IAdapterDataWriter rejectData)
     {
         connectionRequest.Reject(ValidateAndExtract(rejectData));
     }
 
-    private static NetDataWriter ValidateAndExtract(ICustomDataWriter rejectData)
+    private static NetDataWriter ValidateAndExtract(IAdapterDataWriter rejectData)
     {
-        if (rejectData is not CustomDataWriter customDataWriter)
+        if (rejectData is not AdapterDataWriter customDataWriter)
             throw new InvalidOperationException("Invalid ICustomDataWriter type. Expected CustomDataWriter.");
 
         return customDataWriter.GetNetDataWriter();
