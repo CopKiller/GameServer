@@ -5,8 +5,8 @@ namespace Core.Network.Packets.Handler.Interface;
 
 public interface IHandlerRegistry
 {
-    void RegisterRequestHandler<T>(IHandlerRequest<T> handler) where T : class;
-    void RegisterResponseHandler<T>(IHandlerResponse<T> handler) where T : class;
+    void RegisterRequestHandler<T>(IHandlerRequest<T> handler) where T : class, new();
+    void RegisterResponseHandler<T>(IHandlerResponse<T> handler) where T : class, new();
     void UnregisterRequestHandler<T>() where T : class;
     void UnregisterResponseHandler<T>() where T : class;
     IHandlerRequest<T>? GetRequestHandler<T>() where T : class;

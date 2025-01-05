@@ -1,43 +1,24 @@
+using System.Net;
+using Core.Network.Interface.Enum;
+
 namespace Core.Network.Interface.Connection;
 
 public interface IConnectionManager
 {
-    /// <summary>
-    /// Lista de peers customizados.
-    /// </summary>
-    IReadOnlyDictionary<int, ICustomNetPeer> CustomPeers { get; }
-
-    /// <summary>
-    /// Desconecta um peer específico.
-    /// </summary>
-    /// <param name="peer">Peer a ser desconectado.</param>
-    /// <param name="reason">Razão da desconexão.</param>
-    void DisconnectPeer(ICustomNetPeer peer, string reason = "Disconnected");
-
-    /// <summary>
-    /// Desconecta todos os peers conectados.
-    /// </summary>
-    void DisconnectAll();
-
-    /// <summary>
-    /// Verifica se há peers conectados.
-    /// </summary>
+    bool StartListener(int port = 0);
+    IAdapterNetPeer ConnectToServer(string address, int port, string key);
+    IAdapterNetPeer ConnectToServer(IPEndPoint target, string key);
+    int GetPeersCount(CustomConnectionState peerState);
+    public IAdapterNetPeer? GetPeerById(int id);
     bool HasConnectedPeers { get; }
-
-    /// <summary>
-    /// Obtém um peer pelo seu ID.
-    /// </summary>
-    /// <param name="id">ID do peer.</param>
-    /// <returns>O peer correspondente, ou null se não encontrado.</returns>
-    public ICustomNetPeer? GetPeerById(int id);
-
-    /// <summary>
-    /// Obter todos os peers conectados.
-    /// </summary>
-    IEnumerable<ICustomNetPeer> GetPeers();
-
-    /// <summary>
-    /// Obter o peer do servidor.
-    /// </summary>
-    ICustomNetPeer GetFirstPeer();
+    void RegisterEvents();
+    void DisconnectAll();
+    void DisconnectAll(byte[] data, int start, int count);
+    void DisconnectPeerForce(IAdapterNetPeer peer);
+    void DisconnectPeer(IAdapterNetPeer peer);
+    void DisconnectPeer(IAdapterNetPeer peer, byte[] data);
+    void DisconnectPeer(IAdapterNetPeer peer, IAdapterDataWriter writer);
+    void DisconnectPeer(IAdapterNetPeer peer, byte[] data, int start, int count);
+    IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers { get; }
+    void DisconnectPeer(IAdapterNetPeer peer, string reason);
 }

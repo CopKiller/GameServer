@@ -7,36 +7,35 @@ using Microsoft.Extensions.Logging;
 namespace Core.Client.Network;
 
 public class ClientNetworkService(
-    INetworkManager networkManager,
-    IClientPacketProcessor packetProcessor,
+    INetService netService,
     IClientConnectionManager connectionManager) : ISingleService
 {
-    public IServiceConfiguration ServiceConfiguration { get; } = new ClientNetworConfiguration();
+    public IServiceConfiguration ServiceConfiguration { get; } = new ClientNetworkConfiguration();
 
     // ISingleService
     public void Start()
     {
-        networkManager.StartClient();
-
-        packetProcessor.Initialize();
+        netService.Start();
 
         ServiceConfiguration.Enabled = true;
     }
 
     public void Stop()
     {
-        networkManager.Stop();
-        packetProcessor.Stop();
+        netService.Stop();
         connectionManager.DisconnectFromServer();
         ServiceConfiguration.Enabled = false;
     }
 
     public void Update(long currentTick)
     {
-        networkManager.PollEvents();
+        netService.PollEvents();
     }
 
-    public void Register() { }
+    public void Register()
+    {
+        connectionManager.ConfigureNetworkSettings();
+    }
 
     public void Restart()
     {

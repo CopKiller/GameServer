@@ -6,15 +6,15 @@ using LiteNetLib.Utils;
 
 namespace Core.Network.Packet;
 
-public class PacketSender(NetPacketProcessor packetProcessor, IConnectionManager manager) : IPacketSender
+public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManager manager) : IPacketSender
 {
     [ThreadStatic] // Evita problemas de concorrência
-    private static CustomDataWriter? _writer;
+    private static AdapterDataWriter? _writer;
 
-    private CustomDataWriter Writer => _writer ??= new CustomDataWriter();
+    private AdapterDataWriter Writer => _writer ??= new AdapterDataWriter();
 
     public void SendPacket<TPacket>(
-        ICustomNetPeer peer,
+        IAdapterNetPeer peer,
         TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered
     ) where TPacket : class, new()
@@ -26,10 +26,10 @@ public class PacketSender(NetPacketProcessor packetProcessor, IConnectionManager
     }
 
     public void SendPacket<T>(
-        ICustomNetPeer peer,
+        IAdapterNetPeer peer,
         ref T packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered
-    ) where T : ICustomSerializable
+    ) where T : IAdapterSerializable
     {
         var writer = Writer;
         writer.Reset();
@@ -38,7 +38,7 @@ public class PacketSender(NetPacketProcessor packetProcessor, IConnectionManager
     }
 
     public void SendPacket(
-        ICustomNetPeer peer,
+        IAdapterNetPeer peer,
         byte[] data,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered
     )
@@ -64,7 +64,7 @@ public class PacketSender(NetPacketProcessor packetProcessor, IConnectionManager
     public void SendPacketToAll<T>(
         ref T packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered
-    ) where T : ICustomSerializable
+    ) where T : IAdapterSerializable
     {
         var writer = Writer;
         writer.Reset();
@@ -87,7 +87,7 @@ public class PacketSender(NetPacketProcessor packetProcessor, IConnectionManager
         }
     }
 
-    private void SerializePacket<T>(ref T packet, CustomDataWriter writer) where T : ICustomSerializable
+    private void SerializePacket<T>(ref T packet, AdapterDataWriter writer) where T : IAdapterSerializable
     {
         packetProcessor.WriteHash<T>(writer.GetNetDataWriter());
         packet.Serialize(writer);

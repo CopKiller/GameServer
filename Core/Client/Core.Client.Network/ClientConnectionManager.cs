@@ -1,66 +1,59 @@
 using Core.Client.Network.Interface;
 using Core.Network.Interface;
 using Core.Network.Interface.Connection;
+using Core.Network.Interface.Event;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Client.Network;
 
-public class ClientConnectionManager : IClientConnectionManager
+public class ClientConnectionManager(
+    IConnectionManager connectionManager, 
+    INetworkEventsListener listener,
+    INetworkSettings networkSettings,
+    ILogger<ClientConnectionManager> logger) : IClientConnectionManager
 {
-    private readonly IConnectionManager _connectionManager;
-    private readonly INetworkEventsListener _listener;
-    private readonly INetworkManager _networkManager;
-    private readonly INetworkConfiguration _networkConfiguration;
-    private readonly ILogger<ClientConnectionManager> _logger;
 
     public bool IsConnected => CurrentPeer is { IsConnected: true };
-    public ICustomNetPeer? CurrentPeer { get; set; }
-    
-    public ClientConnectionManager(
-        IConnectionManager connectionManager,
-        INetworkEventsListener listener,
-        INetworkManager networkManager,
-        INetworkConfiguration networkConfiguration,
-        ILogger<ClientConnectionManager> logger)
+    public IAdapterNetPeer? CurrentPeer { get; set; }
+
+    public void ConfigureNetworkSettings()
     {
-        _connectionManager = connectionManager;
-        _listener = listener;
-        _networkManager = networkManager;
-        _networkConfiguration = networkConfiguration;
-        _logger = logger;
+        networkSettings.AutoRecycle = true;
+        networkSettings.EnableStatistics = false;
+        networkSettings.UnconnectedMessagesEnabled = false;
+        networkSettings.UseNativeSockets = true;
+
+        networkSettings.Address = "127.0.0.1";
+        networkSettings.Port = 9050;
+        networkSettings.Key = "key";
         
-        _networkConfiguration.AutoRecycle = true;
-        _networkConfiguration.EnableStatistics = false;
-        _networkConfiguration.UnconnectedMessagesEnabled = false;
-        _networkConfiguration.UseNativeSockets = true;
-        
-        _listener.OnPeerDisconnected += OnPeerDisconnected;
+        listener.OnPeerDisconnected += OnPeerDisconnected;
     }
-    
+
     public void ConnectToServer()
     {
         if (CurrentPeer is not null)
             if (CurrentPeer.IsConnected)
             {
-                _logger.LogError("Server peer is already connected.");
+                logger.LogError("Server peer is already connected.");
                 return;
             }
 
-        CurrentPeer = _networkManager
+        CurrentPeer = connectionManager
             .ConnectToServer(
-                _networkConfiguration.Address,
-                _networkConfiguration.Port, 
-                _networkConfiguration.Key);
+                networkSettings.Address,
+                networkSettings.Port, 
+                networkSettings.Key);
     }
     
-    private void OnPeerDisconnected(ICustomNetPeer peer, ICustomDisconnectInfo disconnectInfo)
+    private void OnPeerDisconnected(IAdapterNetPeer peer, IAdapterDisconnectInfo disconnectInfo)
     {
         CurrentPeer = null;
     }
     
     public void DisconnectFromServer()
     {
-        _connectionManager.DisconnectAll();
+        connectionManager.DisconnectAll();
         CurrentPeer = null;
     }
 }

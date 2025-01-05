@@ -34,11 +34,6 @@ public partial class LoadingManager : Node
         _sceneManager.Connect(SceneManager.SignalName.SceneLoaded, Callable.From<Resource>(OnSceneLoaded));
     }
 
-    public override void _ExitTree()
-    {
-        ResetLoading();
-    }
-
     public async Task StartLoading()
     {
         if (_isLoading) return;
@@ -114,9 +109,7 @@ public partial class LoadingManager : Node
 
     public void ResetLoading()
     {
-        if (_loadingScene?.IsInsideTree() == true)
-            _loadingScene.QueueFree();
-
+        _loadingScene?.QueueFree();
         _isLoading = false;
     }
 }

@@ -4,17 +4,20 @@ namespace Core.Server.Network.Interface;
 
 public interface IServerConnectionManager
 {
+    void ConfigureNetworkSettings();
+    bool StartListener();
+    
     /// <summary>
     /// Lista de peers customizados.
     /// </summary>
-    IReadOnlyDictionary<int, ICustomNetPeer> CustomPeers { get; }
+    IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers { get; }
 
     /// <summary>
     /// Desconecta um peer específico.
     /// </summary>
     /// <param name="peer">Peer a ser desconectado.</param>
     /// <param name="reason">Razão da desconexão.</param>
-    void DisconnectPeer(ICustomNetPeer peer, string reason = "Disconnected");
+    void DisconnectPeer(IAdapterNetPeer peer, string reason = "Disconnected");
 
     /// <summary>
     /// Desconecta todos os peers conectados.
@@ -31,10 +34,5 @@ public interface IServerConnectionManager
     /// </summary>
     /// <param name="id">ID do peer.</param>
     /// <returns>O peer correspondente, ou null se não encontrado.</returns>
-    public ICustomNetPeer? GetPeerById(int id);
-
-    /// <summary>
-    /// Obter todos os peers conectados.
-    /// </summary>
-    IEnumerable<ICustomNetPeer> GetPeers();
+    public IAdapterNetPeer? GetPeerById(int id);
 }

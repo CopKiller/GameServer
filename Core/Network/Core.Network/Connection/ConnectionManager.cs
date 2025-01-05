@@ -1,6 +1,8 @@
+using System.Net;
 using Core.Network.Interface;
 using Core.Network.Interface.Connection;
 using Core.Network.Interface.Enum;
+using Core.Network.Interface.Event;
 using LiteNetLib;
 using Microsoft.Extensions.Logging;
 
@@ -9,43 +11,36 @@ namespace Core.Network.Connection;
 /// <summary>
 /// Gerenciador de conexões.
 /// </summary>
-public class ConnectionManager : IConnectionManager
+public class ConnectionManager(
+    IAdapterNetManager netManager, 
+    INetworkEventsListener listener,
+    INetworkSettings settings,
+    ILogger<ConnectionManager> logger) : IConnectionManager
 {
-    private readonly INetworkEventsListener _listener;
-    private readonly INetworkManager _networkManager;
-    private readonly INetworkConfiguration _configuration;
-    private readonly ILogger<ConnectionManager> _logger;
-
-    private readonly Dictionary<int, ICustomNetPeer> _peers = [];
-
-    public ConnectionManager(INetworkManager networkManager, INetworkEventsListener listener,
-        INetworkConfiguration configuration, ILogger<ConnectionManager> logger)
-    {
-        _listener = listener ?? throw new ArgumentNullException(nameof(listener));
-        _networkManager = networkManager ?? throw new ArgumentNullException(nameof(networkManager));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-        _listener.OnPeerConnected += AddPeer;
-        _listener.OnPeerDisconnected += RemovePeer;
-        _listener.OnConnectionRequest += ConnectionRequest;
-    }
-
+    
+    private readonly Dictionary<int, IAdapterNetPeer> _peers = [];
+    
     /// <summary>
     /// Verifica se há peers conectados.
     /// </summary>
     public bool HasConnectedPeers => _peers.Count != 0;
-
+    
+    public void RegisterEvents()
+    {
+        listener.OnPeerConnected += AddPeer;
+        listener.OnPeerDisconnected += RemovePeer;
+        listener.OnConnectionRequest += ConnectionRequest;
+    }
 
     /// <summary>
     /// Processa uma solicitação de conexão.
     /// </summary>
     /// <param name="request"></param>
-    private void ConnectionRequest(ICustomConnectionRequest request)
+    private void ConnectionRequest(IAdapterConnectionRequest request)
     {
-        _logger.LogInformation($"Connection request from {request.RemoteEndPoint}");
+        logger.LogInformation($"Connection request from {request.RemoteEndPoint}");
 
-        request.AcceptIfKey(_configuration.Key);
+        request.AcceptIfKey(settings.Key);
     }
 
 
@@ -53,9 +48,9 @@ public class ConnectionManager : IConnectionManager
     /// Processa a conexão de um peer.
     /// </summary>
     /// <param name="peer"></param>
-    private void AddPeer(ICustomNetPeer peer)
+    private void AddPeer(IAdapterNetPeer peer)
     {
-        _logger.LogDebug($"Peer connected - id: {peer.Id} address: {peer.EndPoint}");
+        logger.LogDebug($"Peer connected - id: {peer.Id} address: {peer.EndPoint}");
         _peers.Add(peer.Id, peer);
     }
 
@@ -65,9 +60,9 @@ public class ConnectionManager : IConnectionManager
     /// </summary>
     /// <param name="peer"></param>
     /// <param name="disconnectInfo"></param>
-    private void RemovePeer(ICustomNetPeer peer, ICustomDisconnectInfo? disconnectInfo = null)
+    private void RemovePeer(IAdapterNetPeer peer, IAdapterDisconnectInfo? disconnectInfo = null)
     {
-        _logger.LogDebug(disconnectInfo != null
+        logger.LogDebug(disconnectInfo != null
             ? $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint} ({disconnectInfo.Reason}}})"
             : $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint}");
 
@@ -75,24 +70,27 @@ public class ConnectionManager : IConnectionManager
     }
 
 
+    public void DisconnectPeer(IAdapterNetPeer peer, byte[] data, int start, int count)
+    {
+        netManager.DisconnectPeer(peer, data, start, count);
+    }
+
     /// <summary>
     /// Lista de peers atualmente conectados.
     /// </summary>
     /// <summary>
     /// Lista de peers customizados.
     /// </summary>
-    public IReadOnlyDictionary<int, ICustomNetPeer> CustomPeers =>
+    public IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers =>
         _peers;
 
 
     /// <summary>
     /// Desconecta um peer específico.
     /// </summary>
-    public void DisconnectPeer(ICustomNetPeer peer, string reason = "Disconnected")
+    public void DisconnectPeer(IAdapterNetPeer peer, string reason)
     {
-        if (peer is not CustomNetPeer customNetPeer) throw new ArgumentException("Peer must implement CustomNetPeer");
-
-        _networkManager.DisconnectPeer(peer);
+        netManager.DisconnectPeer(peer);
 
         RemovePeer(peer);
     }
@@ -103,34 +101,60 @@ public class ConnectionManager : IConnectionManager
     /// </summary>
     public void DisconnectAll()
     {
-        _networkManager.DisconnectAll();
+        netManager.DisconnectAll();
     }
 
+    public void DisconnectAll(byte[] data, int start, int count)
+    {
+        netManager.DisconnectAll(data, start, count);
+    }
+
+    public void DisconnectPeerForce(IAdapterNetPeer peer)
+    {
+        netManager.DisconnectPeerForce(peer);
+    }
+
+    public void DisconnectPeer(IAdapterNetPeer peer)
+    {
+        netManager.DisconnectPeer(peer);
+    }
+
+    public void DisconnectPeer(IAdapterNetPeer peer, byte[] data)
+    {
+        netManager.DisconnectPeer(peer, data);
+    }
+
+    public void DisconnectPeer(IAdapterNetPeer peer, IAdapterDataWriter writer)
+    {
+        netManager.DisconnectPeer(peer, writer);
+    }
+
+
+    public bool StartListener(int port = 0)
+    {
+        return netManager.StartListener(port);
+    }
+
+    public IAdapterNetPeer ConnectToServer(string address, int port, string key)
+    {
+        return netManager.ConnectToServer(address, port, key);
+    }
+
+    public IAdapterNetPeer ConnectToServer(IPEndPoint target, string key)
+    {
+        return netManager.ConnectToServer(target, key);
+    }
+
+    public int GetPeersCount(CustomConnectionState peerState)
+    {
+        return netManager.GetPeersCount(peerState);
+    }
 
     /// <summary>
     /// Obtém um peer pelo seu ID.
     /// </summary>
-    public ICustomNetPeer? GetPeerById(int id)
+    public IAdapterNetPeer? GetPeerById(int id)
     {
         return _peers.FirstOrDefault(i => i.Key == id).Value;
-    }
-
-
-    /// <summary>
-    /// Obter todos os peers conectados.
-    /// </summary>
-    public IEnumerable<ICustomNetPeer> GetPeers()
-    {
-        return _peers.Values;
-    }
-
-
-    /// <summary>
-    /// Obter o primeiro peer conectado. (é o do servidor)
-    /// </summary>
-    /// <returns></returns>
-    public ICustomNetPeer GetFirstPeer()
-    {
-        return _networkManager.GetFirstPeer();
     }
 }

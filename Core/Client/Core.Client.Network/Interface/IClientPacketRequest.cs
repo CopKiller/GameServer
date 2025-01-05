@@ -3,23 +3,14 @@ using Core.Network.Interface.Enum;
 
 namespace Core.Client.Network.Interface;
 
-public interface IClientPacketProcessor
+public interface IClientPacketRequest
 {
-    public void Initialize();
-    public void Stop();
-
     public void SendPacket<TPacket>(TPacket packet,
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
         where TPacket : class, new();
 
     void SendPacket<T>(ref T packet, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered)
-        where T : ICustomSerializable;
+        where T : IAdapterSerializable;
 
     void SendPacket(byte[] data, CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered);
-
-    void RegisterNestedType<T>() where T : ICustomSerializable, new();
-
-    void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new();
-
-    void ReadAllPackets(ICustomNetPacketReader customNetPacketReader, ICustomNetPeer customNetPeer);
 }

@@ -65,6 +65,7 @@ public partial class ServiceManager : Node
         services.AddGodotScenePathCache();
         services.AddGodotLoaderService();
         services.AddGodotCustomLoader();
+        services.AddGodotRegisterNetworkHandlers();
 
         _serviceProvider = services.BuildServiceProvider();
     }

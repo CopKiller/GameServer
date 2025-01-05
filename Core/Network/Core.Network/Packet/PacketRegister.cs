@@ -7,7 +7,7 @@ namespace Core.Network.Packet;
 public class PacketRegister(NetPacketProcessor packetProcessor) : IPacketRegister
 {
     private readonly HashSet<Type> nestedTypes = new();
-    public void RegisterPacket<TPacket>(Action<TPacket, ICustomNetPeer> onReceive) where TPacket : class, new()
+    public void RegisterPacket<TPacket>(Action<TPacket, IAdapterNetPeer> onReceive) where TPacket : class, new()
     {
         if (nestedTypes.Contains(typeof(TPacket)))
         {
@@ -17,6 +17,11 @@ public class PacketRegister(NetPacketProcessor packetProcessor) : IPacketRegiste
         nestedTypes.Add(typeof(TPacket));
         
         packetProcessor.SubscribeReusable(onReceive);
+    }
+    
+    public void UnregisterPacket<TPacket>()
+    {
+        packetProcessor.RemoveSubscription<TPacket>();
     }
 
     public void UnregisterPackets()

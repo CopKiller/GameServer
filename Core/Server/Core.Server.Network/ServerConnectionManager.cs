@@ -4,11 +4,32 @@ using Core.Server.Network.Interface;
 
 namespace Core.Server.Network;
 
-public class ServerConnectionManager(IConnectionManager connectionManager) : IServerConnectionManager
+public class ServerConnectionManager(
+    IConnectionManager connectionManager, 
+    INetworkSettings networkSettings) : IServerConnectionManager
 {
-    public IReadOnlyDictionary<int, ICustomNetPeer> CustomPeers => connectionManager.CustomPeers;
+    public IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers => connectionManager.CustomPeers;
 
-    public void DisconnectPeer(ICustomNetPeer peer, string reason = "Disconnected")
+    public void ConfigureNetworkSettings()
+    {
+        networkSettings.AutoRecycle = true;
+        networkSettings.EnableStatistics = false;
+        networkSettings.UnconnectedMessagesEnabled = false;
+        networkSettings.UseNativeSockets = true;
+        
+        networkSettings.Address = "127.0.0.1";
+        networkSettings.Port = 9050;
+        networkSettings.Key = "key";
+        
+        connectionManager.RegisterEvents();
+    }
+    
+    public bool StartListener()
+    {
+        return connectionManager.StartListener(networkSettings.Port);
+    }
+
+    public void DisconnectPeer(IAdapterNetPeer peer, string reason = "Disconnected")
     {
         connectionManager.DisconnectPeer(peer, reason);
     }
@@ -20,13 +41,8 @@ public class ServerConnectionManager(IConnectionManager connectionManager) : ISe
 
     public bool HasConnectedPeers => connectionManager.HasConnectedPeers;
 
-    public ICustomNetPeer? GetPeerById(int id)
+    public IAdapterNetPeer? GetPeerById(int id)
     {
         return connectionManager.GetPeerById(id);
-    }
-
-    public IEnumerable<ICustomNetPeer> GetPeers()
-    {
-        return connectionManager.GetPeers();
     }
 }

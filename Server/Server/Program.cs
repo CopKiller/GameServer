@@ -2,6 +2,7 @@
 using Core.Database.Models.Account;
 using Core.Server.Database.Interface;
 using Core.Server.Extensions;
+using Core.Server.Network.Packet.Handler;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,7 @@ public static class Program
         services.AddMapper();
         services.AddServiceManager();
         services.AddPhysics();
+        services.AddNetworkRegisterHandlers();
 
         _serviceManager?.Start();
         
@@ -36,6 +38,10 @@ public static class Program
             ValidateOnBuild = false,
             ValidateScopes = false
         });
+        
+        // Register all packet handlers
+        var registerPacketHandler = serviceProvider.GetRequiredService<ServerRegisterHandler>();
+        registerPacketHandler.Register();
 
         _serviceManager = serviceProvider.GetRequiredService<IServiceManager>();
         _serviceManager.Register();

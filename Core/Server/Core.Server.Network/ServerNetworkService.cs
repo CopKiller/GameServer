@@ -8,35 +8,31 @@ using Microsoft.Extensions.Logging;
 namespace Core.Server.Network;
 
 public class ServerNetworkService(
-    INetworkConfiguration networkConfiguration,
-    INetworkManager networkManager,
-    IServerPacketProcessor packetProcessor) : ISingleService
+    IServerConnectionManager connectionManager,
+    INetService netService) : ISingleService
 {
     public IServiceConfiguration ServiceConfiguration { get; } = new ServiceConfiguration();
 
     public void Start()
     {
-        packetProcessor.Initialize();
-
-        ServiceConfiguration.Enabled = networkManager.StartListener(networkConfiguration.Port);
+        ServiceConfiguration.Enabled = connectionManager.StartListener();
     }
 
     public void Stop()
     {
-        networkManager.Stop();
+        netService.Stop();
+        connectionManager.DisconnectAll();
+        ServiceConfiguration.Enabled = false;
     }
 
     public void Update(long currentTick)
     {
-        networkManager.PollEvents();
+        netService.PollEvents();
     }
 
     public void Register()
     {
-        networkConfiguration.AutoRecycle = true;
-        networkConfiguration.EnableStatistics = false;
-        networkConfiguration.UnconnectedMessagesEnabled = false;
-        networkConfiguration.UseNativeSockets = true;
+        connectionManager.ConfigureNetworkSettings();
     }
 
     public void Restart()

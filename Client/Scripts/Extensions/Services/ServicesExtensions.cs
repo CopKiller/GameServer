@@ -1,11 +1,13 @@
 
 using Core.Logger.Interface;
+using Core.Network.Packets;
 using Game.Scripts.Cache;
 using Game.Scripts.GameState;
 using Game.Scripts.GameState.Interface;
 using Game.Scripts.Loader;
 using Game.Scripts.Logger;
 using Game.Scripts.MainScenes.MainMenu;
+using Game.Scripts.Network;
 using Game.Scripts.Singletons;
 using Game.Scripts.Transitions;
 using Godot;
@@ -76,5 +78,10 @@ public static class ServicesExtensions
     public static void AddGodotLoaderService(this IServiceCollection services)
     {
         services.AddSingleton<ILoaderService, LoaderService>();
+    }
+    
+    public static void AddGodotRegisterNetworkHandlers(this IServiceCollection services)
+    {
+        services.AddScoped<ClientRegisterHandler>();
     }
 }

@@ -1,3 +1,4 @@
+using Core.Network.Interface;
 using Core.Network.Packets.Handler.Interface;
 using Core.Network.Packets.Request;
 using Core.Network.Packets.Request.Interface;
@@ -8,20 +9,20 @@ namespace Core.Network.Packets.Handler;
 
 public abstract class LoginHandler : IHandlerRequest<LoginRequest>, IHandlerResponse<LoginResponse>
 {
-    public abstract void HandleRequest(LoginRequest request);
+    public abstract void HandleRequest(LoginRequest request, IAdapterNetPeer peer);
 
-    public void HandleResponse(LoginResponse response)
+    public void HandleResponse(LoginResponse response, IAdapterNetPeer peer)
     {
         if (response.Success)
         {
-            HandleSuccess(response);
+            HandleSuccess(response, peer);
         }
         else
         {
-            HandleFailure(response);
+            HandleFailure(response, peer);
         }
     }
 
-    public abstract void HandleSuccess(LoginResponse response);
-    public abstract void HandleFailure(LoginResponse response);
+    public abstract void HandleSuccess(LoginResponse response, IAdapterNetPeer peer);
+    public abstract void HandleFailure(LoginResponse response, IAdapterNetPeer peer);
 }

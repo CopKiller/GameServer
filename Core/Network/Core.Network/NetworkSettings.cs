@@ -1,35 +1,21 @@
 using Core.Network.Interface;
-using Core.Network.Interface.Enum;
-using LiteNetLib;
 
 namespace Core.Network;
 
-public class NetworkConfiguration : INetworkConfiguration
+public class NetworkSettings(IAdapterNetManager netManager) : INetworkSettings
 {
-    private readonly NetManager _netManager;
-
-    public NetworkConfiguration(INetworkManager networkManager)
-    {
-        if (networkManager is not NetworkManager netManager)
-            throw new ArgumentException("NetworkManager is not NetworkManager");
-
-        _netManager = netManager.GetManager();
-    }
-
-    public string Address { get; set; } = "127.0.0.1";
-    public int Port { get; set; } = 9050;
-
-    public string Key { get; set; } = "key";
+    public string Address { get; set; } = string.Empty;
+    public int Port { get; set; } = 0;
+    public string Key { get; set; } = string.Empty;
 
     // Configurations from LiteNetLib NetManager
-
     /// <summary>
     /// Enable messages receiving without connection. (with SendUnconnectedMessage method)
     /// </summary>
     public bool UnconnectedMessagesEnabled
     {
-        get => _netManager.UnconnectedMessagesEnabled;
-        set => _netManager.UnconnectedMessagesEnabled = value;
+        get => netManager.UnconnectedMessagesEnabled;
+        set => netManager.UnconnectedMessagesEnabled = value;
     }
 
     /// <summary>
@@ -37,8 +23,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool NatPunchEnabled
     {
-        get => _netManager.NatPunchEnabled;
-        set => _netManager.NatPunchEnabled = value;
+        get => netManager.NatPunchEnabled;
+        set => netManager.NatPunchEnabled = value;
     }
 
     /// <summary>
@@ -48,8 +34,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int UpdateTime
     {
-        get => _netManager.UpdateTime;
-        set => _netManager.UpdateTime = value;
+        get => netManager.UpdateTime;
+        set => netManager.UpdateTime = value;
     }
 
     /// <summary>
@@ -57,8 +43,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int PingInterval
     {
-        get => _netManager.PingInterval;
-        set => _netManager.PingInterval = value;
+        get => netManager.PingInterval;
+        set => netManager.PingInterval = value;
     }
 
     /// <summary>
@@ -67,8 +53,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int DisconnectTimeout
     {
-        get => _netManager.DisconnectTimeout;
-        set => _netManager.DisconnectTimeout = value;
+        get => netManager.DisconnectTimeout;
+        set => netManager.DisconnectTimeout = value;
     }
 
     /// <summary>
@@ -76,8 +62,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool SimulatePacketLoss
     {
-        get => _netManager.SimulatePacketLoss;
-        set => _netManager.SimulatePacketLoss = value;
+        get => netManager.SimulatePacketLoss;
+        set => netManager.SimulatePacketLoss = value;
     }
 
     /// <summary>
@@ -85,8 +71,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool SimulateLatency
     {
-        get => _netManager.SimulateLatency;
-        set => _netManager.SimulateLatency = value;
+        get => netManager.SimulateLatency;
+        set => netManager.SimulateLatency = value;
     }
 
     /// <summary>
@@ -94,8 +80,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int SimulationPacketLossChance
     {
-        get => _netManager.SimulationPacketLossChance;
-        set => _netManager.SimulationPacketLossChance = value;
+        get => netManager.SimulationPacketLossChance;
+        set => netManager.SimulationPacketLossChance = value;
     }
 
     /// <summary>
@@ -103,8 +89,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int SimulationMinLatency
     {
-        get => _netManager.SimulationMinLatency;
-        set => _netManager.SimulationMinLatency = value;
+        get => netManager.SimulationMinLatency;
+        set => netManager.SimulationMinLatency = value;
     }
 
     /// <summary>
@@ -112,8 +98,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int SimulationMaxLatency
     {
-        get => _netManager.SimulationMaxLatency;
-        set => _netManager.SimulationMaxLatency = value;
+        get => netManager.SimulationMaxLatency;
+        set => netManager.SimulationMaxLatency = value;
     }
 
     /// <summary>
@@ -121,8 +107,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool UnsyncedEvents
     {
-        get => _netManager.UnsyncedEvents;
-        set => _netManager.UnsyncedEvents = value;
+        get => netManager.UnsyncedEvents;
+        set => netManager.UnsyncedEvents = value;
     }
 
     /// <summary>
@@ -130,8 +116,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool UnsyncedReceiveEvent
     {
-        get => _netManager.UnsyncedReceiveEvent;
-        set => _netManager.UnsyncedReceiveEvent = value;
+        get => netManager.UnsyncedReceiveEvent;
+        set => netManager.UnsyncedReceiveEvent = value;
     }
 
     /// <summary>
@@ -139,8 +125,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool UnsyncedDeliveryEvent
     {
-        get => _netManager.UnsyncedDeliveryEvent;
-        set => _netManager.UnsyncedDeliveryEvent = value;
+        get => netManager.UnsyncedDeliveryEvent;
+        set => netManager.UnsyncedDeliveryEvent = value;
     }
 
     /// <summary>
@@ -148,8 +134,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool BroadcastReceiveEnabled
     {
-        get => _netManager.BroadcastReceiveEnabled;
-        set => _netManager.BroadcastReceiveEnabled = value;
+        get => netManager.BroadcastReceiveEnabled;
+        set => netManager.BroadcastReceiveEnabled = value;
     }
 
     /// <summary>
@@ -157,8 +143,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int ReconnectDelay
     {
-        get => _netManager.ReconnectDelay;
-        set => _netManager.ReconnectDelay = value;
+        get => netManager.ReconnectDelay;
+        set => netManager.ReconnectDelay = value;
     }
 
     /// <summary>
@@ -166,8 +152,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int MaxConnectAttempts
     {
-        get => _netManager.MaxConnectAttempts;
-        set => _netManager.MaxConnectAttempts = value;
+        get => netManager.MaxConnectAttempts;
+        set => netManager.MaxConnectAttempts = value;
     }
 
     /// <summary>
@@ -175,8 +161,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool ReuseAddress
     {
-        get => _netManager.ReuseAddress;
-        set => _netManager.ReuseAddress = value;
+        get => netManager.ReuseAddress;
+        set => netManager.ReuseAddress = value;
     }
 
     /// <summary>
@@ -186,8 +172,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool DontRoute
     {
-        get => _netManager.DontRoute;
-        set => _netManager.DontRoute = value;
+        get => netManager.DontRoute;
+        set => netManager.DontRoute = value;
     }
 
     // TODO: Implement NetStatistics
@@ -198,8 +184,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool EnableStatistics
     {
-        get => _netManager.EnableStatistics;
-        set => _netManager.EnableStatistics = value;
+        get => netManager.EnableStatistics;
+        set => netManager.EnableStatistics = value;
     }
 
     // TODO: Implement NatPunchModule
@@ -208,20 +194,20 @@ public class NetworkConfiguration : INetworkConfiguration
     /// <summary>
     /// Returns true if socket listening and update thread is running
     /// </summary>
-    public bool IsRunning => _netManager.IsRunning;
+    public bool IsRunning => netManager.IsRunning;
 
     /// <summary>
     /// Local EndPoint (host and port)
     /// </summary>
-    public int LocalPort => _netManager.LocalPort;
+    public int LocalPort => netManager.LocalPort;
 
     /// <summary>
     /// Automatically recycle NetPacketReader after OnReceive event
     /// </summary>
     public bool AutoRecycle
     {
-        get => _netManager.AutoRecycle;
-        set => _netManager.AutoRecycle = value;
+        get => netManager.AutoRecycle;
+        set => netManager.AutoRecycle = value;
     }
 
     /// <summary>
@@ -229,8 +215,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool IPv6Enabled
     {
-        get => _netManager.IPv6Enabled;
-        set => _netManager.IPv6Enabled = value;
+        get => netManager.IPv6Enabled;
+        set => netManager.IPv6Enabled = value;
     }
 
     /// <summary>
@@ -238,8 +224,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public int MtuOverride
     {
-        get => _netManager.MtuOverride;
-        set => _netManager.MtuOverride = value;
+        get => netManager.MtuOverride;
+        set => netManager.MtuOverride = value;
     }
 
     /// <summary>
@@ -248,8 +234,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool MtuDiscovery
     {
-        get => _netManager.MtuDiscovery;
-        set => _netManager.MtuDiscovery = value;
+        get => netManager.MtuDiscovery;
+        set => netManager.MtuDiscovery = value;
     }
 
     /// <summary>
@@ -258,8 +244,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool UseNativeSockets
     {
-        get => _netManager.UseNativeSockets;
-        set => _netManager.UseNativeSockets = value;
+        get => netManager.UseNativeSockets;
+        set => netManager.UseNativeSockets = value;
     }
 
     /// <summary>
@@ -267,8 +253,8 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool DisconnectOnUnreachable
     {
-        get => _netManager.DisconnectOnUnreachable;
-        set => _netManager.DisconnectOnUnreachable = value;
+        get => netManager.DisconnectOnUnreachable;
+        set => netManager.DisconnectOnUnreachable = value;
     }
 
     /// <summary>
@@ -276,7 +262,7 @@ public class NetworkConfiguration : INetworkConfiguration
     /// </summary>
     public bool AllowPeerAddressChange
     {
-        get => _netManager.AllowPeerAddressChange;
-        set => _netManager.AllowPeerAddressChange = value;
+        get => netManager.AllowPeerAddressChange;
+        set => netManager.AllowPeerAddressChange = value;
     }
 }

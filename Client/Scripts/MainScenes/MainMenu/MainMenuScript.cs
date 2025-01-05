@@ -1,4 +1,7 @@
 using System;
+using Core.Client.Network.Interface;
+using Core.Network.Interface.Packet;
+using Core.Network.Packets.Request;
 using Core.Network.SerializationObjects.Enum;
 using Game.Scripts.BaseControls;
 using Game.Scripts.Extensions;
@@ -28,6 +31,21 @@ public partial class MainMenuScript : Control
         networkManager.Connect(NetworkManager.SignalName.NetworkLatencyUpdated, Callable.From<int>(ProcessLatency));
         
         FirstWindowOpened?.Show();
+        
+        SendTestMessage();
+    }
+    
+    private void SendTestMessage()
+    {
+        var sender = ServiceManager.GetRequiredService<IClientPacketRequest>();
+        
+        LoginRequest request = new LoginRequest
+        {
+            Username = "Test",
+            Password = "Test"
+        };
+        
+        sender.SendPacket(request);
     }
     
     private void ProcessLatency(int latency)

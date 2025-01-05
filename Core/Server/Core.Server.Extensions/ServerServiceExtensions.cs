@@ -12,8 +12,12 @@ using Core.Network.Connection;
 using Core.Network.Event;
 using Core.Network.Interface;
 using Core.Network.Interface.Connection;
+using Core.Network.Interface.Event;
 using Core.Network.Interface.Packet;
+using Core.Network.Interface.Serialization;
 using Core.Network.Packet;
+using Core.Network.Packets;
+using Core.Network.Packets.Handler.Interface;
 using Core.Physics;
 using Core.Physics.Builder;
 using Core.Physics.Interface;
@@ -24,6 +28,7 @@ using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
 using Core.Server.Network;
 using Core.Server.Network.Interface;
+using Core.Server.Network.Packet.Handler;
 using Core.Service;
 using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
@@ -151,12 +156,32 @@ public static class ServerServiceExtensions
     public static void AddNetwork(this IServiceCollection services)
     {
         // Core.Network abstractions
-        services.AddTransient<ICustomDataWriter, CustomDataWriter>();
+        
+        // LiteNetLib
         services.AddSingleton<INetworkManager, NetworkManager>();
-        services.AddSingleton<IPacketProcessor, PacketProcessor>();
+        services.AddSingleton<INetworkEventsListener>(p =>
+            p.GetRequiredService<INetworkManager>().NetworkEventsListener);
+        services.AddSingleton<IAdapterNetManager>(p =>
+            p.GetRequiredService<INetworkManager>().AdapterNetManager);
+        
+        services.AddSingleton<INetService, NetService>();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
-        services.AddSingleton<INetworkConfiguration, NetworkConfiguration>();
-        services.AddSingleton<INetworkEventsListener, NetworkEventsListener>();
+        services.AddSingleton<INetworkSettings, NetworkSettings>();
+        
+        // Packet
+        services.AddSingleton<IHandlerRegistry, RegisterHandler>();
+        services.AddSingleton<IPacketProcessor, PacketProcessor>();
+        services.AddSingleton<IPacketRegister>(p => 
+            p.GetRequiredService<IPacketProcessor>().PacketRegister);
+        services.AddSingleton<IPacketHandler>(p => 
+            p.GetRequiredService<IPacketProcessor>().PacketHandler);
+        services.AddSingleton<IPacketSender>(p => 
+            p.GetRequiredService<IPacketProcessor>().PacketSender);
+        services.AddSingleton<INetworkSerializer>(p =>
+            p.GetRequiredService<IPacketProcessor>().NetworkSerializer);
+        
+        // Serializer
+        services.AddTransient<IAdapterDataWriter, AdapterDataWriter>();
     }
 
     /// <summary>
@@ -169,7 +194,7 @@ public static class ServerServiceExtensions
     {
         // Core.Server.Network abstractions
         services.AddSingleton<ISingleService, ServerNetworkService>();
-        services.AddSingleton<IServerPacketProcessor, ServerPacketProcessor>();
+        services.AddSingleton<IServerPacketSender, ServerPacketRequest>();
         services.AddSingleton<IServerConnectionManager, ServerConnectionManager>();
     }
 
@@ -218,5 +243,10 @@ public static class ServerServiceExtensions
         services.AddSingleton<IWorldService, WorldService>();
         
         services.AddSingleton<ISingleService, PhysicService>();
+    }
+    
+    public static void AddNetworkRegisterHandlers(this IServiceCollection services)
+    {
+        services.AddScoped<ServerRegisterHandler>();
     }
 }

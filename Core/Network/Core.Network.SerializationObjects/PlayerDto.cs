@@ -3,7 +3,7 @@ using Core.Network.SerializationObjects.Player;
 
 namespace Core.Network.SerializationObjects;
 
-public class PlayerDto : ICustomSerializable
+public class PlayerDto : IAdapterSerializable
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ public class PlayerDto : ICustomSerializable
     public StatsDto Stats { get; set; } = new();
     public PositionDto Position { get; set; } = new();
 
-    public void Deserialize(ICustomDataReader reader)
+    public void Deserialize(IAdapterDataReader reader)
     {
         Id = reader.GetInt();
         Name = reader.GetString();
@@ -35,7 +35,7 @@ public class PlayerDto : ICustomSerializable
         Position = reader.Get<PositionDto>(() => new PositionDto());
     }
 
-    public void Serialize(ICustomDataWriter writer)
+    public void Serialize(IAdapterDataWriter writer)
     {
         writer.Put(Id);
         writer.Put(SlotNumber);

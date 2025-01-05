@@ -283,7 +283,6 @@ layout_mode = 1
 offset_right = 40.0
 offset_bottom = 23.0
 text = "Ping: 0ms"
-horizontal_alignment = 1
 text_direction = 1
 
 [connection signal="pressed" from="MainMenuWindows/MenuWindow/MarginContainer/VBoxContainer/ExitButton" to="." method="OnExitButtonPressed"]
