@@ -1,10 +1,8 @@
 
-/*
 using Core.Client.Extensions;
 using Core.Client.Network.Interface;
 using Core.Logger.Interface;
-using Core.Network.Packets.Client;
-using Core.Network.Packets.Server;
+using Core.Network.Interface.Packet;
 using Core.Network.SerializationObjects;
 using Core.Network.SerializationObjects.Player;
 using Core.Server.Extensions;
@@ -66,15 +64,18 @@ public class NetworkIntegrationTests
         {
             var (serverManager, clientManager) = SetupServerAndClient();
 
-            var clientPacketProcessor = clientManager.ServiceProvider?.GetRequiredService<IClientPacketProcessor>();
+            var clientPacketProcessor = clientManager.ServiceProvider?.GetRequiredService<IPacketRegister>();
             var clientConnectionManager = clientManager.ServiceProvider?.GetRequiredService<IClientConnectionManager>();
-            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<IServerPacketProcessor>();
+            var serverPacketProcessor = serverManager.ServiceProvider?.GetRequiredService<IPacketRegister>();
             var serverConnectionManager = serverManager.ServiceProvider?.GetRequiredService<IServerConnectionManager>();
-
+            
+            var serverPackerSender = serverManager.ServiceProvider?.GetRequiredService<IPacketSender>();
+            
             clientPacketProcessor.Should().NotBeNull();
             clientConnectionManager.Should().NotBeNull();
             serverPacketProcessor.Should().NotBeNull();
             serverConnectionManager.Should().NotBeNull();
+            serverPackerSender.Should().NotBeNull();
 
             RegisterPacketHandlers(clientPacketProcessor, serverPacketProcessor);
 
@@ -96,8 +97,8 @@ public class NetworkIntegrationTests
 
             var serverSendPackets = async () =>
             {
-                serverPacketProcessor.SendPacketToAll(serverPacket1);
-                serverPacketProcessor.SendPacketToAll(serverPacket2);
+                serverPackerSender.SendPacketToAll(serverPacket1);
+                serverPackerSender.SendPacketToAll(serverPacket2);
                 await Task.Delay(1000);
             };
 
@@ -133,8 +134,14 @@ public class NetworkIntegrationTests
         var serverManager = CreateAndStartManager(serverCollection);
         
         var clientCollection = new ServiceCollection();
-        ClientServiceExtensions.AddNetworkClient(clientCollection);
+        clientCollection.AddNetworkClient();
         var clientManager = CreateAndStartManager(clientCollection);
+        
+        var clientConnectionManager = clientManager.ServiceProvider?.GetRequiredService<IClientConnectionManager>();
+        
+        clientConnectionManager.Should().NotBeNull();
+        
+        clientConnectionManager.ConnectToServer();
         
         return (serverManager, clientManager);
     }
@@ -159,15 +166,15 @@ public class NetworkIntegrationTests
         return manager;
     }
 
-    private void RegisterPacketHandlers(IClientPacketProcessor iClientProcessor, IServerPacketProcessor serverProcessor)
+    private void RegisterPacketHandlers(IPacketRegister clientProcessor, IPacketRegister serverProcessor)
     {
-        iClientProcessor.RegisterPacket<CPacketFirst>((packet, peer) =>
+        clientProcessor.RegisterPacket<CPacketFirst>((packet, peer) =>
         {
             packet.Should().NotBeNull();
             peer.Should().NotBeNull();
         });
 
-        iClientProcessor.RegisterPacket<CPacketSecond>((packet, peer) =>
+        clientProcessor.RegisterPacket<CPacketSecond>((packet, peer) =>
         {
             packet.Should().NotBeNull();
             peer.Should().NotBeNull();
@@ -204,4 +211,17 @@ public class NetworkIntegrationTests
             await Task.Delay(pollingInterval);
         }
     }
-}*/
+}
+
+public class CPacketFirst
+{
+    public string Name { get; set; }
+    
+    public int Age { get; set; }
+}
+
+public class CPacketSecond
+{
+    public int Id { get; set; }
+    public PlayerDto Player { get; set; }
+}

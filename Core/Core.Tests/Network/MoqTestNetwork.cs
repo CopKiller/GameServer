@@ -1,9 +1,9 @@
 
-/*
-using Core.Client.Network.Interface;
+using Core.Database.Models.Player;
 using Core.Network.Interface;
 using Core.Network.Interface.Enum;
-using Core.Network.Packets.Server;
+using Core.Network.Interface.Packet;
+using Core.Network.SerializationObjects;
 using Core.Server.Network.Interface;
 using Moq;
 using Xunit;
@@ -18,28 +18,28 @@ public class NetworkTests
     public void Client_SendPacket_ShouldCallSendPacketMethod()
     {
         // Arrange
-        var mockProcessor = new Mock<IClientPacketProcessor>();
-        var mockPeer = new Mock<ICustomNetPeer>();
+        var mockProcessor = new Mock<IPacketSender>();
+        var mockPeer = new Mock<IAdapterNetPeer>();
 
         var packet = new SPacketFirst();
 
         // Act
-        mockProcessor.Object.SendPacket(packet);
+        mockProcessor.Object.SendPacket(mockPeer.Object, packet);
 
         // Assert
-        mockProcessor.Verify(p => p.SendPacket(packet, CustomDeliveryMethod.ReliableOrdered), Times.Once);
+        mockProcessor.Verify(p => p.SendPacket(mockPeer.Object, packet, CustomDeliveryMethod.ReliableOrdered), Times.Once);
     }
 
     [Fact]
     public void Client_RegisterPacket_ShouldInvokeCallbackOnReceive()
     {
         // Arrange
-        var mockProcessor = new Mock<IClientPacketProcessor>();
-        var mockPeer = new Mock<ICustomNetPeer>();
+        var mockProcessor = new Mock<IPacketRegister>();
+        var mockPeer = new Mock<IAdapterNetPeer>();
         var callbackInvoked = false;
 
-        mockProcessor.Setup(p => p.RegisterPacket<SPacketFirst>(It.IsAny<Action<SPacketFirst, ICustomNetPeer>>()))
-            .Callback((Action<SPacketFirst, ICustomNetPeer> action) =>
+        mockProcessor.Setup(p => p.RegisterPacket<SPacketFirst>(It.IsAny<Action<SPacketFirst, IAdapterNetPeer>>()))
+            .Callback((Action<SPacketFirst, IAdapterNetPeer> action) =>
             {
                 callbackInvoked = true;
                 action(new SPacketFirst(), mockPeer.Object);
@@ -60,8 +60,8 @@ public class NetworkTests
     public void Server_SendPacket_ShouldCallSendPacketMethod()
     {
         // Arrange
-        var mockProcessor = new Mock<IServerPacketProcessor>();
-        var mockPeer = new Mock<ICustomNetPeer>();
+        var mockProcessor = new Mock<IPacketSender>();
+        var mockPeer = new Mock<IAdapterNetPeer>();
 
         var packet = new SPacketFirst();
 
@@ -92,7 +92,7 @@ public class NetworkTests
     {
         // Arrange
         var mockConnectionManager = new Mock<IServerConnectionManager>();
-        var mockPeer = new Mock<ICustomNetPeer>();
+        var mockPeer = new Mock<IAdapterNetPeer>();
 
         // Act
         mockConnectionManager.Object.DisconnectPeer(mockPeer.Object);
@@ -105,7 +105,7 @@ public class NetworkTests
     public void Server_GetPeerById_ShouldReturnPeer()
     {
         // Arrange
-        var mockPeer = new Mock<ICustomNetPeer>();
+        var mockPeer = new Mock<IAdapterNetPeer>();
         var mockConnectionManager = new Mock<IServerConnectionManager>();
 
         mockConnectionManager.Setup(cm => cm.GetPeerById(It.IsAny<int>())).Returns(mockPeer.Object);
@@ -119,4 +119,29 @@ public class NetworkTests
     }
 
     #endregion
-}*/
+}
+
+public class SPacketFirst
+{
+    public int Id { get; set; }
+    
+    public string Name { get; set; }
+    
+    public SPacketFirst()
+    {
+        Id = 1;
+        Name = "First Packet";
+    }
+}
+
+public class SPacketSecond
+{
+    public int Id { get; set; }
+    public PlayerDto Player { get; set; }
+    
+    public SPacketSecond()
+    {
+        Player = new PlayerDto();
+        Player.Id = 1;
+    }
+}
