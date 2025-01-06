@@ -22,7 +22,7 @@ internal class PlayerDataValidator<T>(IRepository<T> repository) : ConsistencyVa
     
     public async Task<IValidatorResult> ValidateName(string name, bool isUpdate = false)
     {
-        if (await repository.ExistEntityAsync(x => x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+        if (await repository.ExistEntityAsync(x => x.Name.ToLower() == name.ToLower()))
         {
             if (!isUpdate)
                 AddError($"Player name {name} already exists");

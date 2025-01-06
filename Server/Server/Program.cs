@@ -2,6 +2,7 @@
 using Core.Database.Models.Account;
 using Core.Server.Database.Interface;
 using Core.Server.Extensions;
+using Core.Server.Network.Packet;
 using Core.Server.Network.Packet.Handler;
 using Core.Service.Interfaces.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ public static class Program
         var services = new ServiceCollection();
 
         services.AddCryptography();
-        services.AddLogger(LogLevel.Trace);
+        services.AddLogger(LogLevel.Debug);
         services.AddServerLogOutput();
         services.AddDatabase();
         services.AddServerDatabase();

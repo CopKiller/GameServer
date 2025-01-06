@@ -7,6 +7,7 @@ using Core.Network.Interface.Serialization;
 using Core.Network.Serialization;
 using Core.Network.SerializationObjects;
 using Core.Network.SerializationObjects.Player;
+using Core.Network.SerializationObjects.Response;
 using LiteNetLib.Utils;
 
 namespace Core.Network.Packet;
@@ -45,5 +46,7 @@ public sealed class PacketProcessor : IPacketProcessor
         NetworkSerializer.RegisterNestedType<PositionDto>();
         NetworkSerializer.RegisterNestedType<VitalsDto>();
         NetworkSerializer.RegisterNestedType<StatsDto>();
+        
+        NetworkSerializer.RegisterNestedType<ResponseDto>();
     }
 }

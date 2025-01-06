@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Core.Tests.Network;
 
-public class NetworkIntegrationTests
+public partial class NetworkTests
 {
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 

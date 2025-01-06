@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Core.Tests.Network;
 
-public class NetworkTests
+public partial class NetworkTests
 {
     #region Client Tests
 

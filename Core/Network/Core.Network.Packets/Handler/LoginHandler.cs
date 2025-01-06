@@ -13,14 +13,10 @@ public abstract class LoginHandler : IHandlerRequest<LoginRequest>, IHandlerResp
 
     public void HandleResponse(LoginResponse response, IAdapterNetPeer peer)
     {
-        if (response.Success)
-        {
+        if (response.Response?.Success == true)
             HandleSuccess(response, peer);
-        }
         else
-        {
             HandleFailure(response, peer);
-        }
     }
 
     public abstract void HandleSuccess(LoginResponse response, IAdapterNetPeer peer);

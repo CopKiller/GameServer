@@ -6,20 +6,21 @@ using Microsoft.Extensions.Logging;
 
 namespace Game.Scripts.Network.Handler;
 
-public class LoginNetHandler(ILogger<LoginHandler> logger) : LoginHandler
+public class LoginNetHandler(
+    ILogger<LoginHandler> logger) : LoginHandler
 {
     public override void HandleRequest(LoginRequest request, IAdapterNetPeer peer)
     {
-        logger.LogInformation("Login request received in client");
+        // Not implemented here
     }
 
     public override void HandleSuccess(LoginResponse response, IAdapterNetPeer peer)
     {
-        logger.LogInformation($"Login response received in client {response.Message}");
+        logger.LogInformation($"Login response received in client {response.Response?.Message} accountID: {response.Account?.Id} username: {response.Account?.Username}");
     }
 
     public override void HandleFailure(LoginResponse response, IAdapterNetPeer peer)
     {
-        logger.LogInformation($"Login response received in client {response.Message}");
+        logger.LogError($"Login response received in client {response.Response?.Message}");
     }
 }

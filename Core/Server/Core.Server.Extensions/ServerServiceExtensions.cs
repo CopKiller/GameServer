@@ -28,6 +28,7 @@ using Core.Server.Database.Interface;
 using Core.Server.Database.Repositories;
 using Core.Server.Network;
 using Core.Server.Network.Interface;
+using Core.Server.Network.Packet;
 using Core.Server.Network.Packet.Handler;
 using Core.Service;
 using Core.Service.Interfaces.Types;

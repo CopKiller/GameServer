@@ -7,6 +7,9 @@ public class AccountDto : IAdapterSerializable
     public int Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string BirthDate { get; set; } = string.Empty;
+    
     public List<PlayerDto?> Players { get; set; } = new();
 
     public void Serialize(IAdapterDataWriter writer)
@@ -14,6 +17,8 @@ public class AccountDto : IAdapterSerializable
         writer.Put(Id);
         writer.Put(Username);
         writer.Put(Email);
+        writer.Put(Password);
+        writer.Put(BirthDate);
     }
 
     public void Deserialize(IAdapterDataReader reader)
@@ -21,5 +26,7 @@ public class AccountDto : IAdapterSerializable
         Id = reader.GetInt();
         Username = reader.GetString();
         Email = reader.GetString();
+        Password = reader.GetString();
+        BirthDate = reader.GetString();
     }
 }

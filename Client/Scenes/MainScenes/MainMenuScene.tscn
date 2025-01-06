@@ -101,6 +101,7 @@ layout_mode = 2
 text = "Username:"
 
 [node name="UsernameLine" type="LineEdit" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "username here"
 clear_button_enabled = true
@@ -154,9 +155,10 @@ text = "Save User"
 layout_mode = 2
 text = "Save Pass"
 
-[node name="Button" type="Button" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
+[node name="LoginButton" type="Button" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Start Game"
+text = "Enter Game"
 
 [node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Register"
@@ -289,6 +291,7 @@ text_direction = 1
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/UsernameLine" method="OnTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/PasswordLine" to="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/PasswordLine" method="OnTextChanged"]
 [connection signal="pressed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2/HidePasswordButton" to="MainMenuWindows/LoginWindow" method="OnHidePasswordButtonPressed"]
+[connection signal="pressed" from="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/LoginButton" to="MainMenuWindows/LoginWindow" method="OnLoginButtonPressed"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/UsernameLineEdit" to="MainMenuWindows/RegisterWindow" method="OnUsernameTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer/PasswordLineEdit" to="MainMenuWindows/RegisterWindow" method="OnPasswordTextChanged"]
 [connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/HBoxContainer/HideRegisterPasswordButton" to="MainMenuWindows/RegisterWindow" method="OnHidePasswordButtonPressed"]
@@ -297,3 +300,4 @@ text_direction = 1
 [connection signal="focus_entered" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/BirthdateLineEdit" to="MainMenuWindows/RegisterWindow" method="ShowDatePicker"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/BirthdateLineEdit" to="MainMenuWindows/MenuWindow" method="OnBirthdateTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/EmailLineEdit" to="MainMenuWindows/RegisterWindow" method="OnEmailTextChanged"]
+[connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/ConfirmButton" to="MainMenuWindows/RegisterWindow" method="OnConfirmRegisterPressed"]

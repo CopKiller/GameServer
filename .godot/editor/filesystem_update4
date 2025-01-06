@@ -1,6 +1,4 @@
-res://Client/Scenes/FirstScene.tscn
 res://Client/Scenes/MainScenes/MainMenuScene.tscn
-res://Client/Scenes/Transitions/LoadingScene.tscn
 res://Client/Scripts/Singletons/SceneManager.cs
 res://Client/Scripts/Singletons/CustomLoader.cs
 res://Client/Scripts/FirstSceneScript.cs

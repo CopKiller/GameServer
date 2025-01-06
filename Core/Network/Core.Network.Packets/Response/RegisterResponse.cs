@@ -4,7 +4,7 @@ using Core.Network.SerializationObjects.Response;
 
 namespace Core.Network.Packets.Response;
 
-public class LoginResponse
+public class RegisterResponse
 {
     public ResponseDto Response { get; set; } = new();
 

@@ -13,7 +13,7 @@ public class ClientRegisterHandler(IHandlerRegistry registry, ILoggerFactory log
     {
         
         registry.RegisterResponseHandler<LoginResponse>(new LoginNetHandler(CreateLogger<LoginNetHandler>()));
-        //registry.RegisterRequestHandler<LoginRequest>(new LoginNetHandler(CreateLogger<LoginNetHandler>()));
+        registry.RegisterResponseHandler<RegisterResponse>(new RegisterNetHandler(CreateLogger<RegisterNetHandler>()));
 
     }
     

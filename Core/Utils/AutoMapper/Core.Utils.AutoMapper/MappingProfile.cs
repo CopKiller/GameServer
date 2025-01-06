@@ -13,11 +13,22 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         // Mapeamentos para tipos concretos
-        CreateMap<AccountModel, AccountDto>();
+        CreateMap<AccountModel, AccountDto>( )
+            .ForMember(dest => dest.Password, opt => opt.Ignore())
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToString("yyyy-MM-dd")));
         CreateMap<PlayerModel, PlayerDto>();
         CreateMap<Stats, StatsDto>();
         CreateMap<Vitals, VitalsDto>();
         CreateMap<Position, PositionDto>();
+        
+        // inverso
+        // Converter o campo de birthdate em string para o DateOnly
+        CreateMap<AccountDto, AccountModel>()
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.Parse(src.BirthDate)));
+        CreateMap<PlayerDto, PlayerModel>();
+        CreateMap<StatsDto, Stats>();
+        CreateMap<VitalsDto, Vitals>();
+        CreateMap<PositionDto, Position>();
 
         // Mapeamentos para interfaces
         CreateMap<IAccountModel, AccountDto>();

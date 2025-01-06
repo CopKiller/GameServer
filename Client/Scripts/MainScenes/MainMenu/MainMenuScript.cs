@@ -31,22 +31,20 @@ public partial class MainMenuScript : Control
         networkManager.Connect(NetworkManager.SignalName.NetworkLatencyUpdated, Callable.From<int>(ProcessLatency));
         
         FirstWindowOpened?.Show();
-        
-        SendTestMessage();
     }
     
-    private void SendTestMessage()
-    {
-        var sender = ServiceManager.GetRequiredService<IClientPacketRequest>();
-        
-        LoginRequest request = new LoginRequest
-        {
-            Username = "Test",
-            Password = "Test"
-        };
-        
-        sender.SendPacket(request);
-    }
+    // private void SendTestMessage()
+    // {
+    //     var sender = ServiceManager.GetRequiredService<IClientPacketRequest>();
+    //     
+    //     LoginRequest request = new LoginRequest
+    //     {
+    //         Username = "Test",
+    //         Password = "Test"
+    //     };
+    //     
+    //     sender.SendPacket(request);
+    // }
     
     private void ProcessLatency(int latency)
     {

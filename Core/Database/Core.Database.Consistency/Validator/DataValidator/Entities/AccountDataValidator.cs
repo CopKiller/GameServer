@@ -25,7 +25,7 @@ internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyV
     
     public async Task<IValidatorResult> ValidateUsername(string username, bool isUpdate = false)
     {
-        if (await repository.ExistEntityAsync(x => x.Username.Equals(username, StringComparison.CurrentCultureIgnoreCase)))
+        if (await repository.ExistEntityAsync(x => x.Username.ToLower() == username.ToLower()))
         {
             if (!isUpdate)
                 AddError($"Username {username} already exists");
@@ -41,7 +41,7 @@ internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyV
     
     public async Task<IValidatorResult> ValidateEmail(string email, bool isUpdate = false)
     {
-        if (await repository.ExistEntityAsync(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase)))
+        if (await repository.ExistEntityAsync(x => x.Email.ToLower() == email.ToLower()))
         {
             if (!isUpdate)
                 AddError($"Email {email} already exists");
