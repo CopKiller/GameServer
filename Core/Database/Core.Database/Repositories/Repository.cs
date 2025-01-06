@@ -9,6 +9,7 @@ namespace Core.Database.Repositories;
 public class Repository<T>(IDbContext context) : IRepository<T>
     where T : class, IEntity
 {
+    
     public async Task<T?> GetEntityAsync(
         Expression<Func<T, bool>> predicate,
         params Expression<Func<T, object>>[] includes)
@@ -37,7 +38,7 @@ public class Repository<T>(IDbContext context) : IRepository<T>
 
     public async Task<bool> ExistEntityAsync(Expression<Func<T, bool>> predicate)
     {
-        return await context.Query<T>().AnyAsync(predicate);
+        return await context.ExistEntityCompiledAsync(predicate);
     }
 
     public async Task<IPagedResult<T>> GetPagedAsync(int page = 1, int pageSize = 10)

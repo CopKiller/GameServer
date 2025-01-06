@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Core.Database.Interface;
 
 public interface IDbContext
@@ -6,6 +8,7 @@ public interface IDbContext
     Task<TEntity> AddAsync<TEntity>(TEntity entity) where TEntity : class;
     void Update<TEntity>(TEntity entity) where TEntity : class;
     void Delete<TEntity>(TEntity entity) where TEntity : class;
+    Task<bool> ExistEntityCompiledAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
     Task<int> SaveChangesAsync();
     bool AnyChanges();
 }
