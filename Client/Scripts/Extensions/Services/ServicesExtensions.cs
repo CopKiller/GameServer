@@ -53,8 +53,8 @@ public static class ServicesExtensions
     
     public static void AddGodotCustomLoader(this IServiceCollection services)
     {
-        services.AddSingleton<CustomLoader>(p => 
-            p.GetRequiredService<SceneTree>().Root.GetSingleton<CustomLoader>());
+        services.AddSingleton<LoadingBackground>(p => 
+            p.GetRequiredService<SceneTree>().Root.GetSingleton<LoadingBackground>());
     }
     
     public static void AddGodotGameStateManager(this IServiceCollection services)

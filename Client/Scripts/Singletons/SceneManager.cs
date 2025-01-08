@@ -14,7 +14,7 @@ public partial class SceneManager : Node
     private SceneTree? _sceneTree;
     private ScenePathCache? _scenePathCache;
     private Node? _currentScene;
-    private CustomLoader? _customLoader;
+    private LoadingBackground? _customLoader;
 
     /// <summary>
     /// Emitted when a new scene is successfully loaded and assigned.
@@ -33,12 +33,12 @@ public partial class SceneManager : Node
 
         _sceneTree = GetTree();
         _scenePathCache = ServiceManager.GetRequiredService<ScenePathCache>();
-        _customLoader = ServiceManager.GetRequiredService<CustomLoader>();
+        _customLoader = ServiceManager.GetRequiredService<LoadingBackground>();
 
-        _customLoader.Connect(CustomLoader.SignalName.LoadStarted, Callable.From<string>(OnSceneLoadStarted));
-        _customLoader.Connect(CustomLoader.SignalName.LoadCompleted, Callable.From<string, Resource>(OnSceneLoadCompleted));
-        _customLoader.Connect(CustomLoader.SignalName.LoadFailed, Callable.From<string, string>(OnSceneLoadFailed));
-        _customLoader.Connect(CustomLoader.SignalName.LoadProgress, Callable.From<string, float>(OnSceneLoadProgress));
+        _customLoader.Connect(LoadingBackground.SignalName.LoadStarted, Callable.From<string>(OnSceneLoadStarted));
+        _customLoader.Connect(LoadingBackground.SignalName.LoadCompleted, Callable.From<string, Resource>(OnSceneLoadCompleted));
+        _customLoader.Connect(LoadingBackground.SignalName.LoadFailed, Callable.From<string, string>(OnSceneLoadFailed));
+        _customLoader.Connect(LoadingBackground.SignalName.LoadProgress, Callable.From<string, float>(OnSceneLoadProgress));
     }
 
     public override void _ExitTree()

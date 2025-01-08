@@ -16,3 +16,5 @@ res://Client/Scripts/Singletons/ServiceManager.cs
 res://Client/Scripts/Transitions/LoadingScript.cs
 res://Client/Scripts/Singletons/GameStateManager.cs
 res://Client/Scripts/BaseControls/DatePicker.cs
+res://Client/Scenes/BaseControls/AlertMessageWindow.tscn
+res://Client/Scripts/Singletons/LoadingBackground.cs

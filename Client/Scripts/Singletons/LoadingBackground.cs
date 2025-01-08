@@ -3,7 +3,7 @@ using Godot;
 
 namespace Game.Scripts.Singletons;
 
-public partial class CustomLoader : Node
+public partial class LoadingBackground : Node
 {
     private ILoaderService? _loaderService;
     

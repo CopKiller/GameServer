@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://brsyug3yx44jd"]
+[gd_scene load_steps=13 format=3 uid="uid://brsyug3yx44jd"]
 
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs" id="1_g8h0f"]
 [ext_resource type="Texture2D" uid="uid://joyt6cvhx0f6" path="res://Client/Resources/Texture/MainMenu/BG.jpg" id="1_t2e0c"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/RegisterWindowScript.cs" id="8_hlxr0"]
 [ext_resource type="PackedScene" uid="uid://m1n8nod1ijp" path="res://Client/Scenes/BaseControls/DatePicker.tscn" id="9_fg5ma"]
 [ext_resource type="Texture2D" uid="uid://br8we67py886l" path="res://Client/Resources/Texture/MainMenu/Secret/HideImage.png" id="9_wmk4i"]
+[ext_resource type="PackedScene" uid="uid://05kfs1ok5ln3" path="res://Client/Scenes/BaseControls/AlertMessageWindow.tscn" id="12_048g5"]
 
 [node name="MainMenuScene" type="Control" node_paths=PackedStringArray("FirstWindowOpened")]
 layout_mode = 3
@@ -78,7 +79,6 @@ CloseWindow = NodePath("../../..")
 [node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 title = "Login"
 size = Vector2i(230, 200)
-visible = false
 script = ExtResource("5_mrp30")
 OpenWindowWhenClosed = NodePath("../MenuWindow")
 
@@ -279,6 +279,8 @@ text = "Confirm"
 [node name="DatePicker" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("9_fg5ma")]
 visible = false
 unresizable = false
+
+[node name="AcceptDialog" parent="MainMenuWindows" instance=ExtResource("12_048g5")]
 
 [node name="LatencyLabel" type="Label" parent="."]
 layout_mode = 1
