@@ -1,21 +1,28 @@
 using Core.Cryptography.Interface;
-using Core.Database.Consistency;
 using Core.Database.Consistency.Interface.Validator;
-using Core.Database.Consistency.Validator;
+using Core.Database.Consistency.Interface.Validator.DataValidator;
+using Core.Database.Consistency.Interface.Validator.SyntaxValidator;
 using Core.Database.Interface;
 using Core.Database.Interface.Account;
 using Core.Server.Database.Interface;
 
 namespace Core.Server.Database.Repositories;
 
-public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAccountRepository<T>
-    where T : class, IAccountModel
+public class AccountRepository<T>(
+    IRepository<T> context, 
+    ICrypto crypto,
+    IAccountSyntaxValidator<T> syntaxValidator,
+    IAccountDataValidator<T> dataValidator) 
+    : IAccountRepository<T> where T : class, IAccountModel
 {
-    private readonly AccountValidator<T> _validator = new(context);
-
     public async Task<(IValidatorResult, T?)> AddAccountAsync(T account)
     {
-        var validationResult = await _validator.ValidateAsync(account);
+        var syntaxValidationResult = syntaxValidator.Validate(account);
+        
+        if (!syntaxValidationResult.IsValid)
+            return (syntaxValidationResult, null);
+        
+        var validationResult = await dataValidator.ValidateAsync(account);
         
         if (!validationResult.IsValid)
             return (validationResult, null);
@@ -36,7 +43,8 @@ public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAcc
     {
         var accountResult = await context.GetEntityAsync(a => a.Username == username, model => model.Players);
 
-        var validator = new ValidatorResult(true);
+        
+        var validator = new ValidatorResult();
 
         if (accountResult == null)
         {
@@ -55,18 +63,23 @@ public class AccountRepository<T>(IRepository<T> context, ICrypto crypto) : IAcc
 
     public async Task<IValidatorResult> UpdateAccountAsync(T account)
     {
-        var validationResult = await _validator.ValidateAsync(account, true);
+        var syntaxValidationResult = syntaxValidator.Validate(account);
         
-        if (!validationResult.IsValid)
-            return validationResult;
+        if (!syntaxValidationResult.IsValid)
+            return syntaxValidationResult;
+        
+        var dataValidationResult = await dataValidator.ValidateAsync(account);
+        
+        if (!dataValidationResult.IsValid)
+            return dataValidationResult;
         
         context.Update(account);
 
         var result = await context.SaveChangesAsync() > 0;
         
         if (!result)
-            validationResult.AddError("Failed to update account");
+            dataValidationResult.AddError("Failed to update account");
         
-        return validationResult;
+        return dataValidationResult;
     }
 }

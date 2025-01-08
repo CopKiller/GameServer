@@ -24,6 +24,7 @@ public static class Program
         services.AddServerLogOutput();
         services.AddDatabase();
         services.AddServerDatabase();
+        services.AddEntitiesValidator();
         services.AddNetwork();
         services.AddNetworkServer();
         services.AddMapper();

@@ -5,19 +5,17 @@ using Core.Database.Interface;
 
 namespace Core.Database.Consistency.Validator;
 
-public abstract class ConsistencyValidator<T> : IValidator<T> where T : class, IEntity
+public class ConsistencyValidator
 {
-    internal readonly IValidatorResult ValidatorResult = new ValidatorResult(true);
+    public readonly IValidatorResult ValidatorResult = new ValidatorResult();
 
-    public abstract Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false);
-
-    protected void AddError(string error)
+    public void AddError(string error)
     {
         ValidatorResult.IsValid = false;
         ValidatorResult.AddError(error);
     }
-    
-    private bool ValidateStringLength(string? value, string propertyName, int? minLength, int? maxLength)
+
+    public bool ValidateStringLength(string? value, string propertyName, int? minLength, int? maxLength)
     {
         if (minLength == null && maxLength == null)
             return true;
@@ -41,8 +39,8 @@ public abstract class ConsistencyValidator<T> : IValidator<T> where T : class, I
         
         return true;
     }
-    
-    private bool ValidateRegex(string? value, string propertyName, Regex? regex)
+
+    public bool ValidateRegex(string? value, string propertyName, Regex? regex)
     {
         if (regex == null)
             return true;
@@ -59,7 +57,7 @@ public abstract class ConsistencyValidator<T> : IValidator<T> where T : class, I
         return true;
     }
     
-    protected bool ValidateString(string? value, string propertyName, int? minLength = null, int? maxLength = null, Regex? regex = null)
+    public bool ValidateString(string? value, string propertyName, int? minLength = null, int? maxLength = null, Regex? regex = null)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

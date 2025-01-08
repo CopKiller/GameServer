@@ -10,7 +10,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Core.Database.Consistency.Interface\Core.Database.Consistency.Interface.csproj" />
         <ProjectReference Include="..\Core.Database.Constants\Core.Database.Constants.csproj" />
-        <ProjectReference Include="..\Core.Database.Interface\Core.Database.Interface.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,3 +1,5 @@
+using Core.Database.Interface.Account;
+using Core.Database.Interface.Player;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Logger.Interface;
@@ -7,7 +9,7 @@ using Core.Server.Database.Interface;
 
 namespace Core.Server.Database;
 
-public class DatabaseService(
+public class DatabaseRepositories(
     IAccountRepository<AccountModel> accountRepository,
     IPlayerRepository<PlayerModel> playerRepository) 
     : IDatabaseService

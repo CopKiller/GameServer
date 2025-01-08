@@ -1,17 +1,20 @@
 using Core.Database.Consistency.Interface.Validator;
+using Core.Database.Consistency.Interface.Validator.DataValidator;
 using Core.Database.Interface;
 using Core.Database.Interface.Account;
 
 namespace Core.Database.Consistency.Validator.DataValidator.Entities;
 
-internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyValidator<T> where T : class, IAccountModel
+public class AccountDataValidator<T>(IRepository<T> repository) : IAccountDataValidator<T> where T : class, IAccountModel
 {
-    public override async Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
+    private readonly ConsistencyValidator _validator = new();
+    
+    public async Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
     {
         if (entity == null)
         {
-            AddError("Account Entity is null");
-            return ValidatorResult;
+            _validator.AddError("Account Entity is null");
+            return _validator.ValidatorResult;
         }
         
         // Username
@@ -20,7 +23,7 @@ internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyV
         // Email
         await ValidateEmail(entity.Email, isUpdate);
         
-        return ValidatorResult;
+        return _validator.ValidatorResult;
     }
     
     public async Task<IValidatorResult> ValidateUsername(string username, bool isUpdate = false)
@@ -28,15 +31,15 @@ internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyV
         if (await repository.ExistEntityAsync(x => x.Username.ToLower() == username.ToLower()))
         {
             if (!isUpdate)
-                AddError($"Username {username} already exists");
+                _validator.AddError($"Username {username} already exists");
         }
         else
         {
             if (isUpdate)
-                AddError($"Username {username} not found for update this account");
+                _validator.AddError($"Username {username} not found for update this account");
         }
         
-        return ValidatorResult;
+        return _validator.ValidatorResult;
     }
     
     public async Task<IValidatorResult> ValidateEmail(string email, bool isUpdate = false)
@@ -44,14 +47,14 @@ internal class AccountDataValidator<T>(IRepository<T> repository) : ConsistencyV
         if (await repository.ExistEntityAsync(x => x.Email.ToLower() == email.ToLower()))
         {
             if (!isUpdate)
-                AddError($"Email {email} already exists");
+                _validator.AddError($"Email {email} already exists");
         }
         else
         {
             if (isUpdate)
-                AddError($"Email {email} not found for update this account");
+                _validator.AddError($"Email {email} not found for update this account");
         }
         
-        return ValidatorResult;
+        return _validator.ValidatorResult;
     }
 }

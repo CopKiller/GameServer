@@ -1,12 +1,6 @@
-using System;
-using Core.Client.Network.Interface;
-using Core.Network.Interface.Packet;
-using Core.Network.Packets.Request;
-using Core.Network.SerializationObjects.Enum;
 using Game.Scripts.BaseControls;
 using Game.Scripts.Extensions;
 using Game.Scripts.Extensions.Attributes;
-using Game.Scripts.GameState;
 using Game.Scripts.Singletons;
 using Godot;
 

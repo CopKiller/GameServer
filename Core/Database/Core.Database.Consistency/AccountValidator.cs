@@ -10,12 +10,12 @@ namespace Core.Database.Consistency;
 
 public class AccountValidator<T>(IRepository<T> repository) where T : class, IAccountModel
 {
-    private readonly IValidator<T> _syntaxValidator = new AccountSyntaxValidator<T>();
-    private readonly IValidator<T> _dataValidator = new AccountDataValidator<T>(repository);
+    private readonly AccountSyntaxValidator<T> _syntaxValidator = new();
+    private readonly AccountDataValidator<T> _dataValidator = new(repository);
     
     public async Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
     {
-        var syntaxValidationResult = await _syntaxValidator.ValidateAsync(entity, isUpdate);
+        var syntaxValidationResult = _syntaxValidator.Validate(entity, isUpdate);
         
         if (!syntaxValidationResult.IsValid)
         {

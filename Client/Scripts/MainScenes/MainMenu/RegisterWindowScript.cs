@@ -11,7 +11,7 @@ namespace Game.Scripts.MainScenes.MainMenu;
 
 public partial class RegisterWindowScript : WindowBase
 {
-	private IClientPacketRequest _packetRequest;
+	private IClientPacketRequest? _packetRequest;
 	
 	[Export] public DatePicker? DatePickWindow;
 	
@@ -230,6 +230,6 @@ public partial class RegisterWindowScript : WindowBase
 			Account = accountDto
 		};
 
-		_packetRequest.SendPacket(registerResponse);
+		_packetRequest?.SendPacket(registerResponse);
 	}
 }

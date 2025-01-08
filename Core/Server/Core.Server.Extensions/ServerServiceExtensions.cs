@@ -2,7 +2,13 @@ using System.Reflection;
 using Core.Cryptography;
 using Core.Cryptography.Interface;
 using Core.Database;
+using Core.Database.Consistency.Interface.Validator.DataValidator;
+using Core.Database.Consistency.Interface.Validator.SyntaxValidator;
+using Core.Database.Consistency.Validator.DataValidator.Entities;
+using Core.Database.Consistency.Validator.SyntaxValidator.Entities;
 using Core.Database.Interface;
+using Core.Database.Interface.Account;
+using Core.Database.Interface.Player;
 using Core.Database.Models.Account;
 using Core.Database.Models.Player;
 using Core.Database.Repositories;
@@ -114,7 +120,7 @@ public static class ServerServiceExtensions
         if (string.IsNullOrEmpty(cnn) && !useInMemory)
             throw new InvalidOperationException("A valid connection string is required unless using InMemory database.");
         
-        services.AddDbContext<IDbContext, DatabaseContext>(DbContextOptions);
+        services.AddDbContextPool<IDbContext, DatabaseContext>(DbContextOptions);
         
         services.AddScoped<IRepository<AccountModel>, Repository<AccountModel>>();
         services.AddScoped<IRepository<PlayerModel>, Repository<PlayerModel>>();
@@ -145,7 +151,22 @@ public static class ServerServiceExtensions
         // Core.Server.Database abstractions
         services.AddScoped<IAccountRepository<AccountModel>, AccountRepository<AccountModel>>();
         services.AddScoped<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
-        services.AddScoped<IDatabaseService, DatabaseService>();
+        services.AddScoped<IDatabaseService, DatabaseRepositories>();
+    }
+    
+    /// <summary>
+    /// Add entities validator services to the service collection
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to
+    /// </param>
+    public static void AddEntitiesValidator(this IServiceCollection services)
+    {
+        services.AddScoped<IPlayerSyntaxValidator<PlayerModel>, PlayerSyntaxValidator<PlayerModel>>();
+        services.AddScoped<IPlayerDataValidator<PlayerModel>, PlayerDataValidator<PlayerModel>>();
+        
+        services.AddScoped<IAccountSyntaxValidator<AccountModel>, AccountSyntaxValidator<AccountModel>>();
+        services.AddScoped<IAccountDataValidator<AccountModel>, AccountDataValidator<AccountModel>>();
     }
 
     /// <summary>
