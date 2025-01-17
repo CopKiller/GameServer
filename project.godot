@@ -18,8 +18,9 @@ config/icon="res://Client/icon.svg"
 [autoload]
 
 ServiceManager="*res://Client/Scripts/Singletons/ServiceManager.cs"
-LoadingManager="*res://Client/Scripts/Singletons/LoadingManager.cs"
 SceneManager="*res://Client/Scripts/Singletons/SceneManager.cs"
+LoadingManager="*res://Client/Scripts/Singletons/LoadingManager.cs"
+AlertManager="*res://Client/Scripts/Singletons/AlertManager.cs"
 NetworkManager="*res://Client/Scripts/Singletons/NetworkManager.cs"
 GameStateManager="*res://Client/Scripts/Singletons/GameStateManager.cs"
 LoadingBackground="*res://Client/Scripts/Singletons/LoadingBackground.cs"
