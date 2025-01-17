@@ -217,17 +217,15 @@ public partial class RegisterWindowScript : WindowBase
 			return;
 		}
 
-		var accountDto = new AccountDto()
-		{
-			Username = username,
-			Password = password,
-			Email = email,
-			BirthDate = birthdate
-		};
-
 		var registerResponse = new RegisterRequest()
 		{
-			Account = accountDto
+			Account =
+			{
+				Username = username,
+				Password = password,
+				Email = email,
+				BirthDate = birthdate
+			}
 		};
 
 		_packetRequest?.SendPacket(registerResponse);
