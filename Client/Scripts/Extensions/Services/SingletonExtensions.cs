@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Game.Scripts.Extensions;
+namespace Game.Scripts.Extensions.Services;
 
 public static class SingletonExtensions
 {

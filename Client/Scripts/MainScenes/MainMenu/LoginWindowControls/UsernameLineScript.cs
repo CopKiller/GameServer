@@ -1,10 +1,13 @@
 using Core.Client.Validator;
+using Game.Scripts.Extensions;
 using Godot;
 
-namespace Game.Scripts.MainScenes.MainMenu.StartWindowControls;
+namespace Game.Scripts.MainScenes.MainMenu.LoginWindowControls;
 
 public partial class UsernameLineScript : LineEdit
 {
+	// TODO: Remover essa classe e centralizar tudo no LoginWindow invocando sinais.
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -16,9 +19,6 @@ public partial class UsernameLineScript : LineEdit
 
 		var result = EntitiesValidator.ValidateAccountUsername(newText);
 		
-		if (result.IsValid)
-			this.RemoveThemeColorOverride("font_color");
-		else
-			this.AddThemeColorOverride("font_color", new Color(1,0,0));
+		this.ChangeThemeColor(result.IsValid);
 	}
 }

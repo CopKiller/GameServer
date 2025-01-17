@@ -1,11 +1,9 @@
 using System;
-using Godot;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Game.Scripts.Extensions;
 using Game.Scripts.Extensions.Attributes;
+using Godot;
 
-namespace Game.Scripts.Transitions
+namespace Game.Scripts.BaseControls
 {
     [ScenePath("res://Client/Scenes/Transitions/LoadingScene.tscn")]
     public partial class LoadingScript : Control

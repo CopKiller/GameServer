@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b63i2bly2xrwb"]
 
-[ext_resource type="Script" path="res://Client/Scripts/Transitions/LoadingScript.cs" id="1_brj3t"]
+[ext_resource type="Script" path="res://Client/Scripts/BaseControls/LoadingScript.cs" id="1_brj3t"]
 [ext_resource type="Texture2D" uid="uid://cjmhnj5f2uxxd" path="res://Client/Resources/Texture/SplashImage.jpg" id="2_ac0ni"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20tsv"]

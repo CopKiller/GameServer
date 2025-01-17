@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://brsyug3yx44jd"]
+[gd_scene load_steps=14 format=3 uid="uid://brsyug3yx44jd"]
 
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs" id="1_g8h0f"]
 [ext_resource type="Texture2D" uid="uid://joyt6cvhx0f6" path="res://Client/Resources/Texture/MainMenu/BG.jpg" id="1_t2e0c"]
@@ -6,12 +6,13 @@
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/MenuWindowScript.cs" id="3_65gus"]
 [ext_resource type="PackedScene" uid="uid://t4m4dgov1k5q" path="res://Client/Scenes/BaseControls/ButtonBase.tscn" id="4_px31k"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/LoginWindowScript.cs" id="5_mrp30"]
-[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/UsernameLineScript.cs" id="6_1jjaj"]
-[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/StartWindowControls/PasswordLineScript.cs" id="7_txykb"]
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/LoginWindowControls/UsernameLineScript.cs" id="7_jq22f"]
 [ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/RegisterWindowScript.cs" id="8_hlxr0"]
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/LoginWindowControls/PasswordLineScript.cs" id="8_j6u07"]
 [ext_resource type="PackedScene" uid="uid://m1n8nod1ijp" path="res://Client/Scenes/BaseControls/DatePicker.tscn" id="9_fg5ma"]
 [ext_resource type="Texture2D" uid="uid://br8we67py886l" path="res://Client/Resources/Texture/MainMenu/Secret/HideImage.png" id="9_wmk4i"]
-[ext_resource type="PackedScene" uid="uid://05kfs1ok5ln3" path="res://Client/Scenes/BaseControls/AlertMessageWindow.tscn" id="12_048g5"]
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/CharacterWindowScript.cs" id="11_agmdt"]
+[ext_resource type="Script" path="res://Client/Scripts/MainScenes/MainMenu/CreateCharWindowScript.cs" id="13_ukx2g"]
 
 [node name="MainMenuScene" type="Control" node_paths=PackedStringArray("FirstWindowOpened")]
 layout_mode = 3
@@ -36,6 +37,7 @@ expand_mode = 1
 [node name="MainMenuWindows" type="Node" parent="."]
 
 [node name="MenuWindow" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+unique_name_in_owner = true
 title = "Menu"
 size = Vector2i(250, 110)
 visible = false
@@ -77,8 +79,10 @@ text = "Exit"
 CloseWindow = NodePath("../../..")
 
 [node name="LoginWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+unique_name_in_owner = true
 title = "Login"
 size = Vector2i(230, 200)
+visible = false
 script = ExtResource("5_mrp30")
 OpenWindowWhenClosed = NodePath("../MenuWindow")
 
@@ -105,7 +109,7 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "username here"
 clear_button_enabled = true
-script = ExtResource("6_1jjaj")
+script = ExtResource("7_jq22f")
 
 [node name="password" type="Label" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -121,7 +125,7 @@ size_flags_horizontal = 3
 placeholder_text = "password here"
 clear_button_enabled = true
 secret = true
-script = ExtResource("7_txykb")
+script = ExtResource("8_j6u07")
 
 [node name="HidePasswordButton" type="Button" parent="MainMenuWindows/LoginWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -161,12 +165,13 @@ layout_mode = 2
 text = "Enter Game"
 
 [node name="RegisterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("DatePickWindow", "OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+unique_name_in_owner = true
 title = "Register"
 size = Vector2i(230, 373)
 visible = false
 wrap_controls = true
 script = ExtResource("8_hlxr0")
-DatePickWindow = NodePath("../DatePicker")
+DatePickWindow = NodePath("DatePicker")
 OpenWindowWhenClosed = NodePath("../MenuWindow")
 
 [node name="MarginContainer" type="MarginContainer" parent="MainMenuWindows/RegisterWindow"]
@@ -276,11 +281,87 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "Confirm"
 
-[node name="DatePicker" parent="MainMenuWindows" groups=["MainMenuWindows"] instance=ExtResource("9_fg5ma")]
+[node name="DatePicker" parent="MainMenuWindows/RegisterWindow" groups=["MainMenuWindows"] instance=ExtResource("9_fg5ma")]
 visible = false
 unresizable = false
 
-[node name="AcceptDialog" parent="MainMenuWindows" instance=ExtResource("12_048g5")]
+[node name="CharacterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+unique_name_in_owner = true
+title = "Characters"
+size = Vector2i(200, 177)
+visible = false
+wrap_controls = true
+script = ExtResource("11_agmdt")
+OpenWindowWhenClosed = NodePath("../LoginWindow")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuWindows/CharacterWindow"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 89.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="PlayersItemList" type="ItemList" parent="MainMenuWindows/CharacterWindow/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/v_separation = 10
+auto_height = true
+item_count = 3
+item_0/text = "Vazio"
+item_1/text = "Vazio"
+item_2/text = "Vazio"
+
+[node name="CreateCharButton" parent="MainMenuWindows/CharacterWindow/VBoxContainer" node_paths=PackedStringArray("OpenWindow", "CloseWindow") instance=ExtResource("4_px31k")]
+layout_mode = 2
+text = "Create Character"
+OpenWindow = NodePath("../../../CreateCharWindow")
+CloseWindow = NodePath("../..")
+
+[node name="EnterGameButton" type="Button" parent="MainMenuWindows/CharacterWindow/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enter Game"
+
+[node name="CreateCharWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+unique_name_in_owner = true
+title = "Create New Char"
+size = Vector2i(200, 87)
+visible = false
+wrap_controls = true
+script = ExtResource("13_ukx2g")
+OpenWindowWhenClosed = NodePath("../CharacterWindow")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenuWindows/CreateCharWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuWindows/CreateCharWindow/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameLineEdit" type="LineEdit" parent="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CreateCharButton" type="Button" parent="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create"
 
 [node name="LatencyLabel" type="Label" parent="."]
 layout_mode = 1
@@ -303,3 +384,6 @@ text_direction = 1
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/BirthdateLineEdit" to="MainMenuWindows/MenuWindow" method="OnBirthdateTextChanged"]
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/EmailLineEdit" to="MainMenuWindows/RegisterWindow" method="OnEmailTextChanged"]
 [connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/ConfirmButton" to="MainMenuWindows/RegisterWindow" method="OnConfirmRegisterPressed"]
+[connection signal="item_selected" from="MainMenuWindows/CharacterWindow/VBoxContainer/PlayersItemList" to="MainMenuWindows/CreateCharWindow" method="UpdateCharacterSelectedSlotSignal"]
+[connection signal="text_changed" from="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/HBoxContainer/NameLineEdit" to="MainMenuWindows/CreateCharWindow" method="CheckCharacterNameInputSignal"]
+[connection signal="pressed" from="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/CreateCharButton" to="MainMenuWindows/CreateCharWindow" method="CheckCreateCharacterSignal"]

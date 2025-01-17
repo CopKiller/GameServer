@@ -65,5 +65,7 @@ public partial class GameStateManager : Node, IGameStateManager
     public override void _ExitTree()
     {
         _currentState?.ExitStateAsync();
+        
+        _currentState = null;
     }
 }

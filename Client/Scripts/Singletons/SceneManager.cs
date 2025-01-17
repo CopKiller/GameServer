@@ -25,7 +25,16 @@ public partial class SceneManager : Node
     [Signal]
     public delegate void SceneChangedEventHandler(Node newScene);
 
-    public Node? GetCurrentScene() => _currentScene;
+    //public Node? GetCurrentScene() => _currentScene;
+
+    public T? GetCurrentScene<T>() where T : Node
+    {
+        if (_currentScene is T scene)
+            return scene;
+        
+        return null;
+        
+    }
 
     public override void _Ready()
     {

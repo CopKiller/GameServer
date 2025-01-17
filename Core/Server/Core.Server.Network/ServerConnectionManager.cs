@@ -1,5 +1,6 @@
 using Core.Network.Interface;
 using Core.Network.Interface.Connection;
+using Core.Network.Interface.Event;
 using Core.Server.Network.Interface;
 
 namespace Core.Server.Network;
@@ -8,7 +9,6 @@ public class ServerConnectionManager(
     IConnectionManager connectionManager, 
     INetworkSettings networkSettings) : IServerConnectionManager
 {
-    public IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers => connectionManager.CustomPeers;
 
     public void ConfigureNetworkSettings()
     {

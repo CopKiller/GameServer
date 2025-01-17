@@ -40,6 +40,9 @@ public class GameState<T>(
     {
         logger.LogInformation($"{nameof(GameState<T>)}: {typeof(T).Name} entered!");
 
+        if (sceneManager.IsConnected(SceneManager.SignalName.SceneChanged, Callable.From<Node>(OnSceneChanged)))
+            sceneManager.Disconnect(SceneManager.SignalName.SceneChanged, Callable.From<Node>(OnSceneChanged));
+        
         sceneManager.Connect(SceneManager.SignalName.SceneChanged, Callable.From<Node>(OnSceneChanged));
         
         loadingManager.AddTask(() => sceneManager.LoadSceneInBackground<T>(LoaderPriority), $"Loading {typeof(T).Name} scene...");

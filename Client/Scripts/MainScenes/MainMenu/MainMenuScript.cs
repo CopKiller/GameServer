@@ -1,30 +1,43 @@
 using Game.Scripts.BaseControls;
 using Game.Scripts.Extensions;
 using Game.Scripts.Extensions.Attributes;
+using Game.Scripts.Extensions.Services;
 using Game.Scripts.Singletons;
 using Godot;
+using Godot.NativeInterop;
 
 namespace Game.Scripts.MainScenes.MainMenu;
 
 [ScenePath("res://Client/Scenes/MainScenes/MainMenuScene.tscn")]
 public partial class MainMenuScript : Control
 {
-    private Label? _latencyLabel;
-    
     [Export]
-    public WindowBase? FirstWindowOpened { get; set; }
+    private WindowBase? FirstWindowOpened { get; set; }
+    
+    
+    private Label? _latencyLabel;
+    private LoginWindowScript? _loginWindow;
+    private CharacterWindowScript? _characterWindow;
     
     public override void _Ready()
     {
         GD.Print("MainMenuScene ready!");
         
         _latencyLabel = GetNode<Label>("LatencyLabel");
+        _loginWindow = GetNode<LoginWindowScript>("%LoginWindow");
+        _characterWindow = GetNode<CharacterWindowScript>("%CharacterWindow");
 
         var networkManager = ServiceManager.GetRequiredService<NetworkManager>();
 
         networkManager.Connect(NetworkManager.SignalName.NetworkLatencyUpdated, Callable.From<int>(ProcessLatency));
         
         FirstWindowOpened?.Show();
+    }
+    
+    public void EnterCharacterSelection()
+    {
+        _loginWindow?.Hide();
+        _characterWindow?.Show();
     }
     
     // private void SendTestMessage()

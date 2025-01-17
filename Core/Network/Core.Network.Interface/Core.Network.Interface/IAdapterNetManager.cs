@@ -14,6 +14,8 @@ public interface IAdapterNetManager
     void TriggerEvents();
     void Stop(bool sendDisconnectMessages);
     int GetPeersCount(CustomConnectionState peerState);
+    int HasConnectedPeers();
+    IAdapterNetPeer GetPeerById(int id);
     IEnumerable<IAdapterNetPeer> GetPeers(CustomConnectionState state);
     IAdapterNetPeer GetFirstPeer();
     void DisconnectAll();
@@ -26,10 +28,6 @@ public interface IAdapterNetManager
     void CreateNtpRequest(IPEndPoint endPoint);
     void CreateNtpRequest(string ntpServerAddress, int port);
     void CreateNtpRequest(string ntpServerAddress);
-    
-    string Address { get; set; }
-    int Port { get; set; }
-    string Key { get; set; }
     bool UnconnectedMessagesEnabled { get; set; }
     bool NatPunchEnabled { get; set; }
     int UpdateTime { get; set; }

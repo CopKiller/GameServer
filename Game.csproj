@@ -34,6 +34,10 @@
     <Content Include="Client\Scenes\MainScenes\MainMenuScene.tscn" />
     <Content Include="Client\Scenes\Transitions\LoadingScene.tscn" />
     <Content Include="Readme.txt" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Client\Scripts\MainScenes\MainMenu\CreateCharWindowControls\" />
   </ItemGroup> 
   
 </Project>

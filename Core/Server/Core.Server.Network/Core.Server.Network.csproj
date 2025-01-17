@@ -13,6 +13,7 @@
         <ProjectReference Include="..\..\Service\Core.Service.Interfaces\Core.Service.Interfaces.csproj"/>
         <ProjectReference Include="..\..\Utils\AutoMapper\Core.Utils.AutoMapper.Interface\Core.Utils.AutoMapper.Interface.csproj" />
         <ProjectReference Include="..\Core.Server.Database.Interface\Core.Server.Database.Interface.csproj" />
+        <ProjectReference Include="..\Core.Server.Session\Core.Server.Session.csproj" />
     </ItemGroup>
 
 </Project>

@@ -24,7 +24,7 @@ public class LoaderService(ILogger<LoaderService> logger) : ILoaderService
     public event Action<string, string>? LoadFailed;
 
     private readonly PriorityQueue<string, LoaderPriority> _loadQueue = new();
-    private readonly HashSet<string> _activeLoads = new();
+    private readonly HashSet<string> _activeLoads = [];
     private readonly Dictionary<string, Resource> _loadedResources = new();
     private readonly Array _progress = [];
     private readonly Dictionary<string, float> _loadTimers = new();
@@ -34,7 +34,8 @@ public class LoaderService(ILogger<LoaderService> logger) : ILoaderService
     {
         if (_loadedResources.ContainsKey(resourcePath) || _activeLoads.Contains(resourcePath))
         {
-            logger.LogError($"Resource '{resourcePath}' is already loaded or in progress.");
+            logger.LogError($"{nameof(Resource)} '{resourcePath}' is already loaded or in progress, notify the caller.");
+            LoadCompleted?.Invoke(resourcePath, _loadedResources[resourcePath]);
             return;
         }
 

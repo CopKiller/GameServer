@@ -3,6 +3,7 @@ using Core.Client.Validator;
 using Core.Network.Packets.Request;
 using Core.Network.SerializationObjects;
 using Game.Scripts.BaseControls;
+using Game.Scripts.Extensions;
 using Game.Scripts.Singletons;
 using Godot;
 
@@ -10,8 +11,10 @@ namespace Game.Scripts.MainScenes.MainMenu;
 
 public partial class LoginWindowScript : WindowBase
 {
-	private IClientPacketRequest _packetRequest;
+	[Export]
+	public WindowBase? NextWindow { get; set; }
 	
+	private IClientPacketRequest? _packetRequest;
 	private LineEdit? _usernameLineEdit;
 	private LineEdit? _passwordLineEdit;
 	private Button? _hidePasswordButton;
@@ -67,6 +70,13 @@ public partial class LoginWindowScript : WindowBase
 	{
 		GD.Print("Login button pressed!");
 		
+		// var alertManager = ServiceManager.GetRequiredService<AlertManager>();
+		// alertManager.AddGlobalAlert("Login button pressed!");
+		//
+		// alertManager.AddGlobalAlert("Register button pressed!");
+		//
+		// return;
+		
 		if (_usernameLineEdit == null) return;
 		if (_passwordLineEdit == null) return;
 		
@@ -76,28 +86,23 @@ public partial class LoginWindowScript : WindowBase
 		var userValid = EntitiesValidator.ValidateAccountUsername(username);
 		var passwordValid = EntitiesValidator.ValidateAccountPassword(password);
 		
-		ChangeThemeColor(_usernameLineEdit, userValid.IsValid);
-		ChangeThemeColor(_passwordLineEdit, passwordValid.IsValid);
+		_usernameLineEdit.ChangeThemeColor(userValid.IsValid);
+		_passwordLineEdit.ChangeThemeColor(passwordValid.IsValid);
 		
 		if (!userValid.IsValid || !passwordValid.IsValid)
 		{
 			return;
 		}
 
-		var loginRequest = new LoginRequest()
+		var loginRequest = new LoginRequest
 		{
-			Username = username,
-			Password = password
+			Account =
+			{
+				Username = username,
+				Password = password
+			}
 		};
-		
-		_packetRequest.SendPacket(loginRequest);
-	}
-	
-	private void ChangeThemeColor(LineEdit lineEdit, bool isValid)
-	{
-		if (isValid)
-			lineEdit.RemoveThemeColorOverride("font_color");
-		else
-			lineEdit.AddThemeColorOverride("font_color", new Color(1, 0, 0));
+
+		_packetRequest?.SendPacket(loginRequest);
 	}
 }

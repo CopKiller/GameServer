@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Client.Network;
 using Core.Client.Network.Interface;
 using Core.Network.Interface;
 using Core.Network.Interface.Event;
 using Core.Service.Interfaces.Types;
-using Game.Scripts.Extensions;
 using Game.Scripts.GameState.Interface;
 using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Network;
-using Game.Scripts.Transitions;
 using Godot;
 
 namespace Game.Scripts.Singletons;
@@ -71,7 +67,7 @@ public partial class NetworkManager : Node
         
         var clientRegisterHandler = ServiceManager.GetRequiredService<ClientRegisterHandler>();
         
-        clientRegisterHandler.Register();
+        clientRegisterHandler.RegisterHandlers();
 
         return Task.CompletedTask;
     }

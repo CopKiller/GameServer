@@ -1,6 +1,7 @@
 
 using Core.Logger.Interface;
 using Core.Network.Packets;
+using Game.Scripts.BaseControls;
 using Game.Scripts.Cache;
 using Game.Scripts.GameState;
 using Game.Scripts.GameState.Interface;
@@ -9,7 +10,6 @@ using Game.Scripts.Logger;
 using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Network;
 using Game.Scripts.Singletons;
-using Game.Scripts.Transitions;
 using Godot;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -61,6 +61,12 @@ public static class ServicesExtensions
     {
         services.AddSingleton<GameStateManager>(p => 
             p.GetRequiredService<SceneTree>().Root.GetSingleton<GameStateManager>());
+    }
+    
+    public static void AddGodotAlertManager(this IServiceCollection services)
+    {
+        services.AddSingleton<AlertManager>(p => 
+            p.GetRequiredService<SceneTree>().Root.GetSingleton<AlertManager>());
     }
     
     public static void AddGodotGameState(this IServiceCollection services)

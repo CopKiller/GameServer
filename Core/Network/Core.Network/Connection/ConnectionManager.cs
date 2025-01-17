@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Net;
+using System.Runtime.InteropServices;
 using Core.Network.Interface;
 using Core.Network.Interface.Connection;
 using Core.Network.Interface.Enum;
@@ -18,18 +20,33 @@ public class ConnectionManager(
     ILogger<ConnectionManager> logger) : IConnectionManager
 {
     
-    private readonly Dictionary<int, IAdapterNetPeer> _peers = [];
+    private readonly List<IAdapterNetPeer> _peers = [];
     
     /// <summary>
     /// Verifica se há peers conectados.
     /// </summary>
-    public bool HasConnectedPeers => _peers.Count != 0;
+    public bool HasConnectedPeers => netManager.HasConnectedPeers() > 0;
+    
+    public ReadOnlySpan<IAdapterNetPeer> GetPeers()
+    {
+        return CollectionsMarshal.AsSpan(_peers);
+    }
     
     public void RegisterEvents()
     {
+        listener.OnConnectionRequest += ConnectionRequest;
         listener.OnPeerConnected += AddPeer;
         listener.OnPeerDisconnected += RemovePeer;
-        listener.OnConnectionRequest += ConnectionRequest;
+    }
+    
+    private void AddPeer(IAdapterNetPeer peer)
+    {
+        _peers.Add(peer);
+    }
+    
+    private void RemovePeer(IAdapterNetPeer peer, IAdapterDisconnectInfo info)
+    {
+        _peers.Remove(peer);
     }
 
     /// <summary>
@@ -42,48 +59,11 @@ public class ConnectionManager(
 
         request.AcceptIfKey(settings.Key);
     }
-
-
-    /// <summary>
-    /// Processa a conexão de um peer.
-    /// </summary>
-    /// <param name="peer"></param>
-    private void AddPeer(IAdapterNetPeer peer)
-    {
-        logger.LogDebug($"Peer connected - id: {peer.Id} address: {peer.EndPoint}");
-        _peers.Add(peer.Id, peer);
-    }
-
-
-    /// <summary>
-    /// Processa a desconexão de um peer.
-    /// </summary>
-    /// <param name="peer"></param>
-    /// <param name="disconnectInfo"></param>
-    private void RemovePeer(IAdapterNetPeer peer, IAdapterDisconnectInfo? disconnectInfo = null)
-    {
-        logger.LogDebug(disconnectInfo != null
-            ? $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint} ({disconnectInfo.Reason}}})"
-            : $"Peer disconnected - id: {peer.Id} address: {peer.EndPoint}");
-
-        _peers.Remove(peer.Id);
-    }
-
-
+    
     public void DisconnectPeer(IAdapterNetPeer peer, byte[] data, int start, int count)
     {
         netManager.DisconnectPeer(peer, data, start, count);
     }
-
-    /// <summary>
-    /// Lista de peers atualmente conectados.
-    /// </summary>
-    /// <summary>
-    /// Lista de peers customizados.
-    /// </summary>
-    public IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers =>
-        _peers;
-
 
     /// <summary>
     /// Desconecta um peer específico.
@@ -91,8 +71,6 @@ public class ConnectionManager(
     public void DisconnectPeer(IAdapterNetPeer peer, string reason)
     {
         netManager.DisconnectPeer(peer);
-
-        RemovePeer(peer);
     }
 
 
@@ -155,6 +133,6 @@ public class ConnectionManager(
     /// </summary>
     public IAdapterNetPeer? GetPeerById(int id)
     {
-        return _peers.FirstOrDefault(i => i.Key == id).Value;
+        return netManager.GetPeerById(id);
     }
 }

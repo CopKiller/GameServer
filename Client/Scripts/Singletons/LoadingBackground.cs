@@ -38,6 +38,7 @@ public partial class LoadingBackground : Node
     public void EnqueueResource(string resourcePath, LoaderPriority priority)
     {
         _loaderService?.EnqueueResource(resourcePath, priority);
+
     }
 
     private void OnLoadStarted(string resourcePath)

@@ -15,7 +15,7 @@ using Core.Network.Interface.Packet;
 using Core.Network.Interface.Serialization;
 using Core.Network.Packet;
 using Core.Network.Packets;
-using Core.Network.Packets.Handler.Interface;
+using Core.Network.Packets.Interface.Handler;
 using Core.Service;
 using Core.Service.Interfaces.Types;
 using Infrastructure.Logger;

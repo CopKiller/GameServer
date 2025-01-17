@@ -62,6 +62,7 @@ public partial class ServiceManager : Node
         services.AddGodotSceneManager();
         services.AddGodotServiceManager();
         services.AddGodotLoadingManager();
+        services.AddGodotAlertManager();
         services.AddGodotScenePathCache();
         services.AddGodotLoaderService();
         services.AddGodotCustomLoader();

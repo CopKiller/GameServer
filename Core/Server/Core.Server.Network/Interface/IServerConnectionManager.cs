@@ -6,11 +6,6 @@ public interface IServerConnectionManager
 {
     void ConfigureNetworkSettings();
     bool StartListener();
-    
-    /// <summary>
-    /// Lista de peers customizados.
-    /// </summary>
-    IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers { get; }
 
     /// <summary>
     /// Desconecta um peer específico.

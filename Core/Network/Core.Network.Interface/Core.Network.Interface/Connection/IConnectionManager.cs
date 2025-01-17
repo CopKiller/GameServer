@@ -11,6 +11,7 @@ public interface IConnectionManager
     int GetPeersCount(CustomConnectionState peerState);
     public IAdapterNetPeer? GetPeerById(int id);
     bool HasConnectedPeers { get; }
+    ReadOnlySpan<IAdapterNetPeer> GetPeers();
     void RegisterEvents();
     void DisconnectAll();
     void DisconnectAll(byte[] data, int start, int count);
@@ -19,6 +20,5 @@ public interface IConnectionManager
     void DisconnectPeer(IAdapterNetPeer peer, byte[] data);
     void DisconnectPeer(IAdapterNetPeer peer, IAdapterDataWriter writer);
     void DisconnectPeer(IAdapterNetPeer peer, byte[] data, int start, int count);
-    IReadOnlyDictionary<int, IAdapterNetPeer> CustomPeers { get; }
     void DisconnectPeer(IAdapterNetPeer peer, string reason);
 }

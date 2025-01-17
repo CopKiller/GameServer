@@ -44,6 +44,7 @@
         <ProjectReference Include="..\..\Utils\Physics\Core.Physics\Core.Physics.csproj" >
             <PrivateAssets>All</PrivateAssets>
         </ProjectReference>
+        <ProjectReference Include="..\Core.Server.Session\Core.Server.Session.csproj" />
 
     </ItemGroup>
 

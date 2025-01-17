@@ -14,11 +14,8 @@ public class MainMenuState(
 
     public override async Task ExitStateAsync()
     {
-        var currentScene = _sceneManager.GetCurrentScene();
-        if (currentScene is MainMenuScript mainMenu)
-        {
-            mainMenu.CloseAllWindows();
-        }
+        var currentScene = _sceneManager.GetCurrentScene<MainMenuScript>();
+        currentScene?.CloseAllWindows();
         
         await base.ExitStateAsync();
     }

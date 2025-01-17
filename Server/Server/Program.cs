@@ -1,5 +1,6 @@
 ﻿
 using Core.Database.Models.Account;
+using Core.Network.Packets.Interface.Request;
 using Core.Server.Database.Interface;
 using Core.Server.Extensions;
 using Core.Server.Network.Packet;
@@ -31,6 +32,7 @@ public static class Program
         services.AddServiceManager();
         services.AddPhysics();
         services.AddNetworkRegisterHandlers();
+        services.AddSessionManager();
 
         _serviceManager?.Start();
         
@@ -43,8 +45,8 @@ public static class Program
         
         // Register all packet handlers
         var registerPacketHandler = serviceProvider.GetRequiredService<ServerRegisterHandler>();
-        registerPacketHandler.Register();
-
+        registerPacketHandler.RegisterHandlers();
+        
         _serviceManager = serviceProvider.GetRequiredService<IServiceManager>();
         _serviceManager.Register();
         _serviceManager.Start();
