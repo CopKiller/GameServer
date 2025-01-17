@@ -2,6 +2,7 @@ using Core.Database.Consistency.Interface.Validator;
 using Core.Database.Consistency.Interface.Validator.DataValidator;
 using Core.Database.Consistency.Interface.Validator.SyntaxValidator;
 using Core.Database.Interface;
+using Core.Database.Interface.Account;
 using Core.Database.Interface.Player;
 using Core.Server.Database.Interface;
 
@@ -27,13 +28,46 @@ public class PlayerRepository<T>(
 
         var validatorResult = new ValidatorResult();
 
-        if (players == null)
+        if (players != null) return (validatorResult, players);
+        
+        validatorResult.AddError("Players not found");
+        return (validatorResult, null);
+
+    }
+    
+    public async Task<(IValidatorResult, T?)> AddPlayerAsync(T player, int accountId)
+    {
+        var validatorResult = new ValidatorResult();
+    
+        // Validar sintaxe
+        var syntaxValidationResult = syntaxValidator.Validate(player);
+        if (!syntaxValidationResult.IsValid)
+            return (syntaxValidationResult, null);
+
+        // Validar dados relacionados ao player
+        var dataValidationResult = await dataValidator.ValidateAsync(player);
+        if (!dataValidationResult.IsValid)
+            return (dataValidationResult, null);
+
+        // Garantir que a Account existe antes de adicionar o Player
+        var accountExists = await Context.ExistEntityAsync(a => a.Id == accountId);
+        if (!accountExists)
         {
-            validatorResult.AddError("Players not found");
+            validatorResult.AddError("Account not found");
             return (validatorResult, null);
         }
-        
-        return (validatorResult, players);
+
+        // Associar o Player à conta usando apenas o Id
+        player.AccountModelId = accountId;
+
+        // Adicionar o Player diretamente ao banco
+        await Context.AddAsync(player);
+    
+        var changes = await Context.SaveChangesAsync() > 0;
+        if (!changes)
+            validatorResult.AddError("Failed to add player");
+    
+        return (validatorResult, player);
     }
 
     public async Task<IValidatorResult> UpdatePlayerAsync(T player)

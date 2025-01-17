@@ -38,7 +38,7 @@ public class Repository<T>(IDbContext context) : IRepository<T>
 
     public async Task<bool> ExistEntityAsync(Expression<Func<T, bool>> predicate)
     {
-        return await context.ExistEntityCompiledAsync(predicate);
+        return await context.ExistEntityAsync(predicate);
     }
 
     public async Task<IPagedResult<T>> GetPagedAsync(int page = 1, int pageSize = 10)

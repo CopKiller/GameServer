@@ -10,7 +10,7 @@ public class AccountDto : IAdapterSerializable
     public string Password { get; set; } = string.Empty;
     public string BirthDate { get; set; } = string.Empty;
     
-    public List<PlayerDto?> Players { get; set; } = new();
+    public List<PlayerDto?> Players { get; set; } = [];
 
     public void Serialize(IAdapterDataWriter writer)
     {

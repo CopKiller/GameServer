@@ -11,10 +11,6 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 {
     public DbSet<AccountModel> Accounts { get; set; }
     public DbSet<PlayerModel> Players { get; set; }
-    
-    // Cache da compiled query
-    // Cache de consultas compiladas por tipo de entidade para chamadas assíncronas
-    private static readonly Dictionary<Type, Delegate> CompiledQueriesAsync = new();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,22 +22,15 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
         return Set<TEntity>().AsQueryable();
     }
     
-    public async Task<bool> ExistEntityCompiledAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) 
+    public async Task<bool> ExistEntityAsync<TEntity>(Expression<Func<TEntity, bool>> predicate)
         where TEntity : class
     {
-        // Verifica se já existe uma compiled query em cache para o tipo
-        if (!CompiledQueriesAsync.TryGetValue(typeof(TEntity), out var compiledQuery))
+        if (predicate == null)
         {
-            // Cria uma nova compiled query assíncrona
-            compiledQuery = EF.CompileAsyncQuery((DatabaseContext context, Expression<Func<TEntity, bool>> pred) =>
-                context.Set<TEntity>().Any(pred));
-
-            CompiledQueriesAsync[typeof(TEntity)] = compiledQuery;
+            throw new ArgumentNullException(nameof(predicate), "A expressão predicate não pode ser nula.");
         }
 
-        // Converte a query para o tipo correto e executa com await
-        var query = (Func<DatabaseContext, Expression<Func<TEntity, bool>>, Task<bool>>)compiledQuery;
-        return await query(this, predicate);
+        return await Set<TEntity>().AnyAsync(predicate);
     }
 
     public async Task<TEntity> AddAsync<TEntity>(TEntity entity) where TEntity : class

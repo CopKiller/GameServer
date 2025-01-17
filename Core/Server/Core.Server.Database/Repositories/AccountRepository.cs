@@ -42,7 +42,6 @@ public class AccountRepository<T>(
     public async Task<(IValidatorResult, T?)> GetAccountAsync(string username, string password)
     {
         var accountResult = await context.GetEntityAsync(a => a.Username == username, model => model.Players);
-
         
         var validator = new ValidatorResult();
 
@@ -63,23 +62,25 @@ public class AccountRepository<T>(
 
     public async Task<IValidatorResult> UpdateAccountAsync(T account)
     {
+        var validatorResult = new ValidatorResult();
+
+        // Validar sintaxe e dados
         var syntaxValidationResult = syntaxValidator.Validate(account);
-        
         if (!syntaxValidationResult.IsValid)
             return syntaxValidationResult;
-        
+    
         var dataValidationResult = await dataValidator.ValidateAsync(account);
-        
         if (!dataValidationResult.IsValid)
             return dataValidationResult;
-        
-        context.Update(account);
 
+        // Persistir no banco
+        context.Update(account);
         var result = await context.SaveChangesAsync() > 0;
-        
+    
         if (!result)
-            dataValidationResult.AddError("Failed to update account");
-        
-        return dataValidationResult;
+            validatorResult.AddError("Failed to update account");
+
+        return validatorResult;
     }
+
 }

@@ -2,6 +2,7 @@ using Core.Database.Consistency.Interface.Validator;
 using Core.Database.Consistency.Interface.Validator.SyntaxValidator;
 using Core.Database.Constants;
 using Core.Database.Interface.Account;
+using Core.Database.Interface.Player;
 
 namespace Core.Database.Consistency.Validator.SyntaxValidator.Entities;
 
@@ -30,6 +31,9 @@ public class AccountSyntaxValidator<T> : IAccountSyntaxValidator<T> where T : cl
         
         // BirthDate
         ValidateBirthDate(entity.BirthDate);
+        
+        // Players Count
+        ValidadePlayerCount(entity.Players);
         
         return _validator.ValidatorResult;
     }
@@ -63,6 +67,12 @@ public class AccountSyntaxValidator<T> : IAccountSyntaxValidator<T> where T : cl
             _validator.AddError($"BirthDate {birthDate} is invalid");
         }
         return _validator.ValidatorResult;
+    }
+    
+    private void ValidadePlayerCount(ICollection<IPlayerModel> playerModels)
+    {
+        if (playerModels.Count > DatabaseLimiter.MaxPlayersPerAccount)
+            _validator.AddError("Maximum number of players per account.");
     }
     
     public void ClearErrors()
