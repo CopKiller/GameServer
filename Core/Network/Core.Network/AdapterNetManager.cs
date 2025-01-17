@@ -12,10 +12,6 @@ public class AdapterNetManager : IAdapterNetManager
 {
     private readonly NetManager _netManager;
 
-    public string Address { get; set; } = "127.0.0.1";
-    public int Port { get; set; } = 9050;
-    public string Key { get; set; } = "key";
-
     public AdapterNetManager(
         NetManager netManager,
         ILogger<NetworkManager> logger)
@@ -67,7 +63,18 @@ public class AdapterNetManager : IAdapterNetManager
 
     public int GetPeersCount(CustomConnectionState peerState)
     {
+        
         return _netManager.GetPeersCount(Extensions.ConvertToConnectionState(peerState));
+    }
+    
+    public int HasConnectedPeers()
+    {
+        return _netManager.ConnectedPeersCount;
+    }
+
+    public IAdapterNetPeer GetPeerById(int id)
+    {
+        return new AdapterNetPeer(_netManager.GetPeerById(id));
     }
 
     public IEnumerable<IAdapterNetPeer> GetPeers(CustomConnectionState state)
