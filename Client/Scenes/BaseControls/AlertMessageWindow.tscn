@@ -1,10 +1,17 @@
-[gd_scene format=3 uid="uid://05kfs1ok5ln3"]
+[gd_scene load_steps=2 format=3 uid="uid://05kfs1ok5ln3"]
 
-[node name="AcceptDialog" type="AcceptDialog"]
+[ext_resource type="Script" path="res://Client/Scripts/BaseControls/AlertMessageScript.cs" id="1_0v4so"]
+
+[node name="AlertMessageWindow" type="AcceptDialog"]
 disable_3d = true
 initial_position = 2
 size = Vector2i(250, 100)
 visible = true
+exclusive = false
 always_on_top = true
 dialog_text = "Testando a mensagem."
 dialog_autowrap = true
+script = ExtResource("1_0v4so")
+
+[connection signal="canceled" from="." to="." method="OnClosePressed"]
+[connection signal="confirmed" from="." to="." method="OnOkPressed"]
