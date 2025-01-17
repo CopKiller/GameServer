@@ -6,7 +6,7 @@ using LiteNetLib.Utils;
 
 namespace Core.Network.Packet;
 
-public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManager manager) : IPacketSender
+public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManager connectionManager) : IPacketSender
 {
     [ThreadStatic] // Evita problemas de concorrência
     private static AdapterDataWriter? _writer;
@@ -55,7 +55,7 @@ public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManage
         writer.Reset();
         packetProcessor.Write(writer.GetNetDataWriter(), packet); // Serializa uma vez
 
-        foreach (var peer in manager.CustomPeers.Values)
+        foreach (var peer in connectionManager.GetPeers())
         {
             peer.Send(writer, deliveryMethod);
         }
@@ -70,7 +70,7 @@ public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManage
         writer.Reset();
         SerializePacket(ref packet, writer); // Serializa uma vez
 
-        foreach (var peer in manager.CustomPeers.Values)
+        foreach (var peer in connectionManager.GetPeers())
         {
             peer.Send(writer, deliveryMethod);
         }
@@ -81,7 +81,7 @@ public class PacketRequest(NetPacketProcessor packetProcessor, IConnectionManage
         CustomDeliveryMethod deliveryMethod = CustomDeliveryMethod.ReliableOrdered
     )
     {
-        foreach (var peer in manager.CustomPeers.Values)
+        foreach (var peer in connectionManager.GetPeers())
         {
             peer.Send(data, deliveryMethod);
         }

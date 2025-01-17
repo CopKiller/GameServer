@@ -1,4 +1,3 @@
-using Core.Network.Packets.Response.Interface;
 using Core.Network.SerializationObjects;
 using Core.Network.SerializationObjects.Response;
 

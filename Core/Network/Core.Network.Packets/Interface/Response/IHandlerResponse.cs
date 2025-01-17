@@ -1,6 +1,6 @@
 using Core.Network.Interface;
 
-namespace Core.Network.Packets.Response.Interface;
+namespace Core.Network.Packets.Interface.Response;
 
 public interface IHandlerResponse <in T> where T : class
 {

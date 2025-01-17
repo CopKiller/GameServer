@@ -1,7 +1,7 @@
-using Core.Network.Packets.Request.Interface;
-using Core.Network.Packets.Response.Interface;
+using Core.Network.Packets.Interface.Request;
+using Core.Network.Packets.Interface.Response;
 
-namespace Core.Network.Packets.Handler.Interface;
+namespace Core.Network.Packets.Interface.Handler;
 
 public interface IHandlerRegistry
 {

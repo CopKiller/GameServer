@@ -23,7 +23,7 @@ using Core.Network.Interface.Packet;
 using Core.Network.Interface.Serialization;
 using Core.Network.Packet;
 using Core.Network.Packets;
-using Core.Network.Packets.Handler.Interface;
+using Core.Network.Packets.Interface.Handler;
 using Core.Physics;
 using Core.Physics.Builder;
 using Core.Physics.Interface;
@@ -36,6 +36,7 @@ using Core.Server.Network;
 using Core.Server.Network.Interface;
 using Core.Server.Network.Packet;
 using Core.Server.Network.Packet.Handler;
+using Core.Server.Session;
 using Core.Service;
 using Core.Service.Interfaces.Types;
 using Core.Utils.AutoMapper;
@@ -270,5 +271,10 @@ public static class ServerServiceExtensions
     public static void AddNetworkRegisterHandlers(this IServiceCollection services)
     {
         services.AddScoped<ServerRegisterHandler>();
+    }
+    
+    public static void AddSessionManager(this IServiceCollection services)
+    {
+        services.AddSingleton<ISessionManager, SessionManager>();
     }
 }

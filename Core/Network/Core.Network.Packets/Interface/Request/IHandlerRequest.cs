@@ -1,6 +1,6 @@
 using Core.Network.Interface;
 
-namespace Core.Network.Packets.Request.Interface;
+namespace Core.Network.Packets.Interface.Request;
 
 public interface IHandlerRequest <in T> where T : class
 {

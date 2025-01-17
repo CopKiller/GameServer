@@ -1,7 +1,7 @@
 using Core.Network.Interface.Packet;
-using Core.Network.Packets.Handler.Interface;
-using Core.Network.Packets.Request.Interface;
-using Core.Network.Packets.Response.Interface;
+using Core.Network.Packets.Interface.Handler;
+using Core.Network.Packets.Interface.Request;
+using Core.Network.Packets.Interface.Response;
 
 namespace Core.Network.Packets;
 

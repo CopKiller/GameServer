@@ -3,9 +3,9 @@ using Core.Network.SerializationObjects.Response;
 
 namespace Core.Network.Packets.Response;
 
-public class LoginResponse
+public class CreateCharResponse
 {
     public ResponseDto Response { get; set; } = new();
 
-    public AccountDto Account { get; set; } = new();
+    public PlayerDto Player { get; set; } = new();
 }
