@@ -8,11 +8,6 @@ public class PlayerDto : IAdapterSerializable
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int SlotNumber { get; set; }
-    
-    // Ignore in serialization
-    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-    public DateOnly LastLogin { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-    
     public int Level { get; set; }
     public int Experience { get; set; }
     public int Golds { get; set; }
