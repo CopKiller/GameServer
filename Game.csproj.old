@@ -1,0 +1,43 @@
+<Project Sdk="Godot.NET.Sdk/4.3.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Core\**" />
+    <Compile Remove="Server\**" />
+    <Compile Remove="External\**" />
+    <Compile Remove="Core.Client.Resource\**" />
+    <Compile Remove="Core.Client.Logger\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Remove="External\**" />
+    <EmbeddedResource Remove="Core.Client.Resource\**" />
+    <EmbeddedResource Remove="Core.Client.Logger\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="Core\Client\Core.Client.Extensions\Core.Client.Extensions.csproj" />
+    <ProjectReference Include="Core\Client\Core.Client.Validator\Core.Client.Validator.csproj" />
+    <ProjectReference Include="Core\Database\Core.Database.Constants\Core.Database.Constants.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Client\Scenes\BaseControls\ButtonBase.tscn" />
+    <Content Include="Client\Scenes\BaseControls\DatePicker.tscn" />
+    <Content Include="Client\Scenes\BaseControls\WindowBase.tscn" />
+    <Content Include="Client\Scenes\MainScenes\MainMenuScene.tscn" />
+    <Content Include="Client\Scenes\Transitions\LoadingScene.tscn" />
+    <Content Include="Readme.txt" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Client\Scripts\MainScenes\MainMenu\CreateCharWindowControls\" />
+  </ItemGroup> 
+  
+</Project>
