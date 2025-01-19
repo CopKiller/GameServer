@@ -20,5 +20,5 @@ public interface IConnectionManager
     void DisconnectPeer(IAdapterNetPeer peer, byte[] data);
     void DisconnectPeer(IAdapterNetPeer peer, IAdapterDataWriter writer);
     void DisconnectPeer(IAdapterNetPeer peer, byte[] data, int start, int count);
-    void DisconnectPeer(IAdapterNetPeer peer, string reason);
+    void DisconnectPeer(int peerId);
 }

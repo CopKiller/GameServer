@@ -10,9 +10,22 @@ public class AccountSession
     
     public ClientState ClientState { get; set; }
     
-    public string Username => CurrentAccount?.Username ?? string.Empty;
-    public int AccountId => CurrentAccount?.Id ?? 0;
     public AccountDto? CurrentAccount { get; set; }
     
+    private PlayerSession? PlayerSession { get; set; }
+    
     public IAdapterNetPeer? CurrentPeer { get; set; }
+    
+    public string Username => CurrentAccount?.Username ?? string.Empty;
+    public int AccountId => CurrentAccount?.Id ?? 0;
+    
+    public void AddPlayerSession(PlayerDto player)
+    {
+        PlayerSession = new PlayerSession {CurrentPlayer = player};
+    }
+    
+    public PlayerSession? GetPlayerSession()
+    {
+        return PlayerSession ?? null;
+    }
 }

@@ -14,10 +14,10 @@ public partial class MainMenuScript : Control
     [Export]
     private WindowBase? FirstWindowOpened { get; set; }
     
-    
     private Label? _latencyLabel;
     private LoginWindowScript? _loginWindow;
-    private CharacterWindowScript? _characterWindow;
+    
+    public CharacterWindowScript? CharacterWindow { get; private set; }
     
     public override void _Ready()
     {
@@ -25,7 +25,7 @@ public partial class MainMenuScript : Control
         
         _latencyLabel = GetNode<Label>("LatencyLabel");
         _loginWindow = GetNode<LoginWindowScript>("%LoginWindow");
-        _characterWindow = GetNode<CharacterWindowScript>("%CharacterWindow");
+        CharacterWindow = GetNode<CharacterWindowScript>("%CharacterWindow");
 
         var networkManager = ServiceManager.GetRequiredService<NetworkManager>();
 
@@ -33,25 +33,6 @@ public partial class MainMenuScript : Control
         
         FirstWindowOpened?.Show();
     }
-    
-    public void EnterCharacterSelection()
-    {
-        _loginWindow?.Hide();
-        _characterWindow?.Show();
-    }
-    
-    // private void SendTestMessage()
-    // {
-    //     var sender = ServiceManager.GetRequiredService<IClientPacketRequest>();
-    //     
-    //     LoginRequest request = new LoginRequest
-    //     {
-    //         Username = "Test",
-    //         Password = "Test"
-    //     };
-    //     
-    //     sender.SendPacket(request);
-    // }
     
     private void ProcessLatency(int latency)
     {

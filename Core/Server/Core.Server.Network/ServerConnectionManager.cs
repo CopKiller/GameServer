@@ -31,7 +31,7 @@ public class ServerConnectionManager(
 
     public void DisconnectPeer(IAdapterNetPeer peer, string reason = "Disconnected")
     {
-        connectionManager.DisconnectPeer(peer, reason);
+        connectionManager.DisconnectPeer(peer);
     }
 
     public void DisconnectAll()

@@ -1,6 +1,8 @@
 using Core.Network.Interface;
+using Core.Network.Interface.Connection;
 using Core.Network.Interface.Event;
 using Core.Network.SerializationObjects;
+using Core.Network.SerializationObjects.Enum;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Server.Session;
@@ -9,56 +11,46 @@ public class SessionManager : ISessionManager
 {
     private readonly Dictionary<int, AccountSession> _accountSessions = [];
     
-    private readonly Dictionary<int, PlayerSession> _playerSessions = [];
-    
+    private readonly IConnectionManager _connectionManager;
     private readonly ILogger<SessionManager> _logger;
     
-    public SessionManager(INetworkEventsListener listener, ILogger<SessionManager> logger)
+    public SessionManager(INetworkEventsListener listener, IConnectionManager connectionManager, ILogger<SessionManager> logger)
     {
+        _connectionManager = connectionManager;
         _logger = logger;
         
-        // listener.OnPeerConnected += (peer) =>
-        // {
-        //     logger.LogDebug($"Peer connected - id: {peer.Id} address: {peer.EndPoint}");
-        //     
-        //     AddAccountSession(peer, new AccountSession());
-        //     AddPlayerSession(peer, new PlayerSession());
-        // };
-        
-        listener.OnPeerDisconnected += RemoveAllSessions;
+        listener.OnPeerDisconnected += RemoveAccountSession;
     }
     
-    public void AddPlayerSession(IAdapterNetPeer peer, PlayerDto player)
-    {
-        var session = new PlayerSession
-        {
-            CurrentPlayer = player,
-            CurrentPeer = peer
-        };
-        
-        _playerSessions[peer.Id] = session;
-    }
-    
-    public void AddAccountSession(IAdapterNetPeer peer, AccountDto account)
+    public void AddAccountSession(IAdapterNetPeer peer, AccountDto account, ClientState clientState = ClientState.CharacterSelection)
     {
         var session = new AccountSession
         {
             CurrentAccount = account,
-            CurrentPeer = peer
+            CurrentPeer = peer,
+            ClientState = clientState,
+            IsLoggedIn = true
         };
         
         _accountSessions[peer.Id] = session;
     }
     
+    public void LogoutAccountSession(int connectionId)
+    {
+        if (_accountSessions.TryGetValue(connectionId, out var session))
+        {
+            _connectionManager.DisconnectPeer(connectionId);
+            _logger.LogInformation($"Account session {connectionId} logged out.");
+        }
+        else
+        {
+            _logger.LogWarning($"Account session {connectionId} not found.");
+        }
+    }
+    
     public AccountSession? GetAccountSession(int connectionId)
     {
         _accountSessions.TryGetValue(connectionId, out var session);
-        return session;
-    }
-
-    public PlayerSession? GetPlayerSession(int connectionId)
-    {
-        _playerSessions.TryGetValue(connectionId, out var session);
         return session;
     }
     
@@ -72,11 +64,10 @@ public class SessionManager : ISessionManager
         return _accountSessions.Values.Any(a => a.AccountId == accountId);
     }
     
-    private void RemoveAllSessions(IAdapterNetPeer peer, IAdapterDisconnectInfo reason)
+    private void RemoveAccountSession(IAdapterNetPeer peer, IAdapterDisconnectInfo reason)
     {
         _logger.LogDebug($"Peer disconnected - id: {peer.Id} address: {peer.EndPoint} ({reason.Reason})");
         
         _accountSessions.Remove(peer.Id);
-        _playerSessions.Remove(peer.Id);
     }
 }

@@ -1,8 +1,9 @@
+res://Client/Scripts/MainScenes/MainMenu/CharacterWindowScript.cs
+res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs
+res://Client/Scripts/Singletons/GameStateManager.cs
 res://Client/Scenes/MainScenes/MainMenuScene.tscn
 res://Client/Scripts/BaseControls/DatePicker.cs
 res://Client/Scripts/MainScenes/MainMenu/MenuWindowScript.cs
-res://Client/Scripts/Singletons/GameStateManager.cs
-res://Client/Scripts/MainScenes/MainMenu/CharacterWindowScript.cs
 res://Client/Scripts/Singletons/NetworkManager.cs
 res://Client/Scripts/BaseControls/AlertMessageScript.cs
 res://Client/Scripts/MainScenes/MainMenu/LoginWindowControls/PasswordLineScript.cs
@@ -17,6 +18,5 @@ res://Client/Scripts/Singletons/SceneManager.cs
 res://Client/Scripts/Singletons/ServiceManager.cs
 res://Client/Scripts/Singletons/LoadingBackground.cs
 res://Client/Scripts/BaseControls/WindowBase.cs
-res://Client/Scripts/MainScenes/MainMenu/MainMenuScript.cs
 res://Client/Scripts/BaseControls/ButtonBase.cs
 res://Client/Scripts/BaseControls/LoadingScript.cs

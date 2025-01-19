@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Network.SerializationObjects;
 using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Singletons;
 using Microsoft.Extensions.Logging;
@@ -14,9 +16,21 @@ public class MainMenuState(
 
     public override async Task ExitStateAsync()
     {
-        var currentScene = _sceneManager.GetCurrentScene<MainMenuScript>();
-        currentScene?.CloseAllWindows();
+        Scene?.CloseAllWindows();
         
         await base.ExitStateAsync();
+    }
+    
+    public void ChangeStateToCharacterSelection()
+    {
+        Scene?.CloseAllWindows();        
+        Scene?.CharacterWindow?.Show();
+        Scene?.CharacterWindow?.PopulatePlayersList();
+    }
+    
+    public void AddCharacterToCharacterSelection(List<PlayerDto> playersDto)
+    {
+        if (Scene?.CharacterWindow != null) 
+            Scene.CharacterWindow.Players = playersDto;
     }
 }

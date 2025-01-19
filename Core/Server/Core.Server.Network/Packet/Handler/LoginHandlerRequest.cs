@@ -1,10 +1,10 @@
 using Core.Database.Models.Account;
 using Core.Network.Interface;
-using Core.Network.Packets;
 using Core.Network.Packets.Interface.Request;
 using Core.Network.Packets.Request;
 using Core.Network.Packets.Response;
 using Core.Network.SerializationObjects;
+using Core.Network.SerializationObjects.Enum;
 using Core.Server.Database.Interface;
 using Core.Server.Network.Interface;
 using Core.Server.Session;
@@ -31,7 +31,7 @@ public class LoginHandlerRequest(
         if (validator.IsValid == false || account == null)
         {
             loginResponse.Response.Success = false;
-            loginResponse.Response.Message = string.Join(", ", validator.Errors);
+            loginResponse.Response.Message = string.Join(",\n", validator.Errors);
             sender.SendPacket(peer, loginResponse);
             return;
         }
@@ -47,7 +47,7 @@ public class LoginHandlerRequest(
         
         loginResponse.Account = mapperService.Map<AccountModel, AccountDto>(account);
         
-        sessionManager.AddAccountSession(peer, loginResponse.Account);
+        sessionManager.AddAccountSession(peer, loginResponse.Account, ClientState.CharacterSelection);
         
         loginResponse.Response.Success = true;
         loginResponse.Response.Message = "Login successful";

@@ -32,7 +32,7 @@ public class RegisterHandlerRequest(
         if (validator.IsValid == false || account == null)
         {
             registerResponse.Response.Success = false;
-            registerResponse.Response.Message = string.Join(", ", validator.Errors);
+            registerResponse.Response.Message = string.Join(",\n", validator.Errors);
             
             sender.SendPacket(peer, registerResponse);
             return;

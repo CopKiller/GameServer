@@ -1,6 +1,8 @@
+using System;
 using Core.Client.Validator;
 using Game.Scripts.BaseControls;
 using Game.Scripts.Extensions;
+using Game.Scripts.Singletons;
 using Godot;
 
 namespace Game.Scripts.MainScenes.MainMenu;
@@ -8,12 +10,16 @@ namespace Game.Scripts.MainScenes.MainMenu;
 public partial class CreateCharWindowScript : WindowBase
 {
     private LineEdit? _nameLineEdit;
+
+    private AlertManager? _alertManager;
     
     private int _characterSelectedSlot = -1;
 
     public override void _Ready()
     {
         _nameLineEdit ??= GetNode<LineEdit>("MarginContainer/VBoxContainer/HBoxContainer/NameLineEdit");
+
+        _alertManager ??= ServiceManager.GetRequiredService<AlertManager>();
     }
 
 
@@ -39,8 +45,11 @@ public partial class CreateCharWindowScript : WindowBase
 
         if (result.IsValid)
         {
-            SendCreateChar();
+            SendCreateChar(text);
+            return;
         }
+        
+        _alertManager?.AddGlobalAlert(string.Join(',' , result.Errors));
     }
 
     #endregion

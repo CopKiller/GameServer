@@ -15,7 +15,7 @@ public class GameState<T>(
     LoadingManager loadingManager,
     ILogger<GameState<T>> logger) : IGameState<T> where T : CanvasItem
 {
-    private T? _scene;
+    protected T? Scene { get; private set; }
 
     private bool FadeIn { get; set; } = true;
     private float FadeInDuration { get; set; } = 0.5f;
@@ -52,16 +52,16 @@ public class GameState<T>(
     
     private void OnSceneChanged(Node scene)
     {
-        _scene = scene as T;
+        Scene = scene as T;
 
-        if (_scene == null)
+        if (Scene == null)
         {
             logger.LogError($"Failed to enter {typeof(T).Name}: Scene is null!");
             return;
         }
 
         if (FadeIn)
-            _scene?.FadeIn(FadeInDuration);
+            Scene?.FadeIn(FadeInDuration);
     }
 
     public virtual async Task ExitStateAsync()
@@ -70,14 +70,14 @@ public class GameState<T>(
         {
             logger.LogInformation($"{typeof(T).Name} exited!");
 
-            if (_scene == null)
+            if (Scene == null)
             {
                 logger.LogError($"Failed to exit {typeof(T).Name}: Scene is null!");
                 return;
             }
 
             if (FadeOut)
-                await _scene.FadeOut(FadeOutDuration);
+                await Scene.FadeOut(FadeOutDuration);
         }
         catch (Exception e)
         {

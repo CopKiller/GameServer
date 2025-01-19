@@ -75,7 +75,7 @@ public static class ServicesExtensions
         services.AddScoped<IGameState<LoadingScript>, GameState<LoadingScript>>();
         services.AddScoped<IGameState<MainMenuScript>, MainMenuState>();
     }
-    
+        
     public static void AddGodotScenePathCache(this IServiceCollection services)
     {
         services.AddSingleton<ScenePathCache>();

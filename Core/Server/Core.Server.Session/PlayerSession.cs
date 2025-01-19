@@ -6,5 +6,9 @@ namespace Core.Server.Session;
 public class PlayerSession
 {
     public PlayerDto? CurrentPlayer { get; set; }
-    public IAdapterNetPeer? CurrentPeer { get; set; }
+    
+    public void Logout()
+    {
+        CurrentPlayer = null;
+    }
 }

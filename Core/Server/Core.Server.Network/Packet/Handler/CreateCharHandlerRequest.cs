@@ -45,7 +45,7 @@ public class CreateCharHandlerRequest(
         if (!validatorResult.IsValid || player == null)
         {
             response.Response.Success = false;
-            response.Response.Message = string.Join(", ", validatorResult.Errors);
+            response.Response.Message = string.Join(",\n", validatorResult.Errors);
             sender.SendPacket(peer, response);
             logger.LogWarning($"Failed to create player for peer {peer.Id}. Reason: {response.Response.Message}");
             return;

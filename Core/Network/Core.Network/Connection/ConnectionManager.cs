@@ -68,9 +68,18 @@ public class ConnectionManager(
     /// <summary>
     /// Desconecta um peer específico.
     /// </summary>
-    public void DisconnectPeer(IAdapterNetPeer peer, string reason)
+    public void DisconnectPeer(IAdapterNetPeer peer)
     {
         netManager.DisconnectPeer(peer);
+    }
+    
+    public void DisconnectPeer(int peerId)
+    {
+        var peer = GetPeerById(peerId);
+        if (peer != null)
+        {
+            netManager.DisconnectPeer(peer);
+        }
     }
 
 
@@ -90,11 +99,6 @@ public class ConnectionManager(
     public void DisconnectPeerForce(IAdapterNetPeer peer)
     {
         netManager.DisconnectPeerForce(peer);
-    }
-
-    public void DisconnectPeer(IAdapterNetPeer peer)
-    {
-        netManager.DisconnectPeer(peer);
     }
 
     public void DisconnectPeer(IAdapterNetPeer peer, byte[] data)

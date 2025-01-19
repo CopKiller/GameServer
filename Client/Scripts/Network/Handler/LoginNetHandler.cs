@@ -1,7 +1,8 @@
 using Core.Network.Interface;
 using Core.Network.Packets.Interface.Response;
-using Core.Network.Packets.Request;
 using Core.Network.Packets.Response;
+using Game.Scripts.GameState;
+using Game.Scripts.GameState.Interface;
 using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Singletons;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,8 @@ namespace Game.Scripts.Network.Handler;
 public class LoginNetHandler(
     AlertManager alertManager,
     SceneManager sceneManager,
+    NetworkManager networkManager,
+    GameStateManager gameStateManager,
     ILogger<LoginNetHandler> logger) : IHandlerResponse<LoginResponse>
 {
     public void HandleResponse(LoginResponse packet, IAdapterNetPeer peer)
@@ -27,9 +30,17 @@ public class LoginNetHandler(
         
         alertManager.AddGlobalAlert(response.Response.Message);
 
-        var currentScene = sceneManager.GetCurrentScene<MainMenuScript>();
+        var currentState = gameStateManager.GetCurrentState();
         
-        currentScene?.CallDeferred(MainMenuScript.MethodName.EnterCharacterSelection);
+        if (currentState is not MainMenuState mainMenuState)
+        {
+            networkManager.Reconnect("Client is not in MainMenu state, waiting for it to change...");
+            return;
+        }
+        
+        mainMenuState.ChangeStateToCharacterSelection();
+        
+        mainMenuState.AddCharacterToCharacterSelection(response.Account.Players);
     }
 
     public void HandleFailure(LoginResponse response, IAdapterNetPeer peer)
