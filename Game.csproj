@@ -35,7 +35,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Client\Scripts\MainScenes\MainMenu\CreateCharWindowControls\" />
     <Folder Include="Client\Scripts\Singletons\Interface\" />
   </ItemGroup> 
   

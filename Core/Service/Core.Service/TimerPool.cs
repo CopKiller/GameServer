@@ -27,9 +27,9 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
             {
                 var startTick = MainTimer.ElapsedMilliseconds;
                 
-                // Usar foreach para atualizar todos os serviços em sequência.
-                foreach (var service in ServiceLastTick.Keys)
+                foreach (var kvp in ServiceLastTick)
                 {
+                    var service = kvp.Key;
                     try
                     {
                         Update(service);

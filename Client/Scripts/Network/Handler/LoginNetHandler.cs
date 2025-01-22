@@ -11,7 +11,6 @@ namespace Game.Scripts.Network.Handler;
 
 public class LoginNetHandler(
     AlertManager alertManager,
-    SceneManager sceneManager,
     NetworkManager networkManager,
     GameStateManager gameStateManager,
     ILogger<LoginNetHandler> logger) : IHandlerResponse<LoginResponse>
