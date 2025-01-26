@@ -1,3 +1,7 @@
+CollisionShape2D
+CollisionPolygon2D
+Sprite2D
+CharacterBody2D
 Button
 MarginContainer
 Label
@@ -8,7 +12,3 @@ ItemList
 AcceptDialog
 Window
 PopupPanel
-Popup
-TextureRect
-TextureButton
-Node

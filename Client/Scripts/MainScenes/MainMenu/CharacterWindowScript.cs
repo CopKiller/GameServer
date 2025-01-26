@@ -23,7 +23,7 @@ public partial class CharacterWindowScript : WindowBase
             _players.Clear();
             _players.AddRange(value);
 
-            PopulatePlayersList();
+            CallDeferred(MethodName.PopulatePlayersList);
         }
     }
 
@@ -31,7 +31,7 @@ public partial class CharacterWindowScript : WindowBase
     {
         _playersList = GetNode<ItemList>("VBoxContainer/PlayersItemList");
         _enterGameButton = GetNode<Button>("VBoxContainer/EnterGameButton");
-
+        
         PopulatePlayersList();
     }
 

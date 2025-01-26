@@ -12,7 +12,7 @@ namespace Game.Scripts.Singletons;
 
 public partial class ServiceManager : Node
 {
-    private IServiceManager? _serviceManager;
+    private ISingleService? _networkService;
     private static IServiceProvider? _serviceProvider;
 
     public override void _Ready()
@@ -25,7 +25,7 @@ public partial class ServiceManager : Node
         loadingManager?.AddTask(RegisterServices, "Registrando serviços...");
         loadingManager?.AddTask(StartServices, "Iniciando serviços...");
     }
-
+    
     public static T? GetService<T>()
     {
         if (_serviceProvider == null)
@@ -60,7 +60,7 @@ public partial class ServiceManager : Node
         services.AddGodotGameState();
         services.AddGodotNetworkManager();
         services.AddGodotSceneManager();
-        services.AddGodotServiceManager();
+        //services.AddGodotServiceManager();
         services.AddGodotLoadingManager();
         services.AddGodotAlertManager();
         services.AddGodotScenePathCache();
@@ -73,23 +73,23 @@ public partial class ServiceManager : Node
 
     private Task RegisterServices()
     {
-        _serviceManager = _serviceProvider?.GetRequiredService<IServiceManager>();
+        _networkService = _serviceProvider?.GetRequiredService<ISingleService>();
 
-        _serviceManager?.Register();
+        _networkService?.Register();
         
         return Task.CompletedTask;
     }
     
     private Task StartServices()
     {
-        _serviceManager?.Start();
+        _networkService?.Start();
         
         return Task.CompletedTask;
     }
 
     public override void _ExitTree()
     {
-        _serviceManager?.Stop();
-        _serviceManager?.Dispose();
+        _networkService?.Stop();
+        _networkService?.Dispose();
     }
 }

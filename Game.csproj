@@ -28,6 +28,7 @@
   <ItemGroup>
     <Content Include="Client\Scenes\BaseControls\ButtonBase.tscn" />
     <Content Include="Client\Scenes\BaseControls\DatePicker.tscn" />
+    <Content Include="Client\Scenes\BaseControls\Player.tscn" />
     <Content Include="Client\Scenes\BaseControls\WindowBase.tscn" />
     <Content Include="Client\Scenes\MainScenes\MainMenuScene.tscn" />
     <Content Include="Client\Scenes\Transitions\LoadingScene.tscn" />

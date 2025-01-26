@@ -16,6 +16,8 @@ public partial class NetworkManager : Node
     private ISingleService? _clientNetworkManager;
     private IClientConnectionManager? _clientConnectionManager;
     private INetworkEventsListener? _networkEventsListener;
+    
+    private ulong _networkUpdateTimer;
 
     [Signal]
     public delegate void NetworkLatencyUpdatedEventHandler(int latency);
@@ -33,6 +35,25 @@ public partial class NetworkManager : Node
 
         loadingManager.AddTask(ConfigureNetwork, "Configurando rede...");
         loadingManager.AddTask(StartNetwork, "Iniciando rede...");
+    }
+    
+    public override void _Process(double delta)
+    {
+         if (_isConnected)
+         {
+             var time = Time.GetTicksMsec();
+             if (_networkUpdateTimer <= time)
+             {
+                 GD.Print($"Update network {time - _networkUpdateTimer}");;
+                 _clientNetworkManager?.Update((long)_networkUpdateTimer);
+                 _networkUpdateTimer = time + 15;
+             }
+         }
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
     }
 
     public override void _EnterTree()

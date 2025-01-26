@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Network.SerializationObjects;
 using Game.Scripts.MainScenes.MainMenu;
 using Game.Scripts.Singletons;
+using Godot;
 using Microsoft.Extensions.Logging;
 
 namespace Game.Scripts.GameState;
@@ -28,9 +29,25 @@ public class MainMenuState(
         Scene?.CharacterWindow?.PopulatePlayersList();
     }
     
+    public void ChangeStateToCharacterSelectionDeferred()
+    {
+        Scene?.CallDeferred(MainMenuScript.MethodName.CloseAllWindows);
+        Scene?.CallDeferred(CanvasItem.MethodName.Show);
+        Scene?.CharacterWindow?.CallDeferred(CharacterWindowScript.MethodName.PopulatePlayersList);
+    }
+    
     public void AddCharacterToCharacterSelection(List<PlayerDto> playersDto)
     {
         if (Scene?.CharacterWindow != null) 
             Scene.CharacterWindow.Players = playersDto;
+    }
+    public void AddCharacterToCharacterSelection(PlayerDto playerDto)
+    {
+        if (Scene?.CharacterWindow == null) return;
+        
+        var players = Scene.CharacterWindow.Players;
+        players.Add(playerDto);
+            
+        Scene.CharacterWindow.Players = players;
     }
 }

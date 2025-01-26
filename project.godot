@@ -25,6 +25,10 @@ NetworkManager="*res://Client/Scripts/Singletons/NetworkManager.cs"
 GameStateManager="*res://Client/Scripts/Singletons/GameStateManager.cs"
 LoadingBackground="*res://Client/Scripts/Singletons/LoadingBackground.cs"
 
+[display]
+
+window/vsync/vsync_mode=0
+
 [dotnet]
 
 project/assembly_name="Game"
