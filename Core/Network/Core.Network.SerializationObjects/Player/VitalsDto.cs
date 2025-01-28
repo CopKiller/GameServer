@@ -2,7 +2,7 @@ using Core.Network.Interface;
 
 namespace Core.Network.SerializationObjects.Player;
 
-public class VitalsDto : IAdapterSerializable
+public struct VitalsDto : IAdapterSerializable
 {
     public double Health { get; set; }
     public double MaxHealth { get; set; }

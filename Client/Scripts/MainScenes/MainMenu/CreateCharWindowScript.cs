@@ -28,10 +28,8 @@ public partial class CreateCharWindowScript : WindowBase
     private void UpdateCharacterSelectedSlotSignal(int index)
         => _characterSelectedSlot = index;
 
-    private void CheckCharacterNameInputSignal()
+    private void CheckCharacterNameInputSignal(string text)
     {
-        var text = _nameLineEdit != null ? _nameLineEdit.Text : string.Empty;
-        
         var result = EntitiesValidator.ValidatePlayerName(text);
 
         _nameLineEdit?.ChangeThemeColor(result.IsValid);
@@ -45,7 +43,7 @@ public partial class CreateCharWindowScript : WindowBase
 
         if (result.IsValid)
         {
-            SendCreateChar(text);
+            SendCreateChar(_characterSelectedSlot, text);
             return;
         }
         

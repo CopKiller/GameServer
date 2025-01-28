@@ -42,5 +42,7 @@ public class RegisterHandlerRequest(
         
         registerResponse.Response.Success = true;
         registerResponse.Response.Message = "Account created successfully";
+        
+        sender.SendPacket(peer, registerResponse);
     }
 }

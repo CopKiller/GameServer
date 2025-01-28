@@ -43,7 +43,7 @@ public sealed class PacketProcessor : IPacketProcessor
 
         NetworkSerializer.RegisterNestedType<AccountDto>();
         NetworkSerializer.RegisterNestedType<PlayerDto>();
-        NetworkSerializer.RegisterNestedType<PositionDto>();
+        NetworkSerializer.RegisterNestedType<Vector2>();
         NetworkSerializer.RegisterNestedType<VitalsDto>();
         NetworkSerializer.RegisterNestedType<StatsDto>();
         

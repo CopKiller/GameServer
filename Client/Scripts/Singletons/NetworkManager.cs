@@ -44,16 +44,11 @@ public partial class NetworkManager : Node
              var time = Time.GetTicksMsec();
              if (_networkUpdateTimer <= time)
              {
-                 GD.Print($"Update network {time - _networkUpdateTimer}");;
+                 //GD.Print($"Update network {time - _networkUpdateTimer}");;
                  _clientNetworkManager?.Update((long)_networkUpdateTimer);
                  _networkUpdateTimer = time + 15;
              }
          }
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        base._PhysicsProcess(delta);
     }
 
     public override void _EnterTree()
@@ -145,7 +140,7 @@ public partial class NetworkManager : Node
 
     private void UpdateNetworkLatency(IAdapterNetPeer peer, int latency)
     {
-        CallDeferred(GodotObject.MethodName.EmitSignal, SignalName.NetworkLatencyUpdated, latency);
+        EmitSignal(SignalName.NetworkLatencyUpdated, latency);
     }
 
     private void PeerDisconnectedEvent(IAdapterNetPeer peer, IAdapterDisconnectInfo disconnectInfo)
@@ -153,7 +148,7 @@ public partial class NetworkManager : Node
         if (_isConnected)
         {
             _isConnected = false;
-            CallDeferred(nameof(Reconnect), disconnectInfo.Reason.ToString());
+            Reconnect(disconnectInfo.Reason.ToString());
         }
     }
 }

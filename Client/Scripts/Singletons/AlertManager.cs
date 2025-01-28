@@ -25,7 +25,7 @@ public partial class AlertManager : Node
 
     public void AddGlobalAlert(string text)
     {
-        CallDeferred(MethodName.InstantiateAlert, text);
+        InstantiateAlert(text);
     }
     
     // public void AddLocalAlert(string text)

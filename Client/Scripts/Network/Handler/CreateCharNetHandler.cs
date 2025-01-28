@@ -23,7 +23,7 @@ public class CreateCharNetHandler(
     
     public void HandleSuccess(CreateCharResponse response, IAdapterNetPeer peer)
     {
-        logger.LogInformation($"Register response received in client {response.Response?.Message} accountID: {response.Player?.Id} username: {response.Player?.Name}");
+        logger.LogInformation($"CreateChar response received in client {response.Response?.Message} accountID: {response.Player?.Id} username: {response.Player?.Name}");
 
         if (response.Response != null)
             alertManager.AddGlobalAlert(response.Response.Message);
@@ -36,7 +36,7 @@ public class CreateCharNetHandler(
             return;
         }
         
-        mainMenuState.ChangeStateToCharacterSelectionDeferred();
+        mainMenuState.ChangeStateToCharacterSelection();
 
         if (response.Player != null) 
             mainMenuState.AddCharacterToCharacterSelection(response.Player);

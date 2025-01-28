@@ -90,7 +90,7 @@ public partial class NetworkTests
                 Level = 20,
                 Golds = 10,
                 Diamonds = 15,
-                Position = new PositionDto(),
+                Position = new Vector2(),
                 Vitals = new VitalsDto(),
                 Stats = new StatsDto()
             };

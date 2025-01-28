@@ -1,7 +1,10 @@
 CollisionShape2D
+AnimatedSprite2D
+CharacterBody2D
+Area2D
+RayCast2D
 CollisionPolygon2D
 Sprite2D
-CharacterBody2D
 Button
 MarginContainer
 Label
@@ -9,6 +12,3 @@ HBoxContainer
 LineEdit
 VBoxContainer
 ItemList
-AcceptDialog
-Window
-PopupPanel

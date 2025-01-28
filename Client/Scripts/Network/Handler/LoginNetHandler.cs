@@ -37,7 +37,7 @@ public class LoginNetHandler(
             return;
         }
         
-        mainMenuState.ChangeStateToCharacterSelectionDeferred();
+        mainMenuState.ChangeStateToCharacterSelection();
         
         mainMenuState.AddCharacterToCharacterSelection(response.Account.Players);
     }

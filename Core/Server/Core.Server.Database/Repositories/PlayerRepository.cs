@@ -50,12 +50,12 @@ public class PlayerRepository<T>(
             return (dataValidationResult, null);
 
         // Garantir que a Account existe antes de adicionar o Player
-        var accountExists = await Context.ExistEntityAsync(a => a.Id == accountId);
-        if (!accountExists)
-        {
-            validatorResult.AddError("Account not found");
-            return (validatorResult, null);
-        }
+        // var accountExists = await Context.ExistEntityAsync(a => a.Id == accountId);
+        // if (!accountExists)
+        // {
+        //     validatorResult.AddError("Account not found");
+        //     return (validatorResult, null);
+        // }
 
         // Associar o Player à conta usando apenas o Id
         player.AccountModelId = accountId;
@@ -66,7 +66,7 @@ public class PlayerRepository<T>(
         var changes = await Context.SaveChangesAsync() > 0;
         if (!changes)
             validatorResult.AddError("Failed to add player");
-    
+        
         return (validatorResult, player);
     }
 

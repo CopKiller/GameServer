@@ -19,7 +19,7 @@ public class MappingProfile : Profile
         CreateMap<PlayerModel, PlayerDto>();
         CreateMap<Stats, StatsDto>();
         CreateMap<Vitals, VitalsDto>();
-        CreateMap<Position, PositionDto>();
+        CreateMap<Position, Vector2>();
         
         // inverso
         // Converter o campo de birthdate em string para o DateOnly
@@ -28,13 +28,13 @@ public class MappingProfile : Profile
         CreateMap<PlayerDto, PlayerModel>();
         CreateMap<StatsDto, Stats>();
         CreateMap<VitalsDto, Vitals>();
-        CreateMap<PositionDto, Position>();
+        CreateMap<Vector2, Position>();
 
         // Mapeamentos para interfaces
         CreateMap<IAccountModel, AccountDto>();
         CreateMap<IPlayerModel, PlayerDto>();
         CreateMap<IStats, StatsDto>();
         CreateMap<IVitals, VitalsDto>();
-        CreateMap<IPosition, PositionDto>();
+        CreateMap<IPosition, Vector2>();
     }
 }

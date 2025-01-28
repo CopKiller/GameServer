@@ -285,13 +285,13 @@ text = "Confirm"
 visible = false
 unresizable = false
 
-[node name="CharacterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
+[node name="CharacterWindow" parent="MainMenuWindows" node_paths=PackedStringArray("_createCharacterWindow", "OpenWindowWhenClosed") groups=["MainMenuWindows"] instance=ExtResource("2_g687l")]
 unique_name_in_owner = true
 title = "Characters"
 size = Vector2i(200, 177)
-visible = false
 wrap_controls = true
 script = ExtResource("11_agmdt")
+_createCharacterWindow = NodePath("../CreateCharWindow")
 OpenWindowWhenClosed = NodePath("../LoginWindow")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMenuWindows/CharacterWindow"]
@@ -312,11 +312,10 @@ item_0/text = "Vazio"
 item_1/text = "Vazio"
 item_2/text = "Vazio"
 
-[node name="CreateCharButton" parent="MainMenuWindows/CharacterWindow/VBoxContainer" node_paths=PackedStringArray("OpenWindow", "CloseWindow") instance=ExtResource("4_px31k")]
+[node name="CreateCharButton" type="Button" parent="MainMenuWindows/CharacterWindow/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Create Character"
-OpenWindow = NodePath("../../../CreateCharWindow")
-CloseWindow = NodePath("../..")
 
 [node name="EnterGameButton" type="Button" parent="MainMenuWindows/CharacterWindow/VBoxContainer"]
 layout_mode = 2
@@ -385,6 +384,8 @@ text_direction = 1
 [connection signal="text_changed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/EmailLineEdit" to="MainMenuWindows/RegisterWindow" method="OnEmailTextChanged"]
 [connection signal="pressed" from="MainMenuWindows/RegisterWindow/MarginContainer/VBoxContainer/ConfirmButton" to="MainMenuWindows/RegisterWindow" method="OnConfirmRegisterPressed"]
 [connection signal="close_requested" from="MainMenuWindows/CharacterWindow" to="MainMenuWindows/CharacterWindow" method="SendLogoutSignal"]
+[connection signal="item_selected" from="MainMenuWindows/CharacterWindow/VBoxContainer/PlayersItemList" to="MainMenuWindows/CharacterWindow" method="UpdateCharacterSelectedSlotSignal"]
 [connection signal="item_selected" from="MainMenuWindows/CharacterWindow/VBoxContainer/PlayersItemList" to="MainMenuWindows/CreateCharWindow" method="UpdateCharacterSelectedSlotSignal"]
+[connection signal="pressed" from="MainMenuWindows/CharacterWindow/VBoxContainer/CreateCharButton" to="MainMenuWindows/CharacterWindow" method="OpenCreateCharWindowSignal"]
 [connection signal="text_changed" from="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/HBoxContainer/NameLineEdit" to="MainMenuWindows/CreateCharWindow" method="CheckCharacterNameInputSignal"]
 [connection signal="pressed" from="MainMenuWindows/CreateCharWindow/MarginContainer/VBoxContainer/CreateCharButton" to="MainMenuWindows/CreateCharWindow" method="CheckCreateCharacterSignal"]

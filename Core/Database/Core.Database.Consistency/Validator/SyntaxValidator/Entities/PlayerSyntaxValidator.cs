@@ -26,6 +26,7 @@ public class PlayerSyntaxValidator<T> : IPlayerSyntaxValidator<T> where T : clas
         ValidateStats(entity.Stats);
         ValidateVitals(entity.Vitals);
         ValidatePosition(entity.Position);
+        ValidateSlotNumber(entity.SlotNumber);
 
         return _validator.ValidatorResult;
     }
@@ -59,6 +60,15 @@ public class PlayerSyntaxValidator<T> : IPlayerSyntaxValidator<T> where T : clas
         if (position == null)
         {
             _validator.AddError("Position is null");
+        }
+        return _validator.ValidatorResult;
+    }
+    
+    public IValidatorResult ValidateSlotNumber(byte slotNumber)
+    {
+        if (slotNumber >= DatabaseLimiter.MaxPlayersPerAccount)
+        {
+            _validator.AddError($"Slot number {slotNumber} is invalid");
         }
         return _validator.ValidatorResult;
     }

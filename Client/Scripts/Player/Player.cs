@@ -4,7 +4,7 @@ namespace Game.Scripts.Player;
 
 public partial class Player : CharacterBody2D
 {
-    private Vector2 _gridSnapped = new (32, 32);
+    private float _gridSnapped = 32;
 
     private Vector2 _targetPosition = Vector2I.Zero;
 
@@ -22,8 +22,6 @@ public partial class Player : CharacterBody2D
         CheckInputMovement();
         
         ProcessMovement(delta);
-        
-        CheckMovement();
     }
     
     private void CheckInputMovement()
@@ -31,9 +29,9 @@ public partial class Player : CharacterBody2D
         if (_isMoving) return;
         
         var direction = Input.GetVector("ui_left","ui_right","ui_up","ui_down");
-
+        
         if (direction == Vector2.Zero) return;
-
+        
         _targetPosition = direction * _gridSnapped;
         
         _isMoving = true;
@@ -43,16 +41,13 @@ public partial class Player : CharacterBody2D
     {
         if (!_isMoving) return;
 
-        Velocity = _targetPosition * _speed;
-        
-        MoveAndSlide();
-    }
-    
-    private void CheckMovement()
-    {
-        
-        if (Position != _targetPosition) return;
-        
-        _isMoving = false;
+        var tween = CreateTween();
+        tween.TweenProperty(this, "position", _targetPosition, 0.5);
+        tween.TweenCallback(Callable.From(() =>
+        {
+            Position = _targetPosition;
+            _isMoving = false;
+        }));
+        tween.Play();
     }
 }

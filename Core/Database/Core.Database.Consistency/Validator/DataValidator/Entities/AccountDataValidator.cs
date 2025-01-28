@@ -12,6 +12,9 @@ public class AccountDataValidator<T>(IRepository<T> repository)
 
     public async Task<IValidatorResult> ValidateAsync(T? entity, bool isUpdate = false)
     {
+        
+        ClearErrors();
+            
         if (entity == null)
         {
             _validator.AddError("Account Entity is null");
@@ -70,5 +73,11 @@ public class AccountDataValidator<T>(IRepository<T> repository)
         }
 
         return _validator.ValidatorResult;
+    }
+    
+    public void ClearErrors()
+    {
+        _validator.ValidatorResult.Errors.Clear();
+        _validator.ValidatorResult.IsValid = true;
     }
 }

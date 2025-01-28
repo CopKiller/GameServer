@@ -2,7 +2,7 @@ using Core.Network.Interface;
 
 namespace Core.Network.SerializationObjects.Player;
 
-public class StatsDto : IAdapterSerializable
+public struct StatsDto : IAdapterSerializable
 {
     public int Strength { get; set; }
     public int Defense { get; set; }

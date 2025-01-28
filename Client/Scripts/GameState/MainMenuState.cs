@@ -29,13 +29,6 @@ public class MainMenuState(
         Scene?.CharacterWindow?.PopulatePlayersList();
     }
     
-    public void ChangeStateToCharacterSelectionDeferred()
-    {
-        Scene?.CallDeferred(MainMenuScript.MethodName.CloseAllWindows);
-        Scene?.CallDeferred(CanvasItem.MethodName.Show);
-        Scene?.CharacterWindow?.CallDeferred(CharacterWindowScript.MethodName.PopulatePlayersList);
-    }
-    
     public void AddCharacterToCharacterSelection(List<PlayerDto> playersDto)
     {
         if (Scene?.CharacterWindow != null) 

@@ -39,7 +39,7 @@ public class CreateCharHandlerRequest(
             return;
         }
 
-        var playerModel = mapperService.Map<PlayerModel>(request.Player);
+        var playerModel = mapperService.Map<PlayerDto, PlayerModel>(request.Player);
         var (validatorResult, player) = await playerRepository.AddPlayerAsync(playerModel, getAccountSession.CurrentAccount.Id);
         
         if (!validatorResult.IsValid || player == null)
@@ -53,7 +53,7 @@ public class CreateCharHandlerRequest(
         
         getAccountSession.CurrentAccount.Players.Add(mapperService.Map<PlayerDto>(player));
 
-        response.Player = mapperService.Map<PlayerDto>(player);
+        response.Player = mapperService.Map<PlayerModel, PlayerDto>(player);
         response.Response.Success = true;
         
         sender.SendPacket(peer, response);

@@ -12,7 +12,7 @@ public partial class CreateCharWindowScript
     private readonly IClientPacketRequest? _packetRequest 
         = ServiceManager.GetRequiredService<IClientPacketRequest>();
 
-    private void SendCreateChar(string name)
+    private void SendCreateChar(int characterSelectedSlot,string name)
     {
         // TODO: Implement new packet for CreateCharacter.
 
@@ -20,7 +20,8 @@ public partial class CreateCharWindowScript
         {
             Player = new PlayerDto
             {
-                Name = name
+                Name = name,
+                SlotNumber = (byte)characterSelectedSlot
             }
         };
         

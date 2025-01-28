@@ -12,57 +12,45 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
     private Stopwatch MainTimer { get; } = new();
     private ConcurrentDictionary<ISingleService, long> ServiceLastTick { get; } = new();
     private Task? UpdateLoopTask { get; set; }
+    
+    private readonly ManualResetEventSlim _loopWaitHandle = new();
 
     public void Start(CancellationToken cancellationToken)
+{
+    if (UpdateLoopTask != null) return;
+
+    configuration.Enabled = true;
+
+    MainTimer.Start();
+
+    UpdateLoopTask = Task.Run(() =>
     {
-        if (UpdateLoopTask != null) return;
-        
-        configuration.Enabled = true;
-
-        MainTimer.Start();
-
-        UpdateLoopTask = Task.Run(async () =>
+        while (!cancellationToken.IsCancellationRequested && configuration.Enabled)
         {
-            while (!cancellationToken.IsCancellationRequested && configuration.Enabled)
+            var startTick = MainTimer.ElapsedMilliseconds;
+
+            foreach (var service in ServiceLastTick.Keys)
             {
-                var startTick = MainTimer.ElapsedMilliseconds;
-                
-                foreach (var kvp in ServiceLastTick)
+                try
                 {
-                    var service = kvp.Key;
-                    try
-                    {
-                        Update(service);
-                    }
-                    catch (Exception e)
-                    {
-                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.",
-                            service.ServiceConfiguration.ServiceType);
-                    }
+                    Update(service);
                 }
-
-                // Usar Parallel.ForEach para atualizar todos os serviços em paralelo.
-                /*Parallel.ForEach(ServiceLastTick.Keys, service =>
+                catch (Exception e)
                 {
-                    try
-                    {
-                        Update(service);
-                    }
-                    catch (Exception e)
-                    {
-                        logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.",
-                            service.ServiceConfiguration.ServiceType);
-                    }
-                });*/
-
-                var elapsed = MainTimer.ElapsedMilliseconds - startTick;
-                if (elapsed > configuration.UpdateIntervalMs)
-                    logger?.LogWarning("Loop de atualização atrasado em {Elapsed}ms.", elapsed);
-                else
-                    await Task.Delay((int)(configuration.UpdateIntervalMs - elapsed), cancellationToken);
+                    logger?.LogError(e, "Erro ao atualizar o serviço {ServiceType}.", service.ServiceConfiguration.ServiceType);
+                }
             }
-        }, cancellationToken);
-    }
+
+            var elapsed = MainTimer.ElapsedMilliseconds - startTick;
+            var delay = Math.Max(0, configuration.UpdateIntervalMs - elapsed);
+
+            if (elapsed > configuration.UpdateIntervalMs)
+                logger?.LogWarning("Loop de atualização atrasado em {Elapsed}ms.", elapsed);
+
+            _loopWaitHandle.Wait((int)delay, cancellationToken);
+        }
+    }, cancellationToken);
+}
 
 
     internal void Update(ISingleService service, bool force = false)
@@ -85,7 +73,7 @@ internal class TimerPool(IServiceConfiguration configuration, ILogger<TimerPool>
         if (tickCounter < service.ServiceConfiguration.UpdateIntervalMs && !force) return;
 
         service.Update(tick);
-        ServiceLastTick[service] = tick;
+        ServiceLastTick.AddOrUpdate(service, tick, (_, _) => tick);
     }
 
     public async Task StopAsync()
