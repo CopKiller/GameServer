@@ -9,7 +9,8 @@ public class AttackController(CharacterBody2D body)
     
     private const float AttackDuration = 0.5f;
     
-    public  bool IsAttacking => _isAttacking;
+    public bool IsAttacking => _isAttacking;
+    
     private bool _isAttacking;
     
     public void Attack()

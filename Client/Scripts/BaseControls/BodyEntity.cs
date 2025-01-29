@@ -1,13 +1,16 @@
 
 using Core.Network.SerializationObjects.Enum;
 using Game.Scripts.Components;
+using Game.Scripts.Extensions.Attributes;
 using Godot;
 
 namespace Game.Scripts.BaseControls;
 
 [Tool]
+[ScenePath("res://Client/Scenes/BaseControls/BodyEntity.tscn")]
 public partial class BodyEntity : CharacterBody2D
 {
+    # region Exports
     [ExportCategory("Configuration")]
     
     [Export] private float _gridSnapSize = 32f;
@@ -48,15 +51,19 @@ public partial class BodyEntity : CharacterBody2D
     
     [ExportToolButton("Attack")]
     private Callable Attack => Callable.From(() => _attackController?.Attack());
+    
+    # endregion
 
     private MovementController? _movementController;
     private AttackController? _attackController;
     private AnimationController? _animationController;
-    private InputHandler? _inputHandler;
+    
+    public MovementController GetMovementController() => _movementController!;
+    public AttackController GetAttackController() => _attackController!;
 
     public override void _Ready()
     {
-        _animatedSprite ??= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        _animatedSprite ??= GetNode<AnimatedSprite2D>(nameof(AnimatedSprite2D));
         
         _movementController = new MovementController(this, _gridSnapSize);
         
@@ -64,11 +71,9 @@ public partial class BodyEntity : CharacterBody2D
         
         _animationController = new AnimationController(_animatedSprite);
         
-        _inputHandler = new InputHandler(_movementController, _attackController);
-        
         RegisterEvents();
 
-        GD.Print("Player Ready");
+        GD.Print("Body Ready");
     }
     
     private void RegisterEvents()
@@ -96,17 +101,9 @@ public partial class BodyEntity : CharacterBody2D
     {
         if (_movementController != null &&
             _attackController != null &&
-            _animationController != null &&
-            _inputHandler != null) return true;
+            _animationController != null) return true;
         
         GD.PrintErr("One or more components are not initialized");
         return false;
-
-    }
-
-
-    public override void _Input(InputEvent @event)
-    {
-        _inputHandler?.ProcessInput();
     }
 }

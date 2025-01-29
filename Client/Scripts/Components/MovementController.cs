@@ -44,6 +44,8 @@ public class MovementController(CharacterBody2D character, float gridSnapSize)
     public void MoveToPosition(Vector2 position)
     {
         if (_isMoving) return;
+        
+        position *= gridSnapSize;
 
         _targetPosition = position;
         
