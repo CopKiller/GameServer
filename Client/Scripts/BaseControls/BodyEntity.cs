@@ -1,4 +1,6 @@
+
 using Core.Network.SerializationObjects.Enum;
+using Game.Scripts.Components;
 using Godot;
 
 namespace Game.Scripts.BaseControls;
@@ -6,167 +8,105 @@ namespace Game.Scripts.BaseControls;
 [Tool]
 public partial class BodyEntity : CharacterBody2D
 {
-    [Export] private float _gridSnapped = 32;
-
-    [Export] private float _speed = 2f;
-
-    [Export] private Direction Direction
-    {
-        get => _direction;
-        set => ProcessDirection(value);
-    }
+    [ExportCategory("Configuration")]
     
-    [Export] private bool Attack
-    {
-        get => _isAttacking;
-        set => ProcessAttack(value);
-    }
-
+    [Export] private float _gridSnapSize = 32f;
     [Export] private AnimatedSprite2D? _animatedSprite;
+    
+    
+    [ExportCategory("Tests")]
+    
+    [Export]
+    private Vector2 _targetPosition = Vector2.Zero;
+    
+    [ExportToolButton("Move To Target")]
+    private Callable MoveToTarget => Callable.From(() => _movementController?.MoveToPosition(_targetPosition));
+    
+    [ExportToolButton("Move Up")]
+    private Callable MoveUp => Callable.From(() => _movementController?.MoveToDirection(Direction.Up));
+    
+    [ExportToolButton("Move Down")]
+    private Callable MoveDown => Callable.From(() => _movementController?.MoveToDirection(Direction.Down));
+    
+    [ExportToolButton("Move Left")]
+    private Callable MoveLeft => Callable.From(() => _movementController?.MoveToDirection(Direction.Left));
+    
+    [ExportToolButton("Move Right")]
+    private Callable MoveRight => Callable.From(() => _movementController?.MoveToDirection(Direction.Right));
+    
+    [ExportToolButton("Move Up Right")]
+    private Callable MoveUpRight => Callable.From(() => _movementController?.MoveToDirection(Direction.UpRight));
+    
+    [ExportToolButton("Move Up Left")]
+    private Callable MoveUpLeft => Callable.From(() => _movementController?.MoveToDirection(Direction.UpLeft));
+    
+    [ExportToolButton("Move Down Right")]
+    private Callable MoveDownRight => Callable.From(() => _movementController?.MoveToDirection(Direction.DownRight));
+    
+    [ExportToolButton("Move Down Left")]
+    private Callable MoveDownLeft => Callable.From(() => _movementController?.MoveToDirection(Direction.DownLeft));
+    
+    [ExportToolButton("Attack")]
+    private Callable Attack => Callable.From(() => _attackController?.Attack());
 
-    private Vector2 _targetPosition;
-    private Direction _direction;
-    private bool _isMoving;
-    private bool _isAttacking;
-    private ulong _stepTimer;
+    private MovementController? _movementController;
+    private AttackController? _attackController;
+    private AnimationController? _animationController;
+    private InputHandler? _inputHandler;
 
     public override void _Ready()
     {
-        _targetPosition = Position;
-    }
+        _animatedSprite ??= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        
+        _movementController = new MovementController(this, _gridSnapSize);
+        
+        _attackController = new AttackController(this);
+        
+        _animationController = new AnimationController(_animatedSprite);
+        
+        _inputHandler = new InputHandler(_movementController, _attackController);
+        
+        RegisterEvents();
 
+        GD.Print("Player Ready");
+    }
+    
+    private void RegisterEvents()
+    {
+        if (!_ValidateComponents()) return;
+        
+        _movementController!.MovementStateChanged += isMoving =>
+            _animationController?.SetStepTimer(isMoving);
+        
+        _attackController!.AttackStateChanged += isAttacking =>
+            _animationController?.SetStepTimer(isAttacking);
+    }
+    
     public override void _PhysicsProcess(double delta)
     {
-        ProcessAnimation();
-    }
+        if (!_ValidateComponents()) return;
 
-    private void ProcessAnimation()
+        _animationController?.PlayAnimation(
+            _movementController!.Direction, 
+            _movementController!.IsMoving, 
+            _attackController!.IsAttacking);
+    }
+    
+    private bool _ValidateComponents()
     {
-        if (Time.GetTicksMsec() < _stepTimer)
-            return;
-
-        var header = _isMoving ? "move_" : "idle_";
+        if (_movementController != null &&
+            _attackController != null &&
+            _animationController != null &&
+            _inputHandler != null) return true;
         
-        if (_isAttacking)
-            header = "attack_";
+        GD.PrintErr("One or more components are not initialized");
+        return false;
 
-        header += _direction switch
-        {
-            Direction.DownRight or Direction.UpRight => "right",
-            Direction.DownLeft or Direction.UpLeft => "left",
-            _ => _direction.ToString().ToLower()
-        };
-
-        _animatedSprite?.Play(header);
     }
 
-    # region Input
 
     public override void _Input(InputEvent @event)
     {
-        ProcessInput();
+        _inputHandler?.ProcessInput();
     }
-
-    private void ProcessInput()
-    {
-        ProcessInputAction();
-    }
-
-    private void ProcessInputAction()
-    {
-        const string actionHeader = "action_";
-
-        ProcessInputMovement(actionHeader + "move_");
-
-        ProcessInputAttack(actionHeader + "attack");
-    }
-
-    private void ProcessInputMovement(string header)
-    {
-        bool up = Input.IsActionPressed(header + "up");
-        bool down = Input.IsActionPressed(header + "down");
-        bool left = Input.IsActionPressed(header + "left");
-        bool right = Input.IsActionPressed(header + "right");
-
-        if (up && right)
-            Direction = Direction.UpRight;
-        else if (up && left)
-            Direction = Direction.UpLeft;
-        else if (down && right)
-            Direction = Direction.DownRight;
-        else if (down && left)
-            Direction = Direction.DownLeft;
-        else if (up)
-            Direction = Direction.Up;
-        else if (down)
-            Direction = Direction.Down;
-        else if (left)
-            Direction = Direction.Left;
-        else if (right)
-            Direction = Direction.Right;
-    }
-
-    private void ProcessInputAttack(string header)
-    {
-        if (Input.IsActionPressed(header))
-            Attack = true;
-    }
-
-    private void ProcessDirection(Direction direction)
-    {
-        if (_isMoving) return;
-
-        _isMoving = true;
-
-        _direction = direction;
-
-        _targetPosition = direction switch
-        {
-            Direction.Up => new Vector2(Position.X, Position.Y - _gridSnapped),
-            Direction.Down => new Vector2(Position.X, Position.Y + _gridSnapped),
-            Direction.Left => new Vector2(Position.X - _gridSnapped, Position.Y),
-            Direction.Right => new Vector2(Position.X + _gridSnapped, Position.Y),
-            Direction.UpRight => new Vector2(Position.X + _gridSnapped, Position.Y - _gridSnapped),
-            Direction.UpLeft => new Vector2(Position.X - _gridSnapped, Position.Y - _gridSnapped),
-            Direction.DownRight => new Vector2(Position.X + _gridSnapped, Position.Y + _gridSnapped),
-            Direction.DownLeft => new Vector2(Position.X - _gridSnapped, Position.Y + _gridSnapped),
-            _ => _targetPosition
-        };
-
-        ProcessMovement();
-    }
-
-    private void ProcessMovement()
-    {
-        var tween = CreateTween();
-        tween.TweenProperty(this, "position", _targetPosition, 0.5);
-        tween.TweenCallback(Callable.From(() =>
-        {
-            Position = _targetPosition;
-            _isMoving = false;
-            _stepTimer = Time.GetTicksMsec() + 50;
-        }));
-        tween.Play();
-    }
-    
-    private void ProcessAttack(bool isAttacking)
-    {
-        if (_isAttacking) return;
-
-        _isAttacking = isAttacking;
-
-        if (isAttacking)
-        {
-            var tween = CreateTween();
-            tween.TweenProperty(this, "scale", new Vector2(1f, 1f), 0.5);
-            tween.TweenCallback(Callable.From(() =>
-            {
-                _isAttacking = false;
-                _stepTimer = Time.GetTicksMsec() + 50;
-            }));
-            tween.Play();
-        }
-    }
-
-    # endregion
 }

@@ -7,15 +7,14 @@
 height = 20.0
 
 [node name="BodyEntity" type="CharacterBody2D" node_paths=PackedStringArray("_animatedSprite")]
-position = Vector2(436, -64)
 script = ExtResource("1_126fu")
-Direction = 6
 _animatedSprite = NodePath("AnimatedSprite2D")
+_targetPosition = Vector2(96, 96)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_126fu")
-animation = &"idle_left"
-frame_progress = 0.839199
+animation = &"idle_right"
+frame_progress = 0.837542
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 16)
